@@ -1,0 +1,13 @@
+{
+	"options": {
+			"data": "demos/src/authors.json"
+		},
+		"demos": [
+			{
+				"name": "Button",
+				"template": "demos/button.mustache",
+				"js": "demos/src/demos.js"
+		
+			}
+		]
+}

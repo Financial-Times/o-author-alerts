@@ -1,10 +1,12 @@
 {
-   "name": "o-author-alerts",
-   "dependencies": {
-   		"o-ft-buttons": "^1.5.1"
-   },
-   "main": [
-   	"main.scss",
-   	"main.js"
-   ]
+  "name": "o-follow",
+  "dependencies": {
+    "o-ft-buttons": "^1.5.1",
+    "o-cookies": "~1.0.1",
+    "o-dom": "~0.3.0"
+  },
+  "main": [
+    "main.scss",
+    "main.js"
+  ]
 }
