@@ -1,0 +1,10 @@
+{
+   "name": "o-author-alerts",
+   "dependencies": {
+   		"o-ft-buttons": "^1.5.1"
+   },
+   "main": [
+   	"main.scss",
+   	"main.js"
+   ]
+}
