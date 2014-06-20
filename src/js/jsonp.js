@@ -1,6 +1,7 @@
 
+var unique = 0;
 
-exports.get = function(url, callback, callbackName) {
+exports.get = function(url, callbackName, callback) {
 		callbackName = callbackName || 'ftJsonpCallback' + unique++;
 
 		var script = document.createElement('script');
@@ -9,9 +10,9 @@ exports.get = function(url, callback, callbackName) {
     document.getElementsByTagName('head')[0].appendChild(script);
 
 		if(!window[callbackName]) {
-			window[callbackName] = function() {
+			window[callbackName] = function(data) {
 				if(typeof callback === 'function') {
-					callback();
+					callback(data);
 				}
 				
 	      document.getElementsByTagName('head')[0].removeChild(script);

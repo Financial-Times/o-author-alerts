@@ -3,7 +3,8 @@
   "dependencies": {
     "o-ft-buttons": "^1.5.1",
     "o-cookies": "~1.0.1",
-    "o-dom": "~0.3.0"
+    "o-dom": "~0.3.0",
+    "lodash": "~2.4.1"
   },
   "main": [
     "main.scss",

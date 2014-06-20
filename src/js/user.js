@@ -1,8 +1,15 @@
 'use strict';
 var oCookies = require('o-cookies');
 var oDom = require('o-dom');
+var jsonp = require('./jsonp');
+var event = require('./event');
 
-exports.getId = function() {
+function User() {
+	this.id = getId();
+	this.getFollowing()
+}
+
+function getId() {
 	var userCookie = oCookies.get('FT_U');
 	var id = null;
 	if(userCookie) {
@@ -15,3 +22,16 @@ exports.getId = function() {
 	return '11101642';
 };
 
+User.prototype.setUserFollowing = function(data) {
+	if(data.status === 'success' && data.taxonomies) {
+		this.following = data.taxonomies;
+		event.dispatch('oFollow.userPreferencesLoaded', this, document.body);
+	}
+}
+
+User.prototype.getFollowing = function() {
+	var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=' + this.id + '&callback=getUserFollowingCallback';
+	jsonp.get(url, 'getUserFollowingCallback', this.setUserFollowing.bind(this));
+}
+
+module.exports = new User();

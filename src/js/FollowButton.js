@@ -1,30 +1,48 @@
 'use strict';
 
-var Follow = require('./Follow');
-
+var follow = require('./follow');
+var user = require('./user');
+var _ = require('lodash');
 
 function FollowButton(rootEl) {
 	this.rootEl = rootEl;
-  this.btn = null;
-  this.follow = null;
+  this.btn = rootEl.querySelector('[data-o-follow-id]');;
+  this.entity = {
+    id: this.btn.getAttribute('data-o-follow-id'),
+    name: this.btn.getAttribute('data-o-follow-name')
+  }
 	this.init();
 }
 
 FollowButton.prototype.init = function() {
-	console.log('init for ', this.rootEl);
-  this.btn = this.rootEl.querySelector('[data-o-follow-id]');
   this.btn.addEventListener('click', this.toggleFollowState.bind(this), false);
-  this.follow = new Follow(this.btn.getAttribute('data-o-follow-id'),
-     this.btn.getAttribute('data-o-follow-name'));
+  document.body.addEventListener('oFollow.userPreferencesLoaded', this.setInitialState.bind(this), false);
+}
+
+FollowButton.prototype.setInitialState = function(ev) {
+  if(isBeingFollowed(this.entity, ev.detail.following)) {
+    this.setStateToStop();
+  }
+}
+
+function isBeingFollowed(entity, followingList) {
+  var matched = false;
+  followingList.forEach(function(following) {
+    if(following.id === entity.id) {
+      matched = true;
+      return;
+    }
+  });
+  return matched;
 }
 
 FollowButton.prototype.toggleFollowState = function(ev) {
   var isCurrentlyFollowing = this.rootEl.getAttribute('data-o-follow-state');
   if(isCurrentlyFollowing) {
-    this.follow.stop();
+    follow.stop(this.entity, user.id )
     this.setStateToStart();
   } else {
-    this.follow.start();
+    follow.start(this.entity, user.id);
     this.setStateToStop();
   }
 }   
@@ -37,9 +55,7 @@ FollowButton.prototype.setStateToStart = function() {
 FollowButton.prototype.setStateToStop = function() {
   this.btn.innerText = "Stop Following";
   this.rootEl.setAttribute('data-o-follow-state', false);
-
 }
-
 
 
 FollowButton.prototype.createAllIn = function(el){
