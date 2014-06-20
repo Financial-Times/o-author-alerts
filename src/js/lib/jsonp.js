@@ -6,7 +6,12 @@ exports.get = function(url, callbackName, callback) {
 
 	var script = document.createElement('script');
   script.type = 'text/javascript';
-	script.src = url + '&callback=' + callbackName;
+	if(url.indexOf('?') > 0) {
+		url = url + '&callback=' + callbackName;
+	} else {
+		url = url + '?callback=' + callbackName;
+	}
+	script.src = url;
   document.getElementsByTagName('head')[0].appendChild(script);
 
 	if(!window[callbackName]) {

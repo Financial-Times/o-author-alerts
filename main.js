@@ -17,7 +17,6 @@ exports.createAllIn = function(el){
 
 function createButtons(el) {
   if(el.hasAttribute('data-o-follow-entity')) {
-    console.log('creating for entity');
     createForEntity(el, JSON.parse(el.getAttribute('data-o-follow-entity')));
   } else if(el.hasAttribute('data-o-follow-article-id'))  {
     createForArticle(el, el.getAttribute('data-o-follow-article-id') );
