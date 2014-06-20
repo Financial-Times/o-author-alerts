@@ -8,7 +8,7 @@ exports.start = function(entity, userId) {
 			userId + '&type=authors&name=' +
 			entity.name + '&id=' +
 			entity.id;
-		jsonp.get(url, 'personalisationRequestCallback');
+		jsonp.get(url, 'oFollowPersonalisationCallback');
 }
 
 exports.stop = function(entity, userId) {
@@ -16,5 +16,5 @@ exports.stop = function(entity, userId) {
 	var url = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
 			userId + '&type=authors&id='+
 			entity.id;
-		jsonp.get(url, 'personalisationRequestCallback');
+		jsonp.get(url, 'oFollowPersonalisationCallback');
 }

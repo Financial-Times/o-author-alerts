@@ -5,8 +5,12 @@ var jsonp = require('./lib/jsonp');
 var event = require('./lib/event');
 
 function User() {
+	// this.init();
+}
+
+User.prototype.init = function() {
 	this.id = getId();
-	this.getFollowing()
+	this.getFollowing();
 }
 
 function getId() {
@@ -19,7 +23,7 @@ function getId() {
 		}
 	}
 
-	return '11101642';
+	return id;
 };
 
 User.prototype.setUserFollowing = function(data) {
@@ -30,8 +34,12 @@ User.prototype.setUserFollowing = function(data) {
 }
 
 User.prototype.getFollowing = function() {
+	console.log('this is...', this);
+	var self = this;
 	var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=' + this.id;
-	jsonp.get(url, 'getUserFollowingCallback', this.setUserFollowing.bind(this));
+	jsonp.get(url, 'getUserFollowingCallback', function(data) {
+		self.setUserFollowing(data)
+	});
 }
 
 module.exports = new User();

@@ -1,6 +1,7 @@
 /*global require,describe,beforeEach,afterEach,it,expect*/
 
 
+
 describe('jsonp.get()', function() {
 
 	it('writes a script to the head of the page', function() {
