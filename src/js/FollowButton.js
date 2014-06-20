@@ -1,28 +1,35 @@
 'use strict';
 
-var follow = require('./follow');
+var follow = require('./lib/follow');
 var user = require('./user');
-var _ = require('lodash');
 
-function FollowButton(rootEl) {
+function FollowButton(rootEl, entity, options) {
 	this.rootEl = rootEl;
-  this.btn = rootEl.querySelector('[data-o-follow-id]');;
-  this.entity = {
-    id: this.btn.getAttribute('data-o-follow-id'),
-    name: this.btn.getAttribute('data-o-follow-name')
-  }
+  this.entity = entity;
 	this.init();
 }
 
 FollowButton.prototype.init = function() {
+  this.render()
   this.btn.addEventListener('click', this.toggleFollowState.bind(this), false);
-  document.body.addEventListener('oFollow.userPreferencesLoaded', this.setInitialState.bind(this), false);
+  if(user.following && user.following.length) {
+    this.setInitialState()
+  } else {
+    document.body.addEventListener('oFollow.userPreferencesLoaded', this.setInitialState.bind(this), false);
+  }
 }
 
-FollowButton.prototype.setInitialState = function(ev) {
-  if(isBeingFollowed(this.entity, ev.detail.following)) {
-    this.setStateToStop();
-  }
+FollowButton.prototype.render = function() {
+  var btn = document.createElement('button');
+  var span = document.createElement('span');
+  span.innerText = this.entity.name;
+  span.className = 'o-follow__name';
+  btn.setAttribute('data-o-follow-id', this.entity.id);
+  btn.setAttribute('data-o-follow-name', this.entity.name);
+  btn.innerText = 'Start Following';
+  this.btn = btn;
+  this.rootEl.appendChild(span);
+  this.rootEl.appendChild(btn);
 }
 
 function isBeingFollowed(entity, followingList) {
@@ -34,6 +41,12 @@ function isBeingFollowed(entity, followingList) {
     }
   });
   return matched;
+}
+
+FollowButton.prototype.setInitialState = function(ev) {
+  if(isBeingFollowed(this.entity, ev.detail.following)) {
+    this.setStateToStop();
+  }
 }
 
 FollowButton.prototype.toggleFollowState = function(ev) {
@@ -56,21 +69,6 @@ FollowButton.prototype.setStateToStop = function() {
   this.btn.innerText = "Stop Following";
   this.rootEl.setAttribute('data-o-follow-state', false);
 }
-
-
-FollowButton.prototype.createAllIn = function(el){
-	var followButtons = [], fEls, c, l;
-  el = el || document.body;
-  if (el.querySelectorAll) {
-      fEls = el.querySelectorAll('[data-o-component=o-follow]');
-      for (c = 0, l = fEls.length; c < l; c++) {
-          if (!fEls[c].classList.contains('o-follow--js')) {
-              followButtons.push(new FollowButton(fEls[c]));
-          }
-      }
-  }
-  return followButtons;
-};
 
 
 module.exports = FollowButton;

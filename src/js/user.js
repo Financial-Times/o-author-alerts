@@ -1,8 +1,8 @@
 'use strict';
 var oCookies = require('o-cookies');
 var oDom = require('o-dom');
-var jsonp = require('./jsonp');
-var event = require('./event');
+var jsonp = require('./lib/jsonp');
+var event = require('./lib/event');
 
 function User() {
 	this.id = getId();
