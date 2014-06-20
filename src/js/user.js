@@ -30,7 +30,7 @@ User.prototype.setUserFollowing = function(data) {
 }
 
 User.prototype.getFollowing = function() {
-	var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=' + this.id + '&callback=getUserFollowingCallback';
+	var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=' + this.id;
 	jsonp.get(url, 'getUserFollowingCallback', this.setUserFollowing.bind(this));
 }
 

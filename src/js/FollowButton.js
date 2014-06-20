@@ -2,6 +2,7 @@
 
 var follow = require('./lib/follow');
 var user = require('./user');
+var followButtonView = require('./followButtonView');
 
 function FollowButton(rootEl, entity, options) {
 	this.rootEl = rootEl;
@@ -10,26 +11,14 @@ function FollowButton(rootEl, entity, options) {
 }
 
 FollowButton.prototype.init = function() {
-  this.render()
+  var wrapper = followButtonView.render(this.rootEl, this.entity);
+  this.btn = wrapper.querySelector('[data-o-follow-id]');
   this.btn.addEventListener('click', this.toggleFollowState.bind(this), false);
   if(user.following && user.following.length) {
     this.setInitialState()
   } else {
     document.body.addEventListener('oFollow.userPreferencesLoaded', this.setInitialState.bind(this), false);
   }
-}
-
-FollowButton.prototype.render = function() {
-  var btn = document.createElement('button');
-  var span = document.createElement('span');
-  span.innerText = this.entity.name;
-  span.className = 'o-follow__name';
-  btn.setAttribute('data-o-follow-id', this.entity.id);
-  btn.setAttribute('data-o-follow-name', this.entity.name);
-  btn.innerText = 'Start Following';
-  this.btn = btn;
-  this.rootEl.appendChild(span);
-  this.rootEl.appendChild(btn);
 }
 
 function isBeingFollowed(entity, followingList) {
@@ -43,8 +32,8 @@ function isBeingFollowed(entity, followingList) {
   return matched;
 }
 
-FollowButton.prototype.setInitialState = function(ev) {
-  if(isBeingFollowed(this.entity, ev.detail.following)) {
+FollowButton.prototype.setInitialState = function() {
+  if(isBeingFollowed(this.entity, user.following)) {
     this.setStateToStop();
   }
 }

@@ -1,4 +1,5 @@
 var FollowButton = require('./src/js/FollowButton');
+var user = require('./src/js/user');
 
 exports.createAllIn = function(el){
 	var followButtons = [], fEls, c, l;
@@ -15,14 +16,35 @@ exports.createAllIn = function(el){
 };
 
 function createButtons(el) {
-  if(el.getAttribute('data-o-follow-entity')) {
+  if(el.hasAttribute('data-o-follow-entity')) {
     console.log('creating for entity');
     createForEntity(el, JSON.parse(el.getAttribute('data-o-follow-entity')));
+  } else if(el.hasAttribute('data-o-follow-article-id'))  {
+    createForArticle(el, el.getAttribute('data-o-follow-article-id') );
+  } else if (el.hasAttribute('data-o-follow-user')) {
+    if(user.following && user.following.length) {
+      createForUser(el);
+    } else {
+      document.body.addEventListener('oFollow.userPreferencesLoaded', function() {
+        createForUser(el);
+      }, false);
+    }
   }
 }
 
-exports.createForArticle = function(el, articleId) {
+function createForUser(el) {
+  user.following.forEach(function(entity) {
+    new FollowButton(el, entity);
+  });
+}
 
+function createForArticle(el, articleId) {
+  var metadata = require('./src/js/lib/metadata');
+  metadata.get(articleId, function(entities) {
+    entities.authors.forEach(function(entity) {
+      new FollowButton(el, entity);
+    });
+  });
 }
 
 function createForEntity(el, entity) {

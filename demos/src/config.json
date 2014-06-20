@@ -7,6 +7,16 @@
 				"name": "author",
 				"template": "demos/author.mustache",
 				"js": "demos/src/demos.js"
+			},
+			{
+				"name": "article",
+				"template": "demos/article.mustache",
+				"js": "demos/src/demos.js"
+			},
+			{
+				"name": "user",
+				"template": "demos/user.mustache",
+				"js": "demos/src/demos.js"
 			}
 		]
 }
