@@ -4,9 +4,6 @@ var follow = require('../src/js/lib/follow'),
 
 describe('Follow.js', function() {
 
-	afterEach(function() {
-		follow.clearQueue();
-	});
 
 	it('a user can follow an author', function() {
 		var getSpy = spyOn(jsonp, 'get');
@@ -14,11 +11,12 @@ describe('Follow.js', function() {
 			name: 'Arjun',
 			id: 'arjunId'
 		}
+		follow.init();
 		follow.start(entity, 'userId');
 		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' + 
 			'userId&type=authors&name=Arjun&id=arjunId';
 
-		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oFollowPersonalisationRequest', jasmine.any(Function));
+		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oFollowPersonalisationRequest0', jasmine.any(Function));
 	});
 
 	it('a user can unfollow an author', function() {
@@ -27,6 +25,7 @@ describe('Follow.js', function() {
 			name: 'Arjun',
 			id: 'arjunId'
 		}
+		follow.init();
 		follow.stop(entity, 'userId');
 		var expectedUrl = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
 			'userId&type=authors&id=arjunId';

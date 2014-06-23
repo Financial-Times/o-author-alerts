@@ -9,6 +9,7 @@ describe('Construction', function() {
 	it('creates an object with defaults', function() {
 
 		var req = new RetryableRequest();
+		req.init();
 		expect(req.name).toEqual('oFollowRequest');
 		expect(req.retry).toBe(true);
 		expect(req.maxRetries).toBe(4);
@@ -24,6 +25,7 @@ describe('Construction', function() {
 			retry: false,
 			maxRetries: 1
 		});
+		req.init();
 		expect(req.name).toEqual('myRequest');
 		expect(req.retry).toBe(false);
 		expect(req.maxRetries).toBe(1);
@@ -31,12 +33,14 @@ describe('Construction', function() {
 
 	it('loads from localstorage if retry set to true', function() {
 		spyOn(jsonp, 'get');
-		localStorage.setItem('myRequestCache', '[{"url": "test1"}, {"url":"test2"}]');
+
+		localStorage.setItem('myFailedRequestCache', '[{"url": "test1"}, {"url":"test2"}]');
 		var req = new RetryableRequest({
-			name: 'myRequest',
+			name: 'myFailedRequest',
 			retry: true,
 			maxRetries: 1
 		});
+		req.init();
 		expect(req.queue.length).toBe(1);
 		expect(req.inProgress.url).toBe('test1');
 		expect(req.queue[0].url).toEqual('test2');
@@ -50,6 +54,7 @@ describe('Construction', function() {
 			retry: false,
 			maxRetries: 1
 		});
+		req.init();
 		expect(req.queue.length).toBe(0);
 
 		expect(localStorage.getItem('myRequestCache')).toBe(null);
