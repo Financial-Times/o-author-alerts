@@ -3,7 +3,7 @@ var followButtonView = require('../src/js/followButtonView.js');
 describe('Rendering a follow button', function() {
 
 
-	it('adds  name and the necessary data attributes', function() {
+	it('adds name and the necessary data attributes', function() {
 
 		var container = document.body;
 		var entity = {
