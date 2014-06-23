@@ -18,6 +18,7 @@ FollowButton.prototype.init = function() {
     this.setInitialState()
   } else {
     document.body.addEventListener('oFollow.userPreferencesLoaded', this.setInitialState.bind(this), false);
+
   }
 }
 
