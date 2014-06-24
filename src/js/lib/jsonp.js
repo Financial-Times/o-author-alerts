@@ -1,7 +1,9 @@
 
+var unique = 0;
+
 exports.get = function(url, callbackName, callback) {
-	if(!url) throw 'Url parameter is required';
-	callbackName = (callbackName || 'ftJsonpCallback');
+	
+	callbackName = (callbackName || 'ftJsonpCallback') + unique++;
 
 	var script = document.createElement('script');
   script.type = 'text/javascript';

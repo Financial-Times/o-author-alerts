@@ -2,8 +2,6 @@
 var oCookies = require('o-cookies');
 var oDom = require('o-dom');
 var jsonp = require('./lib/jsonp');
-var RetryableRequest = require('./lib/RetryableRequest');
-
 var event = require('./lib/event');
 
 function User() {
@@ -11,15 +9,7 @@ function User() {
 }
 
 User.prototype.init = function() {
-	var self = this;
 	this.id = getId();
-	this.request = new RetryableRequest({
-		name: 'oFollowUserPreferencesCallback',
-		retry: false,
-		requestCallback: function(data) {
-			self.setFollowing(data);
-		}
-	});
 	this.getFollowing();
 }
 
@@ -32,11 +22,11 @@ function getId() {
 			id = matches[1];
 		}
 	}
-	return '11101642';
-	// return id;
+
+	return id;
 };
 
-User.prototype.setFollowing = function(data) {
+User.prototype.setUserFollowing = function(data) {
 	if(data.status === 'success' && data.taxonomies) {
 		this.following = data.taxonomies;
 		event.dispatch('oFollow.userPreferencesLoaded', this, document.body);
@@ -44,8 +34,12 @@ User.prototype.setFollowing = function(data) {
 }
 
 User.prototype.getFollowing = function() {
+	console.log('this is...', this);
 	var self = this;
 	var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=' + this.id;
-	this.request.get(url);
+	jsonp.get(url, 'getUserFollowingCallback', function(data) {
+		self.setUserFollowing(data)
+	});
 }
+
 module.exports = new User();
