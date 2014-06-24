@@ -12,24 +12,15 @@ function User() {
 
 User.prototype.init = function() {
 	var self = this;
-	return new Promise(function(resolve, reject) {
-		self.id = getId();
-		self.request = new RetryableRequest({
-			name: 'oFollowUserPreferencesCallback',
-			retry: false,
-			success: function(data) {
-				self.setFollowing(data);
-				console.log('resolving with following data', data);
-				resolve(data);
-			},
-			error: function(error) {
-				reject(error)
-			}
-		});
-		self.request.init();
-		self.getFollowing();
+	this.id = getId();
+	this.request = new RetryableRequest({
+		name: 'oFollowUserPreferencesCallback',
+		retry: false,
+		requestCallback: function(data) {
+			self.setFollowing(data);
+		}
 	});
-
+	this.getFollowing();
 }
 
 function getId() {

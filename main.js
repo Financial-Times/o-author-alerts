@@ -1,21 +1,11 @@
 var FollowButton = require('./src/js/FollowButton');
 var user = require('./src/js/user');
-var follow = require('./src/js/lib/follow');
 
 //TODO: move this somewhere better!
-
-exports.init = function(el) {
-  Promise.all([follow.init(), user.init()]).then(function(arr) {
-    //if there were pending follow requests, use this as the users
-    if(arr[0] && arr[0].taxonomies) {
-      user.setFollowing(arr[0]);
-    }
-    createAllIn(el);
-  });
-}
+user.init();
 
 
-function createAllIn(el){
+exports.createAllIn = function(el){
 	var followButtons = [], fEls, c, l;
   el = el || document.body;
   if (el.querySelectorAll) {

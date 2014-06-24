@@ -7,49 +7,31 @@ var storage  = new BrowserStore(localStorage);
 
 function RetryableRequest(options) {
   options = options || {};
-  this.unique = 0;
   this.name = options.name || 'oFollowRequest';
   this.retry = (options.retry === false ? false : true);
   this.maxRetries = options.maxRetries || 4;
   this.inProgress = '';
   this.queue = [];
-  this.success = options.success || null;
-  this.error = options.error || null;
-}
+  this.requestCallback = options.requestCallback || null;
+  this.errorCallback = options.errorCallback || null;
 
-RetryableRequest.prototype.init = function(options) {
-  var self = this;
-  return new Promise(function(resolve, reject) {
-
-    if(self.retry) {
-      self.loadQueue();
-      var promises = [];
-      self.queue.forEach(function(item) {
-        promises.push(self.get());
-      });
-      Promise.all(promises).then(function(arr){
-        resolve(arr[arr.length - 1]);
-      });
-
-    } else {
-      self.clearQueue();
-      resolve(null);
-    }
-  });
+  if(this.retry) {
+    this.loadQueue();
+  } else {
+    this.clearQueue();
+  }
 }
 
 RetryableRequest.prototype.loadQueue = function() {
   var queue = storage.get(this.name + 'Cache');
   if(queue) {
     this.queue = JSON.parse(queue);
+    this.get();
   }
 }
 RetryableRequest.prototype.saveQueue = function() {
-  if(!this.retry) return;
   if(this.queue && this.queue.length) {
     storage.put(this.name + 'Cache', JSON.stringify(this.queue));
-  } else {
-    storage.delete(this.name + 'Cache');
   }
 }
 
@@ -67,46 +49,47 @@ RetryableRequest.prototype.get = function(url) {
     this.saveQueue();
   };
 
-  return new Promise(function(resolve, reject) {
-
-    if(!self.inProgress && self.queue.length >= 1) {
-      if(url) {
-        self.inProgress = queueItem;
-      } else {
-        self.inProgress = self.queue[0];
-      }
-      jsonp.get(self.queue[0].url, (self.name + self.unique++), function(data) {
-        if(typeof self.callback ==='function') {
-          self.callback(data);
-        }
-        resolve(data);
-      });
-      self.queue.shift();
-      self.saveQueue();
-
+  if(!this.inProgress && this.queue.length >= 1) {
+    if(url) {
+      this.inProgress = queueItem;
     } else {
-      resolve(null);
+      this.inProgress = this.queue[0];
     }
-  });
+    jsonp.get(this.queue[0].url, this.name, function(data) {
+      if(typeof self.callback ==='function') {
+        self.callback(data);
+      }
+    });
+    this.queue.shift();
+    this.saveQueue();
+  }
 }
 
 RetryableRequest.prototype.callback = function(data) {
   if (data && data.status === 'success') {
-    if(typeof this.success === 'function') {
-      this.success(data);
-      this.inProgress = '';
+    if(typeof this.requestCallback === 'function') {
+      this.requestCallback(data);
     }
+    this.inProgress = '';
+    this.get();
+    if (this.queue.length === 0) {
+      this.clearQueue();
+    }
+    
   } else {
-    if(typeof this.error === 'function') {
-      this.error(data);
+    if(typeof this.errorCallback === 'function') {
+      this.errorCallback(data);
     }
     this.inProgress.tried += 1;
     if(this.retry && isRetryable(data) && this.inProgress.tried < this.maxRetries) {
       this.queue.unshift(this.inProgress);
       this.saveQueue();
+    } else {
+      this.inProgress = '';
     }
   }
 }
+
 
 //TODO: move this into a constructor option
 function isRetryable(data) {
@@ -115,8 +98,8 @@ function isRetryable(data) {
   if(data.message && (data.message === 'user is not following this id' ||
     data.message === 'user has no following list')) {
     return false;
-}
-return true;
+  }
+  return true;
 }
 
 
