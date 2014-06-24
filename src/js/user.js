@@ -11,7 +11,7 @@ function User() {
 
 User.prototype.init = function() {
 	this.id = getId();
-	this.following = new Following(this.id);
+	thgiis.following = new Following(this.id);
 	this.following.get();
 }
 
@@ -25,7 +25,8 @@ function getId() {
 		}
 	}
 
-	// return id;
+	//TODO: get rid of my id!
+	
 	return id || '11101642';
 };
 
