@@ -9,73 +9,87 @@ var storage = new BrowserStore(localStorage);
 
 function Following(userId) {
 	this.userId = userId;
-	this.entities = JSON.parse(storage.get('oFollowUserCache-' + this.userId)) || [];
-	this.fromStorage = true;
+	this.entities = {};
+	this.serverFetched = {};
 }
 
 Following.prototype.set = function(data) {
-	if(data.status === 'success' && data.taxonomies) {
-		var client = this.entities;
-		var server = data.taxonomies;
-		this.entities = server;
-		if(this.fromStorage) {
-			this.sync(client, server);
+	if(data.status === 'success' && data.taxonomies.length) {
+		if(this.pendingDiff().length) {
+			//we still have pending requests, so pretend the cached ones are most up to date
+			//while we do a an update in the background
+			this.entities = _.cloneDeep(this.pending.client);
+			this.serverFetched =  _.indexBy(data.taxonomies, 'id');
+			this.savePending();
+		} else {
+			this.entities = _.indexBy(data.taxonomies, 'id');
+			this.serverFetched = _.cloneDeep(this.entities);
+			this.clearPending();
 		}
-		this.fromStorage = false;
-		this.save();
 	} else {
-		this.save();
-		this.fromStorage = true;
+			this.savePending();
 	}
 	event.dispatch('oFollow.userPreferencesLoaded', this.entities);
 }
 
 Following.prototype.get = function() {
 	var self = this;
-	var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=' + this.userId;
-	jsonp.get(url, 'oFollowGetCallback', function(data) {
-		self.set(data);
-	});
+	this.pending = JSON.parse(storage.get('oFollowUserCache-' + this.userId));
+	if(this.pendingDiff().length) {
+		this.sync();
+	} else {
+		var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=' + this.userId;
+		jsonp.get(url, 'oFollowGetCallback', function(data) {
+			self.set(data);
+		});
+	}
 }
 
-
-//TODO: refactor!
-function isInList(list, toCheck) {
-	return (_.filter(list, function(item) { return item.id === toCheck.id }).length > 0);
+Following.prototype.pendingDiff = function() {
+	if(this.pending) {
+		return _.xor(_.keys(this.pending.client), _.keys(this.pending.server));
+	}
+	return [];
 }
 
-Following.prototype.sync = function(client, server) {
+Following.prototype.sync = function() {
 	var self = this;
-	var clientOnly = _.filter(client, function(item) {
-		return !isInList(server, item);
-	});
-	var serverOnly = _.filter(server, function(item) {
-		return !isInList(client, item);
-	});
+	var id;
+	var difference = this.pendingDiff();
+	if(difference.length === 0) {
+		this.clearPending();
+	} else {
+		difference.forEach(function(id) {
+			if(self.pending.client.hasOwnProperty(id)) {
+				self.start(self.pending.client[id]);
+			} else if (self.pending.server.hasOwnProperty(id)) {
+				self.stop(self.pending.server[id]);
+			}
+		})
+	};
 
-	clientOnly.forEach(function(entity) {
-		self.start(entity);
-	});
-
-	serverOnly.forEach(function(entity) {
-		self.stop(entity);
-	})
 };
 
 Following.prototype.addEntity = function(entity) {
-	this.entities.push(entity);
+	this.entities[entity.id] = entity;
 }
 Following.prototype.removeEntity = function(entity) {
-	_.remove(this.entities, {'id':entity.id});
+	delete this.entities[entity.id];
 }
 
-Following.prototype.save = function() {
-	if(this.entities && this.entities.length) {
-		storage.put('oFollowUserCache-'+this.userId, JSON.stringify(this.entities));
+Following.prototype.savePending = function() {
+	if(this.entities && Object.keys(this.entities).length) {
+		var obj = {
+			tried: 0,
+			client: this.entities,
+			server: this.serverFetched
+		}
+		storage.put('oFollowUserCache-'+this.userId, JSON.stringify(obj));
 	}
 }
-Following.prototype.clear = function() {
+Following.prototype.clearPending = function() {
 	storage.delete('oFollowUserCache-'+this.userId);
+	this.pending = null;
 }
 
 Following.prototype.start = function(entity) {

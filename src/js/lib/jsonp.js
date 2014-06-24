@@ -3,7 +3,7 @@ var unique = 0;
 
 exports.get = function(url, callbackName, callback) {
 	callbackName = (callbackName || 'ftJsonpCallback') + unique++;
-
+	console.log('getting url ', url, callbackName)
 	var script = document.createElement('script');
   script.type = 'text/javascript';
 	if(url.indexOf('?') > 0) {

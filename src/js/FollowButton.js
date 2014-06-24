@@ -22,12 +22,15 @@ FollowButton.prototype.init = function() {
 
 function isBeingFollowed(entity, followingList) {
   var matched = false;
-  followingList.forEach(function(following) {
-    if(following.id === entity.id) {
-      matched = true;
-      return;
+  var id;
+  for(id in followingList) {
+    if(followingList.hasOwnProperty(id)) {
+      if(id === entity.id) {
+        matched = true;
+        break;
+      }
     }
-  });
+  }
   return matched;
 }
 
