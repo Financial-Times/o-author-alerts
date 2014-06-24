@@ -11,7 +11,7 @@ function User() {
 
 User.prototype.init = function() {
 	this.id = getId();
-	thgiis.following = new Following(this.id);
+	this.following = new Following(this.id);
 	this.following.get();
 }
 
