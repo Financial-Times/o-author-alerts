@@ -10,6 +10,6 @@ describe('Metadata Cache Retriever', function() {
 		var getSpy = spyOn(jsonp, 'get');
 		metadata.get('testId', callback);
 		var expectedUrl = 'http://metadata-cache.webservices.ft.com/v1/getAuthors/testId';
-		expect(getSpy).toHaveBeenCalledWith(expectedUrl, 'oFollowMetadataCallback', callback);
+		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oFollowMetadataCallback', callback);
 	});
 });

@@ -1,12 +1,6 @@
 'use strict';
 
-var RetryableRequest = require('./RetryableRequest');
-
-var req = new RetryableRequest({
-	name: 'oFollowPersonalisationCallback',
-	retry: true,
-	maxRetries: 3
-})
+var jsonp = require('./jsonp');
 
 exports.start = function(entity, userId) {
 	if(!(userId && entity.id && entity.name)) return;
@@ -14,7 +8,7 @@ exports.start = function(entity, userId) {
 			userId + '&type=authors&name=' +
 			entity.name + '&id=' +
 			entity.id;
-		req.get(url);
+		jsonp.get(url, 'oFollowPersonalisationCallback');
 }
 
 exports.stop = function(entity, userId) {
@@ -22,5 +16,5 @@ exports.stop = function(entity, userId) {
 	var url = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
 			userId + '&type=authors&id='+
 			entity.id;
-		req.get(url);
+		jsonp.get(url, 'oFollowPersonalisationCallback');
 }

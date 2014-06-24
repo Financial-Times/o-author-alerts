@@ -2,7 +2,6 @@
 var unique = 0;
 
 exports.get = function(url, callbackName, callback) {
-	
 	callbackName = (callbackName || 'ftJsonpCallback') + unique++;
 
 	var script = document.createElement('script');
