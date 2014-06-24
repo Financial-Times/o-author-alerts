@@ -13,7 +13,7 @@ FollowButton.prototype.init = function() {
   var wrapper = followButtonView.render(this.rootEl, this.entity);
   this.btn = wrapper.querySelector('[data-o-follow-id]');
   this.btn.addEventListener('click', this.toggleFollowState.bind(this), false);
-  if(user.following.entities && user.following.entitieslength) {
+  if(user.following.entities && Object.keys(user.following.entities).length) {
     this.setInitialState()
   } else {
     document.body.addEventListener('oFollow.userPreferencesLoaded', this.setInitialState.bind(this), false);

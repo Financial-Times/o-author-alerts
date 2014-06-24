@@ -41,9 +41,12 @@ function createButtons(el) {
 }
 
 function createForUser(el) {
-  user.following.forEach(function(entity) {
-    new FollowButton(el, entity);
-  });
+  var entities = user.following.entities;
+  for(var id in entities) {
+    if(entities.hasOwnProperty(id)) {
+      new FollowButton(el, entities[id]);
+    }
+  }
 }
 
 function createForArticle(el, articleId) {

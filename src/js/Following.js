@@ -56,9 +56,10 @@ Following.prototype.sync = function() {
 	var self = this;
 	var id;
 	var difference = this.pendingDiff();
-	if(difference.length === 0) {
+	if(difference.length === 0 || self.pending.tried > 2) {
 		this.clearPending();
 	} else {
+		self.pending.tried = self.pending.tried + 1;
 		difference.forEach(function(id) {
 			if(self.pending.client.hasOwnProperty(id)) {
 				self.start(self.pending.client[id]);
