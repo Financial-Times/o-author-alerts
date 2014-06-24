@@ -2,5 +2,5 @@
 var oFollow = require('../../main.js');
 
 document.addEventListener("DOMContentLoaded", function() {
-    oFollow.createAllIn(document.body);
+    oFollow.init(document.body);
 });

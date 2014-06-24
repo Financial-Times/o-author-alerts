@@ -2,10 +2,15 @@ var FollowButton = require('./src/js/FollowButton');
 var user = require('./src/js/user');
 
 //TODO: move this somewhere better!
-user.init();
 
 
-exports.createAllIn = function(el){
+exports.init = function(el) {
+  user.init();
+  createAllIn(el);
+}
+
+
+function createAllIn(el){
 	var followButtons = [], fEls, c, l;
   el = el || document.body;
   if (el.querySelectorAll) {
