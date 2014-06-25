@@ -28,7 +28,7 @@ describe('Rendering a follow button', function() {
 		}
 		var returned = followButtonView.render(container,entity);
 		expect(returned.className).toBe('o-follow__entity');
-	})
+	});
 
 
 })

@@ -19,7 +19,7 @@ describe('Getting the initial model', function() {
 		following.get();
 		var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=userId';
 		expect(getSpy).toHaveBeenCalledWith(url, 'oFollowGetCallback', jasmine.any(Function));
-	})
+	});
 
 	it('set() updates the model based on the data recieved', function() {
 

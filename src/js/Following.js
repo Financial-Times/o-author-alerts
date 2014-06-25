@@ -1,96 +1,112 @@
 'use strict';
 
 var jsonp = require('./lib/jsonp');
-var _ = require('lodash');
 var BrowserStore = require('./lib/BrowserStore');
 var event = require('./lib/event');
 var storage = new BrowserStore(localStorage);
 
-
+var MAX_ATTEMPTS = 3;
 function Following(userId) {
 	this.userId = userId;
-	this.entities = {};
-	this.serverFetched = {};
+	this.entities = [];
+	this.pending = JSON.parse(storage.get('oFollowUserCache-'+this.userId)) || {};
+	this.online = true;
 }
 
-Following.prototype.set = function(data) {
-	if(data.status === 'success' && data.taxonomies.length) {
-		if(this.pendingDiff().length) {
-			//we still have pending requests, so pretend the cached ones are most up to date
-			//while we do a an update in the background
-			this.entities = _.cloneDeep(this.pending.client);
-			this.serverFetched =  _.indexBy(data.taxonomies, 'id');
-			this.savePending();
+Following.prototype.set = function(data, entity, action) {
+	if(data.status === 'success' && data.taxonomies) {
+		this.online = true;
+		this.entities = data.taxonomies;
+		if(entity) {
+			this.removeFromPending(entity);
 		} else {
-			this.entities = _.indexBy(data.taxonomies, 'id');
-			this.serverFetched = _.cloneDeep(this.entities);
-			this.clearPending();
+			this.sync();
 		}
+		event.dispatch('oFollow.userPreferencesLoaded', this.entities);
+		// }
 	} else {
-			this.savePending();
+		this.online = false;
+		if(entity) {
+			this.addToPending(entity, action);
+		}
 	}
-	event.dispatch('oFollow.userPreferencesLoaded', this.entities);
 }
 
 Following.prototype.get = function() {
 	var self = this;
-	this.pending = JSON.parse(storage.get('oFollowUserCache-' + this.userId));
-	if(this.pendingDiff().length) {
-		this.sync();
-	} else {
-		var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=' + this.userId;
-		jsonp.get(url, 'oFollowGetCallback', function(data) {
-			self.set(data);
-		});
-	}
-}
-
-Following.prototype.pendingDiff = function() {
-	if(this.pending) {
-		return _.xor(_.keys(this.pending.client), _.keys(this.pending.server));
-	}
-	return [];
+	var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=' + this.userId;
+	jsonp.get(url, 'oFollowGetCallback', function(data) {
+		self.set(data);
+	});
 }
 
 Following.prototype.sync = function() {
 	var self = this;
-	var id;
-	var difference = this.pendingDiff();
-	if(difference.length === 0 || self.pending.tried > 2) {
-		this.clearPending();
-	} else {
-		self.pending.tried = self.pending.tried + 1;
-		difference.forEach(function(id) {
-			if(self.pending.client.hasOwnProperty(id)) {
-				self.start(self.pending.client[id]);
-			} else if (self.pending.server.hasOwnProperty(id)) {
-				self.stop(self.pending.server[id]);
-			}
-		})
-	};
+	var newEntities = [];
 
+	for(var id in this.pending) {
+		if(this.pending.hasOwnProperty(id)) {
+			this.pending[id].tried += 1;
+			if(this.pending[id].tried > MAX_ATTEMPTS) {
+				this.removeFromPending(this.pending[id].entity);
+				break;
+			}
+			if(this.pending[id].action === 'start') {
+				newEntities.push(this.pending[id].entity);
+				this.start(this.pending[id].entity);
+			} else {
+				this.stop(this.pending[id].entity);
+			}
+		}
+
+
+	this.entities.forEach(function(followingEntity) {
+		if(self.pending[followingEntity.id]) {
+			if(self.pending[followingEntity.id].action !== 'stop') {
+				newEntities.push(followingEntity);
+			}
+		} else {
+			newEntities.push(followingEntity);
+		}
+	});
+
+		this.entities = newEntities;
+	}
 };
 
-Following.prototype.addEntity = function(entity) {
-	this.entities[entity.id] = entity;
+Following.prototype.addToPending = function(entity, action) {
+	if(this.pending[entity.id] ) {
+		if(this.pending[entity.id].action !== action) {
+			this.removeFromPending(entity);
+		}
+	} else {
+		this.pending[entity.id] = {
+			tried: 1,
+			action: action,
+			entity: entity
+		}
+	}
+
+	this.savePending();
 }
-Following.prototype.removeEntity = function(entity) {
-	delete this.entities[entity.id];
+Following.prototype.removeFromPending = function(entity) {
+	if(this.pending[entity.id]) {
+		delete this.pending[entity.id];
+	}
+	this.savePending();
 }
 
 Following.prototype.savePending = function() {
-	if(this.entities && Object.keys(this.entities).length) {
-		var obj = {
-			tried: 0,
-			client: this.entities,
-			server: this.serverFetched
-		}
-		storage.put('oFollowUserCache-'+this.userId, JSON.stringify(obj));
+	if(this.pending && Object.keys(this.pending).length) {
+		storage.put('oFollowUserCache-'+this.userId, JSON.stringify(this.pending));
+	} else {
+		this.clearPending();
 	}
 }
+
+
 Following.prototype.clearPending = function() {
 	storage.delete('oFollowUserCache-'+this.userId);
-	this.pending = null;
 }
 
 Following.prototype.start = function(entity) {
@@ -100,10 +116,15 @@ Following.prototype.start = function(entity) {
 			this.userId + '&type=authors&name=' +
 			entity.name + '&id=' +
 			entity.id;
-	this.addEntity(entity);
-	jsonp.get(url, 'oFollowStartCallback', function(data) {
-		self.set(data);
-	});
+	//TODO - move this to a method?
+	if(this.online) {
+		jsonp.get(url, 'oFollowStartCallback', function(data) {
+			self.set(data, entity, 'start');
+		});
+	} else {
+		this.addToPending(entity, 'start');
+	}
+
 }
 
 Following.prototype.stop = function(entity) {
@@ -112,10 +133,14 @@ Following.prototype.stop = function(entity) {
 	var url = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
 			this.userId + '&type=authors&id='+
 			entity.id;
-	this.removeEntity(entity);
-	jsonp.get(url, 'oFollowStopCallback', function(data) {
-		self.set(data);
-	});
+
+	if(this.online) {
+		jsonp.get(url, 'oFollowStopCallback', function(data) {
+			self.set(data, entity, 'stop');
+		});
+	} else {
+		this.addToPending(entity, 'stop');
+	}
 };
 
 
