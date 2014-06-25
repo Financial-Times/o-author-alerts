@@ -49,7 +49,7 @@ describe('Initialising a button', function() {
 		var button = new FollowButton(testEl, entity);
 		expect(button.btn.innerText).toBe('Start Following');
 		user.following.entities  = [entity];
-		event.dispatch('oFollow.userPreferencesLoaded');
+		event.dispatch('oFollow.ready');
 		expect(button.btn.innerText).toBe('Stop Following');
 
 	});

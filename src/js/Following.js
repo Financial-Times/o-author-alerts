@@ -21,7 +21,7 @@ Following.prototype.set = function(data, entity, action) {
 			this.removeFromPending(entity);
 		} else {
 			this.sync();
-			event.dispatch('oFollow.userPreferencesLoaded', this.entities);
+			event.dispatch('oFollow.ready', this.entities);
 		}
 		// }
 	} else {

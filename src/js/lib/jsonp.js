@@ -4,7 +4,6 @@ var unique = 0;
 
 exports.get = function(url, callbackName, callback) {
 	callbackName = (callbackName || 'ftJsonpCallback') + unique++;
-	console.log('getting url ', url, callbackName)
 	var script = document.createElement('script');
   script.type = 'text/javascript';
 	if(url.indexOf('?') > 0) {
@@ -20,7 +19,6 @@ exports.get = function(url, callbackName, callback) {
 			if(typeof callback === 'function') {
 				callback(data);
 			}
-			
       document.getElementsByTagName('head')[0].removeChild(script);
 			script = null;
 			delete window[callbackName];

@@ -16,7 +16,7 @@ FollowButton.prototype.init = function() {
   if(user.following.entities && user.following.entities.length) {
     this.setInitialState()
   } else {
-    document.body.addEventListener('oFollow.userPreferencesLoaded', this.setInitialState.bind(this), false);
+    document.body.addEventListener('oFollow.ready', this.setInitialState.bind(this), false);
   }
 }
 
@@ -32,6 +32,7 @@ function isBeingFollowed(entity, followingList) {
 }
 
 FollowButton.prototype.setInitialState = function() {
+  this.rootEl.setAttribute('data-o-follow--js', '')
   if(isBeingFollowed(this.entity, user.following.entities)) {
     this.startFollowing();
   }

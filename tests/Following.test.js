@@ -138,7 +138,7 @@ describe('Handles response from the server', function() {
 		expect(following.entities[0]).toBe('a');
 		expect(following.online).toBe(true);
 		expect(syncSpy).toHaveBeenCalled();
-		expect(eventSpy).toHaveBeenCalledWith('oFollow.userPreferencesLoaded', following.entities);
+		expect(eventSpy).toHaveBeenCalledWith('oFollow.ready', following.entities);
 	});
 
 	it('handles errors from the initial call', function() {

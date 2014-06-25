@@ -1,0 +1,8 @@
+@mixin oFollowBase($classname: o-follow) {
+	.#{$classname} {
+		display: none;
+	}
+	[data-o-follow--js].#{$classname} {
+		display: block;
+	}
+}

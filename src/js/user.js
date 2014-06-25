@@ -7,7 +7,6 @@ var event = require('./lib/event');
 var Following = require('./Following')
 
 function User() {
-	// this.init();
 }
 
 User.prototype.init = function() {

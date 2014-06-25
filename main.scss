@@ -1,1 +1,6 @@
-@import 'o-ft-buttons/main';
+@import "src/scss/variables";
+@import "src/scss/follow";
+
+@if (not $o-follow-is-silent) {
+	@include oFollowBase();
+}

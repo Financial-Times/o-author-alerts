@@ -6,17 +6,20 @@
 			{
 				"name": "author",
 				"template": "demos/author.mustache",
-				"js": "demos/src/demos.js"
+				"js": "demos/src/demos.js",
+				"sass": "demos/src/demos.scss"
 			},
 			{
 				"name": "article",
 				"template": "demos/article.mustache",
-				"js": "demos/src/demos.js"
+				"js": "demos/src/demos.js",
+				"sass": "demos/src/demos.scss"
 			},
 			{
 				"name": "user",
 				"template": "demos/user.mustache",
-				"js": "demos/src/demos.js"
+				"js": "demos/src/demos.js",
+				"sass": "demos/src/demos.scss"
 			}
 		]
 }
