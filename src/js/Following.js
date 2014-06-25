@@ -21,16 +21,27 @@ Following.prototype.set = function(data, entity, action) {
 			this.removeFromPending(entity);
 		} else {
 			this.sync();
+			event.dispatch('oFollow.userPreferencesLoaded', this.entities);
 		}
-		event.dispatch('oFollow.userPreferencesLoaded', this.entities);
 		// }
 	} else {
-		this.online = false;
-		if(entity) {
+		if(entity && isRetryable(data)) {
+			this.online = false;
 			this.addToPending(entity, action);
 		}
 	}
 }
+
+function isRetryable(data) {
+  //these alerts occur if the user trys to stop alerts for something it has already stopped
+  //i.e. in a different tab. In this case, no need to retry 
+  if(data.message && (data.message === 'user is not following this id' ||
+    data.message === 'user has no following list')) {
+    return false;
+  }
+  return true;
+}
+
 
 Following.prototype.get = function() {
 	var self = this;
@@ -44,22 +55,27 @@ Following.prototype.sync = function() {
 	var self = this;
 	var newEntities = [];
 
+	//GO through pending
 	for(var id in this.pending) {
 		if(this.pending.hasOwnProperty(id)) {
 			this.pending[id].tried += 1;
+			//Get rid of any that have maxed out attemptes
 			if(this.pending[id].tried > MAX_ATTEMPTS) {
 				this.removeFromPending(this.pending[id].entity);
-				break;
+				continue;
 			}
+			//start/stop
 			if(this.pending[id].action === 'start') {
+				//if its a new one, add it to the list we have gotten from the server
 				newEntities.push(this.pending[id].entity);
 				this.start(this.pending[id].entity);
 			} else {
 				this.stop(this.pending[id].entity);
 			}
 		}
+	}
 
-
+	//go through the stuff from the server, and only keep it if we haven't told it to stop
 	this.entities.forEach(function(followingEntity) {
 		if(self.pending[followingEntity.id]) {
 			if(self.pending[followingEntity.id].action !== 'stop') {
@@ -70,8 +86,7 @@ Following.prototype.sync = function() {
 		}
 	});
 
-		this.entities = newEntities;
-	}
+	this.entities = newEntities;
 };
 
 Following.prototype.addToPending = function(entity, action) {
