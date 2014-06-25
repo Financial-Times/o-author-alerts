@@ -1,6 +1,5 @@
-/*global require,describe,beforeEach,afterEach,it,expect*/
-
-
+/*global require,describe,it,expect, jasmine*/
+'use strict';
 
 describe('jsonp.get()', function() {
 
@@ -43,4 +42,4 @@ describe('jsonp.get()', function() {
 		window.testCallback4('data');
 		expect(myCallback).toHaveBeenCalledWith('data');
 	});
-})
+});

@@ -1,6 +1,8 @@
-'use strict';
-var oFollow = require('../../main.js');
+(function() {
+	'use strict';
+	var oFollow = require('../../main.js');
 
-document.addEventListener("DOMContentLoaded", function() {
-    oFollow.init(document.body);
-});
+	document.addEventListener("DOMContentLoaded", function() {
+	    oFollow.init(document.body);
+	});
+}());

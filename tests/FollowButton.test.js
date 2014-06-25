@@ -1,8 +1,11 @@
+/*global require,describe,beforeEach,afterEach,it,expect,spyOn*/
+'use strict';
+
 var FollowButton = require('../src/js/FollowButton.js');
 var followButtonView = require('../src/js/followButtonView.js');
 var jsonp = require('../src/js/lib/jsonp.js');
 var user = require('../src/js/user.js');
-var event = require('../src/js/lib/event');
+var eventHelper = require('../src/js/lib/eventHelper');
 
 var testEl;
 describe('Initialising a button', function() {
@@ -10,7 +13,7 @@ describe('Initialising a button', function() {
 	beforeEach(function() {
 		spyOn(jsonp, 'get');
 		user.init();
-		user.id = 'userId'
+		user.id = 'userId';
 		testEl = document.createElement('div');
 		testEl.id = 'testEl';
 		document.body.appendChild(testEl);
@@ -37,19 +40,19 @@ describe('Initialising a button', function() {
 	});
 
 	it('sets the initial state if the users preferences are available', function() {
-		var entity = {id: 'author1', name: 'First Author'}
+		var entity = {id: 'author1', name: 'First Author'};
 		user.following.entities  = [entity];
 		var button = new FollowButton(testEl, entity);
 		expect(button.btn.innerText).toBe('Stop Following');
 	});
 
 	it('waits for an event users preferences are not available', function() {
-		var entity = {id: 'author1', name: 'First Author'}
+		var entity = {id: 'author1', name: 'First Author'};
 		user.following.entities  = [];
 		var button = new FollowButton(testEl, entity);
 		expect(button.btn.innerText).toBe('Start Following');
 		user.following.entities  = [entity];
-		event.dispatch('oFollow.ready');
+		eventHelper.dispatch('oFollow.ready');
 		expect(button.btn.innerText).toBe('Stop Following');
 
 	});
@@ -58,7 +61,7 @@ describe('Initialising a button', function() {
 
 describe('Clicking the button', function() {
 	it('toggles between states', function() {
-		var entity = {id: 'author1', name: 'First Author'}
+		var entity = {id: 'author1', name: 'First Author'};
 		user.following.entities  = [];
 		var stopSpy = spyOn(user.following, 'stop');
 		var startSpy = spyOn(user.following, 'start');
@@ -72,5 +75,5 @@ describe('Clicking the button', function() {
 		expect(stopSpy).toHaveBeenCalledWith(entity, 'userId');
 		expect(button.btn.innerText).toBe('Start Following');
 		expect(button.btn.getAttribute('data-o-follow-state')).toBe('false');
-	})
-})
+	});
+});

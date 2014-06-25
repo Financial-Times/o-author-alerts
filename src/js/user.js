@@ -1,19 +1,17 @@
 'use strict';
 
 var oCookies = require('o-cookies');
-var oDom = require('o-dom');
-var jsonp = require('./lib/jsonp');
-var event = require('./lib/event');
-var Following = require('./Following')
+var Following = require('./Following');
 
 function User() {
+
 }
 
 User.prototype.init = function() {
 	this.id = getId();
 	this.following = new Following(this.id);
 	this.following.get();
-}
+};
 
 function getId() {
 	var userCookie = oCookies.get('FT_U');
@@ -28,7 +26,7 @@ function getId() {
 	//TODO: get rid of my id!
 	
 	return id || '11101642';
-};
+}
 
 
 module.exports = new User();

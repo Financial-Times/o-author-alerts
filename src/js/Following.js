@@ -2,10 +2,11 @@
 
 var jsonp = require('./lib/jsonp');
 var BrowserStore = require('./lib/BrowserStore');
-var event = require('./lib/event');
+var eventHelper = require('./lib/eventHelper');
 var storage = new BrowserStore(localStorage);
 
 var MAX_ATTEMPTS = 3;
+
 function Following(userId) {
 	this.userId = userId;
 	this.entities = [];
@@ -21,7 +22,7 @@ Following.prototype.set = function(data, entity, action) {
 			this.removeFromPending(entity);
 		} else {
 			this.sync();
-			event.dispatch('oFollow.ready', this.entities);
+			eventHelper.dispatch('oFollow.ready', this.entities);
 		}
 		// }
 	} else {
@@ -30,7 +31,7 @@ Following.prototype.set = function(data, entity, action) {
 			this.addToPending(entity, action);
 		}
 	}
-}
+};
 
 function isRetryable(data) {
   //these alerts occur if the user trys to stop alerts for something it has already stopped
@@ -49,7 +50,7 @@ Following.prototype.get = function() {
 	jsonp.get(url, 'oFollowGetCallback', function(data) {
 		self.set(data);
 	});
-}
+};
 
 Following.prototype.sync = function() {
 	var self = this;
@@ -99,17 +100,18 @@ Following.prototype.addToPending = function(entity, action) {
 			tried: 1,
 			action: action,
 			entity: entity
-		}
+		};
 	}
 
 	this.savePending();
-}
+};
+
 Following.prototype.removeFromPending = function(entity) {
 	if(this.pending[entity.id]) {
 		delete this.pending[entity.id];
 	}
 	this.savePending();
-}
+};
 
 Following.prototype.savePending = function() {
 	if(this.pending && Object.keys(this.pending).length) {
@@ -117,15 +119,17 @@ Following.prototype.savePending = function() {
 	} else {
 		this.clearPending();
 	}
-}
+};
 
 
 Following.prototype.clearPending = function() {
 	storage.delete('oFollowUserCache-'+this.userId);
-}
+};
 
 Following.prototype.start = function(entity) {
-	if(!(this.userId && entity.id && entity.name)) return;
+	if(!(this.userId && entity.id && entity.name)){
+		return;
+	}
 	var self = this;
 	var url = 'http://personalisation.ft.com/follow/update?userId=' + 
 			this.userId + '&type=authors&name=' +
@@ -139,11 +143,12 @@ Following.prototype.start = function(entity) {
 	} else {
 		this.addToPending(entity, 'start');
 	}
-
-}
+};
 
 Following.prototype.stop = function(entity) {
-	if(!(this.userId && entity.id && entity.name)) return;
+	if(!(this.userId && entity.id && entity.name)) {
+		return;
+	} 
 	var self = this;
 	var url = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
 			this.userId + '&type=authors&id='+

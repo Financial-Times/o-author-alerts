@@ -27,4 +27,4 @@ exports.render = function(rootEl, entity) {
 	wrapper.appendChild(createButton(entity));
 	rootEl.appendChild(wrapper);
 	return wrapper;
-}
+};

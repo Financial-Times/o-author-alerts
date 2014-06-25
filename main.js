@@ -1,13 +1,12 @@
+'use strict';
+
 var FollowButton = require('./src/js/FollowButton');
 var user = require('./src/js/user');
-
-//TODO: move this somewhere better!
-
 
 exports.init = function(el) {
   user.init();
   createAllIn(el);
-}
+};
 
 
 function createAllIn(el){
@@ -22,7 +21,7 @@ function createAllIn(el){
       }
   }
   return followButtons;
-};
+}
 
 function createButtons(el) {
   if(el.hasAttribute('data-o-follow-entity')) {

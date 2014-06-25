@@ -1,3 +1,5 @@
+/*global require, module*/
+
 'use strict';
 
 var user = require('./user');
@@ -14,11 +16,11 @@ FollowButton.prototype.init = function() {
   this.btn = wrapper.querySelector('[data-o-follow-id]');
   this.btn.addEventListener('click', this.toggleFollowState.bind(this), false);
   if(user.following.entities && user.following.entities.length) {
-    this.setInitialState()
+    this.setInitialState();
   } else {
     document.body.addEventListener('oFollow.ready', this.setInitialState.bind(this), false);
   }
-}
+};
 
 function isBeingFollowed(entity, followingList) {
   var matched = false;
@@ -32,32 +34,33 @@ function isBeingFollowed(entity, followingList) {
 }
 
 FollowButton.prototype.setInitialState = function() {
-  this.rootEl.setAttribute('data-o-follow--js', '')
+  this.rootEl.setAttribute('data-o-follow--js', '');
   if(isBeingFollowed(this.entity, user.following.entities)) {
     this.startFollowing();
   }
-}
+};
 
-FollowButton.prototype.toggleFollowState = function(ev) {
+FollowButton.prototype.toggleFollowState = function() {
   var isCurrentlyFollowing = (this.btn.getAttribute('data-o-follow-state') === 'true');
   if(isCurrentlyFollowing) {
-    user.following.stop(this.entity, user.id )
+    user.following.stop(this.entity, user.id );
     this.stopFollowing();
   } else {
     user.following.start(this.entity, user.id);
     this.startFollowing();
   }
-}   
+};
 
 FollowButton.prototype.startFollowing = function() {
   this.btn.innerText = "Stop Following";
   this.btn.setAttribute('data-o-follow-state', true);
-}
+};
 
 FollowButton.prototype.stopFollowing = function() {
   this.btn.innerText = "Start Following";
   this.btn.setAttribute('data-o-follow-state', false);
-}
-
+};
 
 module.exports = FollowButton;
+
+

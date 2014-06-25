@@ -1,5 +1,8 @@
+/*global require,describe,beforeEach,afterEach, jasmine,it,expect,spyOn*/
+'use strict';
+
 var Following = require('../src/js/Following'),
-		event =  require('../src/js/lib/event.js'),
+		eventHelper =  require('../src/js/lib/eventHelper.js'),
 		jsonp =  require('../src/js/lib/jsonp.js');
 
 var following;
@@ -10,7 +13,7 @@ beforeEach(function() {
 
 afterEach(function() {
 	localStorage.removeItem('oFollowUserCache-userId');
-})
+});
 
 describe('Getting the initial model', function() {
 
@@ -41,12 +44,11 @@ describe('Getting the initial model', function() {
 describe('Updating the model while online', function() {
 
 	it('will send a request to follow an author', function() {
-		var callback = function() {}
 		var getSpy = spyOn(jsonp, 'get');
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'
-		}
+		};
 		following.online = true;
 		following.start(entity);
 		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' + 
@@ -57,12 +59,11 @@ describe('Updating the model while online', function() {
 	});
 
 	it('will send a request to unfollow an author', function() {
-		var callback = function() {}
 		var getSpy = spyOn(jsonp, 'get');
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'
-		}
+		};
 		following.online = true;
 		following.stop(entity);
 		var expectedUrl = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
@@ -75,54 +76,53 @@ describe('Updating the model while online', function() {
 describe('Updating the model while offline', function() {
 
 	it('will save a request to follow an author', function() {
-		var callback = function() {}
 		var getSpy = spyOn(jsonp, 'get');
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'
-		}
+		};
 		following.online = false;
 		following.start(entity);
 		expect(getSpy).not.toHaveBeenCalled();
 		var pending = JSON.parse(localStorage.getItem('oFollowUserCache-userId'));
-		expect(pending['arjunId'].tried).toBe(1);
-		expect(pending['arjunId'].entity.name).toBe(entity.name);
-		expect(pending['arjunId'].action).toBe('start');
+		expect(pending.arjunId.tried).toBe(1);
+		expect(pending.arjunId.entity.name).toBe(entity.name);
+		expect(pending.arjunId.action).toBe('start');
 	});
 
 	it('will save a request to unfollow an author', function() {
-		var callback = function() {}
 		var getSpy = spyOn(jsonp, 'get');
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'
-		}
+		};
+
 		following.online = false;
 		following.stop(entity);
 
 		expect(getSpy).not.toHaveBeenCalled();
 		var pending = JSON.parse(localStorage.getItem('oFollowUserCache-userId'));
 
-		expect(pending['arjunId'].tried).toBe(1);
-		expect(pending['arjunId'].entity.name).toBe(entity.name);
-		expect(pending['arjunId'].action).toBe('stop')
+		expect(pending.arjunId.tried).toBe(1);
+		expect(pending.arjunId.entity.name).toBe(entity.name);
+		expect(pending.arjunId.action).toBe('stop');
 	});
 
 	it('cancels out requests that would be obsolete', function() {
-		var callback = function() {}
-		var getSpy = spyOn(jsonp, 'get');
+		spyOn(jsonp, 'get');
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'
-		}
+		};
+
 		following.online = false;
 		following.start(entity);
 		var pending = JSON.parse(localStorage.getItem('oFollowUserCache-userId'));
-		expect(pending['arjunId'].action).toBe('start');
+		expect(pending.arjunId.action).toBe('start');
 		following.stop(entity);
 		pending = JSON.parse(localStorage.getItem('oFollowUserCache-userId'));
 		expect(pending).not.toBeTruthy();
-	})
+	});
 });
 
 describe('Handles response from the server', function() {
@@ -131,7 +131,7 @@ describe('Handles response from the server', function() {
 		var mockData = {'status': 'success', taxonomies: ['a', 'b']};
 		following.online = false;
 		var syncSpy = spyOn(following, 'sync');
-		var eventSpy = spyOn(event, 'dispatch');
+		var eventSpy = spyOn(eventHelper, 'dispatch');
 		following.set(mockData);
 
 		expect(following.entities.length).toBe(2);
@@ -145,7 +145,7 @@ describe('Handles response from the server', function() {
 		var mockData = {'status': 'error'};
 		following.online = true;
 		var syncSpy = spyOn(following, 'sync');
-		var eventSpy = spyOn(event, 'dispatch');
+		var eventSpy = spyOn(eventHelper, 'dispatch');
 		following.set(mockData);
 
 		expect(following.entities.length).toBe(0);
@@ -161,7 +161,7 @@ it('successfully recieves data from update requests', function() {
 		following.online = false;
 		var syncSpy = spyOn(following, 'sync');
 		var removeSpy = spyOn(following, 'removeFromPending');
-		var eventSpy = spyOn(event, 'dispatch');
+		var eventSpy = spyOn(eventHelper, 'dispatch');
 
 		following.set(mockData, mockEntity, 'start');
 
@@ -178,7 +178,7 @@ it('successfully recieves data from update requests', function() {
 		var mockEntity = 'mockEntity';
 		following.online = true;
 		var syncSpy = spyOn(following, 'sync');
-		var eventSpy = spyOn(event, 'dispatch');
+		var eventSpy = spyOn(eventHelper, 'dispatch');
 		var addSpy = spyOn(following, 'addToPending');
 
 		following.set(mockData, mockEntity, 'start');
@@ -196,8 +196,6 @@ it('successfully recieves data from update requests', function() {
 		var mockData = {'status': 'error', 'message': 'user is not following this id'};
 		var mockEntity = 'mockEntity';
 		following.online = true;
-		var syncSpy = spyOn(following, 'sync');
-		var eventSpy = spyOn(event, 'dispatch');
 		var addSpy = spyOn(following, 'addToPending');
 
 		following.set(mockData, mockEntity, 'start');
@@ -211,8 +209,6 @@ it('successfully recieves data from update requests', function() {
 		var mockData = {'status': 'error', 'message': 'user has no following list'};
 		var mockEntity = 'mockEntity';
 		following.online = true;
-		var syncSpy = spyOn(following, 'sync');
-		var eventSpy = spyOn(event, 'dispatch');
 		var addSpy = spyOn(following, 'addToPending');
 
 		following.set(mockData, mockEntity, 'start');
@@ -222,7 +218,7 @@ it('successfully recieves data from update requests', function() {
 		expect(addSpy).not.toHaveBeenCalled();
 	});
 
-})
+});
 
 describe('Keeping the client and server in sync', function() {
 	it('Makes any pending requests', function() {
@@ -243,7 +239,8 @@ describe('Keeping the client and server in sync', function() {
 				},
 				"action": "stop"
 			}
-		}
+		};
+
 		localStorage.setItem('oFollowUserCache-userId', JSON.stringify(pending));
 		following = new Following('userId');
 		following.entities = [];
@@ -251,8 +248,8 @@ describe('Keeping the client and server in sync', function() {
 		var stopSpy = spyOn(following, 'stop');
 		following.sync();
 
-		expect(startSpy).toHaveBeenCalledWith(pending["startId"].entity);
-		expect(stopSpy).toHaveBeenCalledWith(pending["stopId"].entity);
+		expect(startSpy).toHaveBeenCalledWith(pending.startId.entity);
+		expect(stopSpy).toHaveBeenCalledWith(pending.stopId.entity);
 	});
 
 	it('Updates the list that came from the server with any pending requests', function() {
@@ -273,20 +270,21 @@ describe('Keeping the client and server in sync', function() {
 				},
 				"action": "stop"
 			}
-		}
+		};
+
 		localStorage.setItem('oFollowUserCache-userId', JSON.stringify(pending));
 		following = new Following('userId');
-		following.entities = [pending['stopId'].entity];
+		following.entities = [pending.stopId.entity];
 		spyOn(following, 'start');
 		spyOn(following, 'stop');
 
 		expect(following.entities.length).toBe(1);
-		expect(following.entities[0].id).toBe('stopId')
+		expect(following.entities[0].id).toBe('stopId');
 
 		following.sync();
 
 		expect(following.entities.length).toBe(1);
-		expect(following.entities[0].id).toBe('startId')
+		expect(following.entities[0].id).toBe('startId');
 	});
 
 	it('Gives up on requests after 3 attempts', function() {
@@ -307,17 +305,18 @@ describe('Keeping the client and server in sync', function() {
 				},
 				"action": "start"
 			}
-		}
+		};
+
 		localStorage.setItem('oFollowUserCache-userId', JSON.stringify(pending));
 		following = new Following('userId');
 		following.entities = [];
 		var startSpy = spyOn(following, 'start');
 		following.sync();
 
-		expect(startSpy).toHaveBeenCalledWith(pending["start2"].entity);
+		expect(startSpy).toHaveBeenCalledWith(pending.startId.entity);
 		expect(following.entities.length).toBe(1);
 		expect(following.entities[0].name).toBe('Keep trying me');
 
-	})
+	});
 
 });

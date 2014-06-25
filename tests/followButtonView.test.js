@@ -1,3 +1,6 @@
+/*global require,describe,it,expect*/
+'use strict';
+
 var followButtonView = require('../src/js/followButtonView.js');
 
 describe('Rendering a follow button', function() {
@@ -9,7 +12,8 @@ describe('Rendering a follow button', function() {
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'
-		}
+		};
+
 		followButtonView.render(container,entity);
 		var buttonWrapper = container.querySelector('.o-follow__entity');
 		expect(buttonWrapper).toBeTruthy();
@@ -25,10 +29,11 @@ describe('Rendering a follow button', function() {
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'
-		}
+		};
+		
 		var returned = followButtonView.render(container,entity);
 		expect(returned.className).toBe('o-follow__entity');
 	});
 
 
-})
+});
