@@ -1,3 +1,4 @@
+'use strict';
 
 function createWrapper() {
 	var wrapper = document.createElement('div');

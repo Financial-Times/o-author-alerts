@@ -1,3 +1,5 @@
+'use strict';
+
 var jsonp = require('./jsonp');
 
 exports.get = function(articleId, callback) {

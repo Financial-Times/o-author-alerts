@@ -3,7 +3,7 @@
 var user = require('./user');
 var followButtonView = require('./followButtonView');
 
-function FollowButton(rootEl, entity, options) {
+function FollowButton(rootEl, entity) {
   this.rootEl = rootEl;
   this.entity = entity;
   this.init();

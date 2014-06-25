@@ -1,3 +1,5 @@
+'use strict';
+
 exports.dispatch = function(name, data, rootEl) {
 	rootEl = rootEl || document.body;
   if (document.createEvent && rootEl.dispatchEvent) {

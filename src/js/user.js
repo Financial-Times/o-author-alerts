@@ -1,4 +1,5 @@
 'use strict';
+
 var oCookies = require('o-cookies');
 var oDom = require('o-dom');
 var jsonp = require('./lib/jsonp');
