@@ -12,7 +12,6 @@ function FollowList(rootEl) {
 
 FollowList.prototype.init = function() {
   user.init();
-  console.log('USER', user.following.entities);
   if(user.following.entities) {
     this.initialiseButtons();
   } else {
