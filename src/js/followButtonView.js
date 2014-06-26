@@ -1,7 +1,7 @@
 'use strict';
 
-function createWrapper() {
-	var wrapper = document.createElement('div');
+function createWrapper(tagName) {
+	var wrapper = document.createElement(tagName);
 	wrapper.className = 'o-follow__entity';
 	return wrapper;
 }
@@ -22,7 +22,8 @@ function createButton(entity) {
 }
 
 exports.render = function(rootEl, entity) {
-	var wrapper = createWrapper();
+	var tagName = rootEl.tagName === ('UL') ? 'li' : 'div';
+	var wrapper = createWrapper(tagName);
 	wrapper.appendChild(createNameSpan(entity.name));
 	wrapper.appendChild(createButton(entity));
 	rootEl.appendChild(wrapper);

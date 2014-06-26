@@ -8,10 +8,17 @@ function User() {
 }
 
 User.prototype.init = function() {
-	this.id = getId();
-	this.following = new Following(this.id);
-	this.following.get();
+	if(!this.id) {
+		this.id = getId();
+		this.following = new Following(this.id);
+		this.following.get();
+	}
 };
+
+User.prototype.destroy = function() {
+	this.following = null;
+	this.id = null;
+}
 
 function getId() {
 	var userCookie = oCookies.get('FT_U');

@@ -5,9 +5,12 @@ var FollowButton = require('../src/js/FollowButton.js');
 var followButtonView = require('../src/js/followButtonView.js');
 var jsonp = require('../src/js/lib/jsonp.js');
 var user = require('../src/js/user.js');
-var eventHelper = require('../src/js/lib/eventHelper');
 
 var testEl;
+
+
+
+
 describe('Initialising a button', function() {
 
 	beforeEach(function() {
@@ -17,63 +20,66 @@ describe('Initialising a button', function() {
 		testEl = document.createElement('div');
 		testEl.id = 'testEl';
 		document.body.appendChild(testEl);
+
 	});
 
 	afterEach(function() {
 		document.body.removeChild(testEl);
 	});
 
-	it('renders', function() {
+	it('sets up the entity', function() {
+		var entity = {id: 'testId', name: 'testName'};
+		followButtonView.render(testEl, entity);
 
-		var viewSpy = spyOn(followButtonView, 'render').andCallThrough();
 		user.following.entities = [];
-		new FollowButton(testEl, 'myEntity');
-		expect(viewSpy).toHaveBeenCalledWith(testEl, 'myEntity');
+		var button = new FollowButton(testEl.querySelector('[data-o-follow-id]'));
+		expect(button.entity.id).toBe(entity.id);
+		expect(button.entity.name).toBe(entity.name);
 	});
 
-	it('adds a click event', function() {
-		var viewSpy = spyOn(followButtonView, 'render').andCallThrough();
-		user.following.entities = [];
-		new FollowButton(testEl, 'myEntity');
-		expect(viewSpy).toHaveBeenCalledWith(testEl, 'myEntity');
-
-	});
-
-	it('sets the initial state if the users preferences are available', function() {
+	it('sets the initial state assuming that the user is initialised', function() {
 		var entity = {id: 'author1', name: 'First Author'};
+		followButtonView.render(testEl, entity);
 		user.following.entities  = [entity];
-		var button = new FollowButton(testEl, entity);
-		expect(button.btn.innerText).toBe('Stop Following');
-	});
-
-	it('waits for an event users preferences are not available', function() {
-		var entity = {id: 'author1', name: 'First Author'};
-		user.following.entities  = [];
-		var button = new FollowButton(testEl, entity);
-		expect(button.btn.innerText).toBe('Start Following');
-		user.following.entities  = [entity];
-		eventHelper.dispatch('oFollow.ready');
-		expect(button.btn.innerText).toBe('Stop Following');
-
+		var button = new FollowButton(testEl.querySelector('[data-o-follow-id]'));
+		expect(button.el.innerText).toBe('Stop Following');
 	});
 
 });
 
 describe('Clicking the button', function() {
+
+	beforeEach(function() {
+		spyOn(jsonp, 'get');
+		user.init();
+		user.id = 'userId';
+		testEl = document.createElement('div');
+		testEl.id = 'testEl';
+		document.body.appendChild(testEl);
+
+	});
+
+	afterEach(function() {
+		document.body.removeChild(testEl);
+	});
+
 	it('toggles between states', function() {
 		var entity = {id: 'author1', name: 'First Author'};
+		followButtonView.render(testEl, entity);
+
 		user.following.entities  = [];
 		var stopSpy = spyOn(user.following, 'stop');
 		var startSpy = spyOn(user.following, 'start');
-		var button = new FollowButton(testEl, entity);
-		button.btn.click();
-		expect(startSpy).toHaveBeenCalledWith(entity, 'userId');
-		expect(button.btn.innerText).toBe('Stop Following');
-		expect(button.btn.getAttribute('data-o-follow-state')).toBe('true');
+		var button = new FollowButton(testEl.querySelector('[data-o-follow-id]'));
+		button.el.click();
 
-		button.btn.click();
+		expect(startSpy).toHaveBeenCalledWith(entity, 'userId');
+		// expect(button.el.innerText).toBe('Stop Following');
+		expect(button.el.getAttribute('data-o-follow-state')).toBe('true');
+
+		button.el.click();
 		expect(stopSpy).toHaveBeenCalledWith(entity, 'userId');
-		expect(button.btn.innerText).toBe('Start Following');
-		expect(button.btn.getAttribute('data-o-follow-state')).toBe('false');
+		// expect(button.el.innerText).toBe('Start Following');
+		expect(button.el.getAttribute('data-o-follow-state')).toBe('false');
 	});
 });

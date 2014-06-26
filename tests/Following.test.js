@@ -36,7 +36,7 @@ describe('Getting the initial model', function() {
 	it('set() only works if the data is correct', function() {
 		var data = {"blah":[{"id":"Q0ItMDAwMDcxOA==-QXV0aG9ycw==","name":"Jack Farchy","type":"authors"}]};
 		following.set(data);
-		expect(Object.keys(following.entities).length).toBe(0);
+		expect(following.entities).toBe(null);
 	});
 
 });
@@ -148,7 +148,7 @@ describe('Handles response from the server', function() {
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 		following.set(mockData);
 
-		expect(following.entities.length).toBe(0);
+		expect(following.entities).toBe(null);
 		//only set offline in certain cases if follow/unfollow request failed, not the initial one
 		expect(following.online).toBe(true);
 		expect(syncSpy).not.toHaveBeenCalled();
@@ -183,7 +183,7 @@ it('successfully recieves data from update requests', function() {
 
 		following.set(mockData, mockEntity, 'start');
 
-		expect(following.entities.length).toBe(0);
+		expect(following.entities).toBe(null);
 		//only set offline in certain cases if follow/unfollow request failed, not the initial one
 		expect(following.online).toBe(false);
 		expect(addSpy).toHaveBeenCalledWith(mockEntity, 'start');
@@ -313,7 +313,7 @@ describe('Keeping the client and server in sync', function() {
 		var startSpy = spyOn(following, 'start');
 		following.sync();
 
-		expect(startSpy).toHaveBeenCalledWith(pending.startId.entity);
+		expect(startSpy).toHaveBeenCalledWith(pending.start2.entity);
 		expect(following.entities.length).toBe(1);
 		expect(following.entities[0].name).toBe('Keep trying me');
 

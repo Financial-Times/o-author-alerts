@@ -1,4 +1,9 @@
+
+<div class="o-follow" data-o-component="o-follow" data-o-version="0.1.0">
 {{#authors}}
-<div class="o-follow" data-o-component="o-follow" data-o-version="0.1.0" data-o-follow-entity='{"id": "{{id}}", "name": "{{name}}", "type": "author"}'>
-</div>
+	<div class="o-follow__entity">
+		<span class="o-follow__name">{{name}}</span>
+		<button data-o-follow-id="{{id}}" data-o-follow-name="{{name}}">Start</button> 
+	</div>
 {{/authors}}
+</div>

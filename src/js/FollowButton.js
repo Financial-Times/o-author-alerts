@@ -3,23 +3,20 @@
 'use strict';
 
 var user = require('./user');
-var followButtonView = require('./followButtonView');
 
-function FollowButton(rootEl, entity) {
-  this.rootEl = rootEl;
-  this.entity = entity;
+function FollowButton(btn) {
+
+  this.el = btn;
+  this.entity = {
+    'id': btn.getAttribute('data-o-follow-id'),
+    'name': btn.getAttribute('data-o-follow-name')
+  };
   this.init();
 }
 
 FollowButton.prototype.init = function() {
-  var wrapper = followButtonView.render(this.rootEl, this.entity);
-  this.btn = wrapper.querySelector('[data-o-follow-id]');
-  this.btn.addEventListener('click', this.toggleFollowState.bind(this), false);
-  if(user.following.entities && user.following.entities.length) {
-    this.setInitialState();
-  } else {
-    document.body.addEventListener('oFollow.ready', this.setInitialState.bind(this), false);
-  }
+  this.el.addEventListener('click', this.toggleFollowState.bind(this), false);
+  this.setInitialState();
 };
 
 function isBeingFollowed(entity, followingList) {
@@ -34,14 +31,14 @@ function isBeingFollowed(entity, followingList) {
 }
 
 FollowButton.prototype.setInitialState = function() {
-  this.rootEl.setAttribute('data-o-follow--js', '');
   if(isBeingFollowed(this.entity, user.following.entities)) {
     this.startFollowing();
   }
 };
 
 FollowButton.prototype.toggleFollowState = function() {
-  var isCurrentlyFollowing = (this.btn.getAttribute('data-o-follow-state') === 'true');
+  var isCurrentlyFollowing = (this.el.getAttribute('data-o-follow-state') === 'true');
+
   if(isCurrentlyFollowing) {
     user.following.stop(this.entity, user.id );
     this.stopFollowing();
@@ -52,14 +49,15 @@ FollowButton.prototype.toggleFollowState = function() {
 };
 
 FollowButton.prototype.startFollowing = function() {
-  this.btn.innerText = "Stop Following";
-  this.btn.setAttribute('data-o-follow-state', true);
+  this.el.innerText = this.el.innerText.replace('Start', 'Stop');
+  this.el.setAttribute('data-o-follow-state', true);
 };
 
 FollowButton.prototype.stopFollowing = function() {
-  this.btn.innerText = "Start Following";
-  this.btn.setAttribute('data-o-follow-state', false);
+  this.el.innerText = this.el.innerText.replace('Stop', 'Start');
+  this.el.setAttribute('data-o-follow-state', false);
 };
+
 
 module.exports = FollowButton;
 

@@ -9,7 +9,7 @@ var MAX_ATTEMPTS = 3;
 
 function Following(userId) {
 	this.userId = userId;
-	this.entities = [];
+	this.entities = null;
 	this.pending = JSON.parse(storage.get('oFollowUserCache-'+this.userId)) || {};
 	this.online = true;
 }
