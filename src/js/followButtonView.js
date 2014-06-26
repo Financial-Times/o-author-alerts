@@ -15,6 +15,7 @@ function createNameSpan(name){
 
 function createButton(entity) {
 	var btn = document.createElement('button');
+  btn.className = 'o-follow__button';
   btn.setAttribute('data-o-follow-id', entity.id);
   btn.setAttribute('data-o-follow-name', entity.name);
   btn.innerText = 'Start Following';

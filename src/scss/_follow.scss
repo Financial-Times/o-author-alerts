@@ -5,4 +5,10 @@
 	[data-o-follow--js].#{$classname} {
 		display: block;
 	}
+	.#{$classname}__entity {
+		list-style: none;
+	}
+
+	@include oFtButtonsButton(o-follow__button);
+
 }

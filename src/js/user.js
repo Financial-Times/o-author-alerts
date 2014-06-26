@@ -18,7 +18,7 @@ User.prototype.init = function() {
 User.prototype.destroy = function() {
 	this.following = null;
 	this.id = null;
-}
+};
 
 function getId() {
 	var userCookie = oCookies.get('FT_U');

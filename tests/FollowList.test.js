@@ -2,7 +2,6 @@
 'use strict';
 
 var FollowList = require('../src/js/FollowList.js');
-var followButtonView = require('../src/js/followButtonView.js');
 var jsonp = require('../src/js/lib/jsonp.js');
 var user = require('../src/js/user.js');
 var eventHelper = require('../src/js/lib/eventHelper');

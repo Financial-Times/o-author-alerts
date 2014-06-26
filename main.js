@@ -1,7 +1,4 @@
-'use strict';
-
 var FollowList = require('./src/js/FollowList');
-
 
 document.addEventListener("o.DOMContentLoaded", function() {
     "use strict";

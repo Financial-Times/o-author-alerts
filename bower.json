@@ -1,7 +1,8 @@
 {
   "name": "o-follow",
   "dependencies": {
-    "o-cookies": "~1.0.1"
+    "o-cookies": "~1.0.1",
+    "o-ft-buttons": "*"
   },
   "main": [
     "main.scss",

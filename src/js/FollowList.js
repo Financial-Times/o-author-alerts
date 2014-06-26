@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var user = require('./user');
 var followButtonView = require('./followButtonView');
@@ -17,13 +17,13 @@ FollowList.prototype.init = function() {
   } else {
     document.body.addEventListener('oFollow.ready', this.initialiseButtons.bind(this), false);
   }
-}
+};
 
 FollowList.prototype.destroy = function() {
   document.body.removeEventListener('oFollow.ready');
   user.destroy();
   this.rootEl.parentElement.removeChild(this.rootEl);
-}
+};
 
 FollowList.prototype.initialiseButtons = function() {
 	this.rootEl.setAttribute('data-o-follow--js', '');
@@ -35,7 +35,7 @@ FollowList.prototype.initialiseButtons = function() {
 
 	createButtons(this.rootEl);
 
-}
+};
 
 
 FollowList.prototype.createAllIn = function(el) {
@@ -53,13 +53,25 @@ FollowList.prototype.createAllIn = function(el) {
       }
   }
   return followButtons;
+};
+
+function createList(el) {
+  var list = document.createElement('ul');
+  list.setAttribute('data-o-follow-list', '');
+  el.appendChild(list);
+  return list;
 }
 
 function createButtons(el) {
+  var list = el.querySelector('[data-o-follow-list]');
+  if(!list) {
+    list = createList(el);
+  }
+
   if(el.hasAttribute('data-o-follow-article-id'))  {
-    createForArticle(el, el.getAttribute('data-o-follow-article-id') );
+    createForArticle(list, el.getAttribute('data-o-follow-article-id') );
   } else if (el.hasAttribute('data-o-follow-user')) {
-      createForUser(el);
+      createForUser(list);
   }
 }
 
