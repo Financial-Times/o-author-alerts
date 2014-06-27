@@ -3,10 +3,79 @@
 		display: none;
 	}
 	[data-o-follow--js].#{$classname} {
-		display: block;
+		display: inline-block;
+	}
+
+	@include oFontsInclude(BentonSans, normal);
+
+
+
+
+
+	.#{$classname}__list {
+			margin: 0;
+			padding: 0;
 	}
 	.#{$classname}__entity {
 		list-style: none;
+		overflow: auto;
+		padding: 5px;
+	}
+	
+	.#{$classname}__widget {
+		display: none;
+	}
+
+
+	[data-o-follow-widget] {
+
+		.#{$classname}__widget {
+			background-color: oColorsGetPaletteColor(white);
+			color: oColorsGetColorFor(link, text);
+			display: inline-block;
+			box-sizing: border-box;
+			border-radius: 10px;
+			padding: 5px 20px;
+			font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
+			font-size: 16px;
+			text-decoration: none;
+		}
+
+
+		.#{$classname}__list {
+			display: none;
+
+
+			font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
+			@include pointer-bordered(
+					top,  
+					oColorsGetColorFor(modal, background), 
+					oColorsGetColorFor(modal, border), 
+					20px,
+					45px);
+			background-color: oColorsGetColorFor(modal, background);
+			color: oColorsGetColorFor(modal, text);
+			border: 1px solid;
+			border-color:  oColorsGetColorFor(modal, border);
+			position: absolute;
+			top: auto;
+			left: auto;
+			padding: 10px 20px;
+			margin-top: 22px;
+		}
+
+		.#{$classname}__name {
+			float: left;
+			margin-right: 10px;
+			line-height: 22px;
+		}
+		.#{$classname}__button {
+			float: right;
+		}
+	} 
+
+	[data-o-follow-widget].open  .#{$classname}__list {
+		display: block;
 	}
 
 	@include oFtButtonsButton(o-follow__button);

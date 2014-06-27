@@ -3,19 +3,21 @@
 var user = require('./user');
 var followButtonView = require('./followButtonView');
 var FollowButton = require('./FollowButton');
+var FollowWidget = require('./FollowWidget');
 var metadata = require('./lib/metadata');
 
 
 function FollowList(rootEl) {
 	this.rootEl = rootEl;
+  this.list = null;
 }
 
 FollowList.prototype.init = function() {
   user.init();
   if(user.following.entities) {
-    this.initialiseButtons();
+    this.setup();
   } else {
-    document.body.addEventListener('oFollow.ready', this.initialiseButtons.bind(this), false);
+    document.body.addEventListener('oFollow.ready', this.setup.bind(this), false);
   }
 };
 
@@ -25,16 +27,18 @@ FollowList.prototype.destroy = function() {
   this.rootEl.parentElement.removeChild(this.rootEl);
 };
 
-FollowList.prototype.initialiseButtons = function() {
+FollowList.prototype.setup = function() {
 	this.rootEl.setAttribute('data-o-follow--js', '');
 	var existing = this.rootEl.querySelectorAll('[data-o-follow-id]');
 	var i,l;
 	for(i=0,l=existing.length; i<l;i++) {
 		new FollowButton(existing[i]);
 	}
-
-	createButtons(this.rootEl);
-
+  this.list = createList(this.rootEl);
+	createButtons(this.rootEl, this.list);
+  if(this.rootEl.hasAttribute('data-o-follow-widget')) {
+    new FollowWidget(this.list);
+  }
 };
 
 
@@ -55,24 +59,24 @@ FollowList.prototype.createAllIn = function(el) {
   return followButtons;
 };
 
-function createList(el) {
-  var list = document.createElement('ul');
-  list.setAttribute('data-o-follow-list', '');
-  el.appendChild(list);
-  return list;
-}
 
-function createButtons(el) {
-  var list = el.querySelector('[data-o-follow-list]');
-  if(!list) {
-    list = createList(el);
-  }
+function createButtons(el, list) {
 
   if(el.hasAttribute('data-o-follow-article-id'))  {
     createForArticle(list, el.getAttribute('data-o-follow-article-id') );
   } else if (el.hasAttribute('data-o-follow-user')) {
       createForUser(list);
   }
+}
+
+function createList(el) {
+  var list = el.querySelector('.o-follow__list');
+  if(!list) {
+    list = document.createElement('ul');
+    list.className = 'o-follow__list';
+    el.appendChild(list);
+  }
+  return list;
 }
 
 function createForUser(el) {
