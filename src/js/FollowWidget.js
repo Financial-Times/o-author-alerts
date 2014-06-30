@@ -10,11 +10,15 @@ function createWidget(overlay) {
 	var parent = overlay.parentElement;
 	var text = parent.getAttribute('data-o-follow-widget') || 'Alerts';
   var widget = parent.querySelector('.o-follow__widget');
+  var i;
   if(!widget) {
     widget = document.createElement('a');
+    i = document.createElement('i');
+    i.className = 'icon-arrow-down';
     widget.href = '';
     widget.innerText = text;
     widget.classList.add('o-follow__widget');
+    widget.appendChild(i);
     parent.insertBefore(widget, overlay);
   }
   return widget;

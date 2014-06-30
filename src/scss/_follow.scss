@@ -7,9 +7,7 @@
 	}
 
 	@include oFontsInclude(BentonSans, normal);
-
-
-
+	@include oFtIconsFontFace();
 
 
 	.#{$classname}__list {
@@ -39,6 +37,11 @@
 			font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 			text-decoration: none;
 			font-size: 1em;
+			i {
+				margin-left: 8px;
+		    @include oFtIconsBaseIconStyles();
+		    @extend %o-ft-icons-icon--arrow-down;
+			}
 		}
 
 
