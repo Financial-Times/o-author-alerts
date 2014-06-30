@@ -34,7 +34,7 @@
 
 	.#{$classname}__name {
 		float: left;
-		margin-right: 12px;
+		margin-right: 20px;
 		line-height: 22px;
 	}
 
@@ -67,7 +67,7 @@
     transition-property: opacity, visibility;
     transition-delay: 0, 300ms;
 		box-shadow: 1px 1px 1px #ccc;
-		@include pointer-bordered(top, oColorsGetColorFor(modal, background), oColorsGetColorFor(modal, border), 16px, 45px);
+		@include pointer-bordered(top, oColorsGetColorFor(modal, background), oColorsGetColorFor(modal, border), 16px, 65px);
 		background-color: oColorsGetColorFor(modal, background);
 		color: oColorsGetColorFor(modal, text);
 		border: 1px solid;
