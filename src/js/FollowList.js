@@ -30,7 +30,6 @@ FollowList.prototype.destroy = function() {
 FollowList.prototype.setup = function() {
 	this.rootEl.setAttribute('data-o-follow--js', '');
 	var existing = this.rootEl.querySelectorAll('[data-o-follow-id]');
-	var i,l;
   this.list = createList(this.rootEl);
 	createButtons(this.rootEl, this.list);
   if(this.rootEl.hasAttribute('data-o-follow-widget')) {
@@ -90,6 +89,7 @@ function createForArticle(el, articleId) {
   metadata.get(articleId, function(entities) {
     entities.authors.forEach(function(entity) {
       followButtonView.render(el, entity);
+      followButtons.setButtonStates(el);
     });
   });
 }

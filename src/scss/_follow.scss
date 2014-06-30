@@ -7,9 +7,8 @@
 	}
 
 	@include oFontsInclude(BentonSans, normal);
-	@include oFontsInclude(BentonSans, bold);
 	@include oFtIconsFontFace();
-
+	@include oFtTypographyIncludeFont(heading);
 
 	.#{$classname}__list {
 			margin: 0;
@@ -26,11 +25,7 @@
 	}
 
 	.#{$classname}__header {
-		font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
-		font-weight: bold;
-		text-transform: uppercase;
-		font-size: 14px;
-		line-height: 18px;
+		@extend %o-ft-typography-heading2-text;
 	}
 
 	.#{$classname}__name {
@@ -57,22 +52,22 @@
 			font-size: inherit;
 			line-height: 1em;
 			i {
+		    @extend %o-ft-icons-icon--arrow-down;
+		    @include oFtIconsBaseIconStyles();
 				margin-left: 8px;
 				margin-top: -3px;
-		    @include oFtIconsBaseIconStyles();
-		    @extend %o-ft-icons-icon--arrow-down;
 			}
 		}
 
 		.#{$classname}__popover {
-			display: none;
+			visibility: hidden;
+      opacity: 0;
+      transition-duration: 300ms, 0;
+      transition-property: opacity, visibility;
+      transition-delay: 0, 300ms;
+			box-shadow: 1px 1px 1px #ccc;
 			font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
-			@include pointer-bordered(
-					top,  
-					oColorsGetColorFor(modal, background), 
-					oColorsGetColorFor(modal, border), 
-					16px,
-					45px);
+			@include pointer-bordered(top, oColorsGetColorFor(modal, background), oColorsGetColorFor(modal, border), 16px, 45px);
 			background-color: oColorsGetColorFor(modal, background);
 			color: oColorsGetColorFor(modal, text);
 			border: 1px solid;
@@ -81,18 +76,21 @@
 			top: auto;
 			left: auto;
 			padding: 10px 20px;
-			margin-top: 22px;
+			margin-top: 16px;
 			z-index: 2;
-
 		}
 
 		
 	} 
 
 	[data-o-follow-widget].open  .#{$classname}__popover {
-		display: block;
-	}
+		transition-duration: 0, 300ms;
+    transition-property: visibility, opacity;
+    transition-delay: 0;
+    visibility: visible;
+    opacity: 1;
 
+ 	}
 	@include oFtButtonsButton(o-follow__button);
 
 }

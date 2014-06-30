@@ -61,7 +61,7 @@ FollowWidget.prototype.show = function() {
 FollowWidget.prototype.hide = function() {
 	var self = this;
 	this.timeout = setTimeout(function() {
-  	self.widget.parentElement.classList.remove('open')
+  	self.widget.parentElement.classList.remove('open');
 	}, 500);
 };
 

@@ -6,16 +6,9 @@ var user = require('./user');
 var DomDelegate = require('ftdomdelegate');
 
 function init(rootEl) {
-  //bind dom delegate event
-  //loop through buttons and set initial state
   var rootDelegate = new DomDelegate(rootEl);
-  var buttons = rootEl.querySelectorAll('[data-o-follow-id]'),
-      i,l;
-
   rootDelegate.on('click', '[data-o-follow-id]', toggleFollowState);
-  for(i=0,l=buttons.length; i<l;i++) {
-    setInitialState(buttons[i]);
-  }
+  setButtonStates(rootEl);
 }
 
 function isBeingFollowed(id, followingList) {
@@ -29,6 +22,14 @@ function isBeingFollowed(id, followingList) {
   return matched;
 }
 
+function setButtonStates(rootEl) {
+  var buttons = rootEl.querySelectorAll('[data-o-follow-id]'),
+      i, l;
+
+  for(i=0,l=buttons.length; i<l;i++) {
+    setInitialState(buttons[i]);
+  }
+}
 function setInitialState(btn) {
   if(isBeingFollowed(btn.getAttribute('data-o-follow-id'), user.following.entities)) {
     startFollowing(btn);
@@ -50,23 +51,25 @@ function toggleFollowState(ev) {
     user.following.start(entity, user.id);
     startFollowing(btn);
   }
-};
+}
 
 
 function startFollowing(el) {
-  el.innerText = el.innerText.replace('Start', 'Stop');
+  //note: using innerHTML in second instance since element is hidden so innerText returns ''
+  el.innerText = el.innerHTML.replace('Start', 'Stop');
   el.setAttribute('data-o-follow-state', true);
 }
 
 function stopFollowing(el) {
-  el.innerText = el.innerText.replace('Stop', 'Start');
+  el.innerText = el.innerHTML.replace('Stop', 'Start');
   el.setAttribute('data-o-follow-state', false);
-};
+}
 
 
 
 module.exports = {
-  init: init
+  init: init,
+  setButtonStates: setButtonStates
 };
 
 
