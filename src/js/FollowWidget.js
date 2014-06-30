@@ -28,15 +28,17 @@ function createWidget(popover) {
   var i;
   if(!widget) {
     widget = document.createElement('a');
-    i = document.createElement('i');
-    i.className = 'icon-arrow-down';
     widget.href = '';
     widget.innerText = text;
     widget.classList.add('o-follow__widget');
-    widget.appendChild(i);
     parent.insertBefore(widget, popover);
   }
-
+  i=widget.querySelector('i');
+  if(!i) {
+    i = document.createElement('i');
+    i.className = 'icon-arrow-down';
+    widget.appendChild(i);
+  }
   return widget;
 }
 

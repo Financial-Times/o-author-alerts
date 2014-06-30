@@ -4,8 +4,7 @@
 @import "o-ft-buttons/main";
 @import "o-colors/main";
 @import "o-fonts/main";
-
-@import "o-ft-icons/main";
+]@import "o-ft-icons/main";
 
 @if (not $o-follow-is-silent) {
 	@include oFollowBase();

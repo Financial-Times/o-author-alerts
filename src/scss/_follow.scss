@@ -7,6 +7,7 @@
 	}
 
 	@include oFontsInclude(BentonSans, normal);
+	@include oFontsInclude(BentonSans, bold);
 	@include oFtIconsFontFace();
 
 
@@ -24,11 +25,20 @@
 		display: none;
 	}
 
+	.#{$classname}__header {
+		font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
+		font-weight: bold;
+		text-transform: uppercase;
+		font-size: 14px;
+		line-height: 18px;
+	}
+
 	.#{$classname}__name {
 		float: left;
-		margin-right: 10px;
+		margin-right: 12px;
 		line-height: 22px;
 	}
+
 	.#{$classname}__button {
 		float: right;
 	}
@@ -61,7 +71,7 @@
 					top,  
 					oColorsGetColorFor(modal, background), 
 					oColorsGetColorFor(modal, border), 
-					20px,
+					16px,
 					45px);
 			background-color: oColorsGetColorFor(modal, background);
 			color: oColorsGetColorFor(modal, text);

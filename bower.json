@@ -5,7 +5,7 @@
     "o-colors": "~2.3.15",
     "o-fonts": "~1.4.1",
     "o-ft-buttons": "*",
-    "o-ft-icons": "2.0.0",
+    "o-ft-icons": "~2.0.0",
     "ftdomdelegate": "~1.0.0"
   },
   "main": [
