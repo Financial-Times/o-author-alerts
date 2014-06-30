@@ -24,6 +24,14 @@
 		display: none;
 	}
 
+	.#{$classname}__name {
+		float: left;
+		margin-right: 10px;
+		line-height: 22px;
+	}
+	.#{$classname}__button {
+		float: right;
+	}
 
 	[data-o-follow-widget] {
 
@@ -33,22 +41,21 @@
 			display: inline-block;
 			box-sizing: border-box;
 			border-radius: 10px;
-			padding: 5px 20px;
+			padding: 5px 10px;
 			font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 			text-decoration: none;
-			font-size: 1em;
+			font-size: inherit;
+			line-height: 1em;
 			i {
 				margin-left: 8px;
+				margin-top: -3px;
 		    @include oFtIconsBaseIconStyles();
 		    @extend %o-ft-icons-icon--arrow-down;
 			}
 		}
 
-
-		.#{$classname}__list {
+		.#{$classname}__popover {
 			display: none;
-
-
 			font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 			@include pointer-bordered(
 					top,  
@@ -69,17 +76,10 @@
 
 		}
 
-		.#{$classname}__name {
-			float: left;
-			margin-right: 10px;
-			line-height: 22px;
-		}
-		.#{$classname}__button {
-			float: right;
-		}
+		
 	} 
 
-	[data-o-follow-widget].open  .#{$classname}__list {
+	[data-o-follow-widget].open  .#{$classname}__popover {
 		display: block;
 	}
 

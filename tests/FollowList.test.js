@@ -23,8 +23,10 @@ describe('Initialising a follow list', function() {
 
 	it('sets up the user', function() {
 		var userSpy = spyOn(user, 'init');
+		spyOn(list, 'setup');
 		list.init();
 		expect(userSpy).toHaveBeenCalled();
+
 	});
 
 	it('initialises the buttons if the user preferences are available', function() {

@@ -1,13 +1,28 @@
-function FollowWidget(overlay) {
-	this.overlay = overlay;
-	this.widget = createWidget(overlay);
+function FollowWidget(list) {
+	this.list = list;
+	this.popover = createPopover(list);
+	this.widget = createWidget(this.popover);
 	this.bindEvents();
 	this.timeout = null;
 }
 
+function createPopover(list) {
+	var parent = list.parentElement;
+  var popover = parent.querySelector('.o-follow__popover');
+  var header = parent.getAttribute('data-o-follow-header') || 'Get alerts for:';
+  if(!popover) {
+  	popover = document.createElement('div');
+  	popover.className = 'o-follow__popover';
+  	popover.innerHTML = '<h3 class="o-follow__header">' + header + '</div>';
+  	parent.insertBefore(popover, list);
+  	popover.appendChild(list);
+  }
+  return popover;
+}
 
-function createWidget(overlay) {
-	var parent = overlay.parentElement;
+
+function createWidget(popover) {
+	var parent = popover.parentElement;
 	var text = parent.getAttribute('data-o-follow-widget') || 'Alerts';
   var widget = parent.querySelector('.o-follow__widget');
   var i;
@@ -19,16 +34,17 @@ function createWidget(overlay) {
     widget.innerText = text;
     widget.classList.add('o-follow__widget');
     widget.appendChild(i);
-    parent.insertBefore(widget, overlay);
+    parent.insertBefore(widget, popover);
   }
+
   return widget;
 }
 
 FollowWidget.prototype.bindEvents = function() {
 	this.widget.addEventListener('mouseover', this.show.bind(this));
 	this.widget.addEventListener('mouseout', this.hide.bind(this));
-	this.overlay.addEventListener('mouseover', this.mouseover.bind(this));
-	this.overlay.addEventListener('mouseout', this.hide.bind(this));
+	this.popover.addEventListener('mouseover', this.mouseover.bind(this));
+	this.popover.addEventListener('mouseout', this.hide.bind(this));
 };
 
 FollowWidget.prototype.mouseover = function() {

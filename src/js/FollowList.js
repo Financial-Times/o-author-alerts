@@ -2,7 +2,7 @@
 
 var user = require('./user');
 var followButtonView = require('./followButtonView');
-var FollowButton = require('./FollowButton');
+var followButtons = require('./followButtons');
 var FollowWidget = require('./FollowWidget');
 var metadata = require('./lib/metadata');
 
@@ -14,7 +14,7 @@ function FollowList(rootEl) {
 
 FollowList.prototype.init = function() {
   user.init();
-  if(user.following.entities) {
+  if(user.following && user.following.entities) {
     this.setup();
   } else {
     document.body.addEventListener('oFollow.ready', this.setup.bind(this), false);
@@ -31,14 +31,12 @@ FollowList.prototype.setup = function() {
 	this.rootEl.setAttribute('data-o-follow--js', '');
 	var existing = this.rootEl.querySelectorAll('[data-o-follow-id]');
 	var i,l;
-	for(i=0,l=existing.length; i<l;i++) {
-		new FollowButton(existing[i]);
-	}
   this.list = createList(this.rootEl);
 	createButtons(this.rootEl, this.list);
   if(this.rootEl.hasAttribute('data-o-follow-widget')) {
     new FollowWidget(this.list);
   }
+  followButtons.init(this.list);
 };
 
 
@@ -47,14 +45,14 @@ FollowList.prototype.createAllIn = function(el) {
   var followButtons = [], fEls, c, l, btn;
   el = el || document.body;
   if (el.querySelectorAll) {
-      fEls = el.querySelectorAll('[data-o-component=o-follow]');
-      for (c = 0, l = fEls.length; c < l; c++) {
-          if (!fEls[c].hasAttribute('data-o-follow--js')) {
-            btn = new FollowList(fEls[c]);
-            btn.init();
-            followButtons.push(btn);
-          }
+    fEls = el.querySelectorAll('[data-o-component=o-follow]');
+    for (c = 0, l = fEls.length; c < l; c++) {
+      if (!fEls[c].hasAttribute('data-o-follow--js')) {
+        btn = new FollowList(fEls[c]);
+        btn.init();
+        followButtons.push(btn);
       }
+    }
   }
   return followButtons;
 };
@@ -80,22 +78,18 @@ function createList(el) {
 }
 
 function createForUser(el) {
-  var entities = user.following.entities,
-  		wrapper;
+  var entities = user.following.entities;
   for(var id in entities) {
     if(entities.hasOwnProperty(id)) {
-      wrapper = followButtonView.render(el, entities[id]);
-			new FollowButton(wrapper.querySelector('[data-o-follow-id]'));
+      followButtonView.render(el, entities[id]);
     }
   }
 }
 
 function createForArticle(el, articleId) {
-	var wrapper;
   metadata.get(articleId, function(entities) {
     entities.authors.forEach(function(entity) {
-      wrapper = followButtonView.render(el, entity);
-			new FollowButton(wrapper.querySelector('[data-o-follow-id]'));
+      followButtonView.render(el, entity);
     });
   });
 }
