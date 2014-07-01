@@ -35,6 +35,7 @@
 	.#{$classname}__name {
 		float: left;
 		margin-right: 20px;
+		font-size: 14px;
 		line-height: 22px;
 		font-weight: normal;
 	}
@@ -53,13 +54,12 @@
 		padding: 5px 10px;
 		font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 		text-decoration: none;
-		font-size: inherit;
+		font-size: 14px;
 		line-height: 1em;
 		i {
 	    @extend %o-ft-icons-icon--arrow-down;
 	    @include oFtIconsBaseIconStyles();
 			margin-left: 8px;
-			margin-top: -3px;
 		}
 	}
 	.#{$classname}__popover {
