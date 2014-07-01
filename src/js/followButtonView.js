@@ -18,7 +18,7 @@ function createButton(entity) {
   btn.className = 'o-follow__button';
   btn.setAttribute('data-o-follow-id', entity.id);
   btn.setAttribute('data-o-follow-name', entity.name);
-  btn.innerText = 'Start Following';
+  btn.innerText = 'Start';
   return btn;
 }
 

@@ -1,6 +1,7 @@
 @mixin oFollowBase($classname: o-follow) {
 	.#{$classname} {
 		display: none;
+		line-height: 1em;
 	}
 	[data-o-follow--js].#{$classname} {
 		display: inline-block;
@@ -54,7 +55,7 @@
 		padding: 5px 10px;
 		font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 		text-decoration: none;
-		font-size: 14px;
+		font-size: 13px;
 		line-height: 1em;
 		i {
 	    @extend %o-ft-icons-icon--arrow-down;
