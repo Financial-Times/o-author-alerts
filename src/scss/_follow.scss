@@ -28,11 +28,11 @@
 		}
 	}
 
-	.#{$classname}__widget > h3 {
+	.#{$classname}__popover > h3 {
 		@extend %o-ft-typography-heading2-text;
 	}
 
-	.#{$classname}__widget > name {
+	.#{$classname}__entity > span {
 		float: left;
 		margin-right: 20px;
 		line-height: 22px;
