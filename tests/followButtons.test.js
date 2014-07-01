@@ -42,6 +42,7 @@ describe('Clicking the button', function() {
 
 	beforeEach(function() {
 		spyOn(jsonp, 'get');
+		user.destroy();
 		user.init();
 		user.id = 'userId';
 		testEl = document.createElement('div');

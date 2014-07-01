@@ -13,6 +13,7 @@ function init(rootEl) {
 
 function isBeingFollowed(id, followingList) {
   var matched = false;
+  followingList = followingList || [];
   followingList.forEach(function(following) {
     if(following.id === id) {
       matched = true;

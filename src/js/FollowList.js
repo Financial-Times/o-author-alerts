@@ -28,7 +28,6 @@ FollowList.prototype.destroy = function() {
 };
 
 FollowList.prototype.setup = function() {
-	this.rootEl.setAttribute('data-o-follow--js', '');
 	var existing = this.rootEl.querySelectorAll('[data-o-follow-id]');
   this.list = createList(this.rootEl);
 	createButtons(this.rootEl, this.list);
@@ -61,9 +60,14 @@ function createButtons(el, list) {
 
   if(el.hasAttribute('data-o-follow-article-id'))  {
     createForArticle(list, el.getAttribute('data-o-follow-article-id') );
-  } else if (el.hasAttribute('data-o-follow-user')) {
+  } else {
+    if (el.hasAttribute('data-o-follow-user')) {
       createForUser(list);
-  }
+    }
+    if(list.hasChildNodes()) {
+      el.setAttribute('data-o-follow--js', '');
+    }
+  } 
 }
 
 function createList(el) {
@@ -77,7 +81,7 @@ function createList(el) {
 }
 
 function createForUser(el) {
-  var entities = user.following.entities;
+  var entities = user && user.following ? user.following.entities : [];
   for(var id in entities) {
     if(entities.hasOwnProperty(id)) {
       followButtonView.render(el, entities[id]);
@@ -87,6 +91,9 @@ function createForUser(el) {
 
 function createForArticle(el, articleId) {
   metadata.get(articleId, function(entities) {
+    if(entities.authors.length) {
+      el.setAttribute('data-o-follow--js', '');
+    }
     entities.authors.forEach(function(entity) {
       followButtonView.render(el, entity);
       followButtons.setButtonStates(el);

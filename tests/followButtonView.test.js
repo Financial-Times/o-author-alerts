@@ -3,12 +3,15 @@
 
 var followButtonView = require('../src/js/followButtonView.js');
 
+var container = document.createElement('div');
+container.className = 'o-follow';
+document.body.appendChild(container);
+
 describe('Rendering a follow button', function() {
 
 
 	it('adds  name and the necessary data attributes', function() {
 
-		var container = document.body;
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'
@@ -25,7 +28,6 @@ describe('Rendering a follow button', function() {
 	});
 
 	it('returns the wrapper created', function() {
-		var container = document.body;
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'

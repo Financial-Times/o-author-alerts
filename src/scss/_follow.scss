@@ -41,6 +41,7 @@
 	.#{$classname}__button {
 		float: right;
 	}
+	@include oFtButtonsButton(o-follow__button);
 
 	.#{$classname}__widget {
 		background-color: oColorsGetPaletteColor(white);
@@ -88,6 +89,5 @@
     opacity: 1;
 
  	}
-	@include oFtButtonsButton(o-follow__button);
 
 }
