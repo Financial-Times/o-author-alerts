@@ -28,17 +28,18 @@
 		}
 	}
 
-	.#{$classname}__header {
+	.#{$classname}__widget > h3 {
 		@extend %o-ft-typography-heading2-text;
 	}
 
-	.#{$classname}__name {
+	.#{$classname}__widget > name {
 		float: left;
 		margin-right: 20px;
 		line-height: 22px;
+		font-weight: normal;
 	}
 
-	.#{$classname}__button {
+	.#{$classname}__entity > button {
 		float: right;
 	}
 	@include oFtButtonsButton(o-follow__button);
