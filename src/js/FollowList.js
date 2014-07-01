@@ -59,7 +59,7 @@ FollowList.prototype.createAllIn = function(el) {
 function createButtons(el, list) {
 
   if(el.hasAttribute('data-o-follow-article-id'))  {
-    createForArticle(list, el.getAttribute('data-o-follow-article-id') );
+    createForArticle(list, el.getAttribute('data-o-follow-article-id'), el);
   } else {
     if (el.hasAttribute('data-o-follow-user')) {
       createForUser(list);
@@ -89,14 +89,14 @@ function createForUser(el) {
   }
 }
 
-function createForArticle(el, articleId) {
+function createForArticle(list, articleId, el) {
   metadata.get(articleId, function(entities) {
     if(entities.authors.length) {
       el.setAttribute('data-o-follow--js', '');
     }
     entities.authors.forEach(function(entity) {
-      followButtonView.render(el, entity);
-      followButtons.setButtonStates(el);
+      followButtonView.render(list, entity);
+      followButtons.setButtonStates(list);
     });
   });
 }
