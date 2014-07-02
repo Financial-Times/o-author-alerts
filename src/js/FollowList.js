@@ -31,7 +31,7 @@ FollowList.prototype.destroy = function() {
 FollowList.prototype.setup = function() {
 	var list = views.list(this.rootEl);
 
-	createButtons(this.rootEl, list);
+	createButtons( list, this.rootEl);
 
   if(this.rootEl.hasAttribute('data-o-follow-widget')) {
     new FollowWidget(list);
@@ -64,25 +64,28 @@ FollowList.prototype.createAllIn = function(rootEl) {
 };
 
 
-function createButtons(rootEl, list) {
+function createButtons(list, rootEl) {
   if(rootEl.hasAttribute('data-o-follow-article-id'))  {
-    createForArticle(list, rootEl.getAttribute('data-o-follow-article-id'));
+    createForArticle(list, rootEl);
   } else if (rootEl.hasAttribute('data-o-follow-user')) {
-    createForUser(list);
+    createForUser(list, rootEl);
   } else {
-    setReadyIfListNotEmpty(list);
+    setReadyIfListNotEmpty(list, rootEl);
   }
 }
 
 
-function createForUser(list) {
+function createForUser(list, rootEl) {
   var entities = user && user.following ? user.following.entities : [];
   renderButtonsForEntities(entities, list);
+  setReadyIfListNotEmpty(list, rootEl);
 }
 
-function createForArticle(list, articleId) {
+function createForArticle(list, rootEl) {
+  var articleId = rootEl.getAttribute('data-o-follow-article-id');
   metadata.get(articleId, function(entities) {
     renderButtonsForEntities(entities.authors, list);
+    setReadyIfListNotEmpty(list, rootEl);
     followButtons.setButtonStates(list);
   });
 }
@@ -92,11 +95,9 @@ function renderButtonsForEntities(entities, list) {
   for(i=0,l=entities.length; i< l; i++) {
     views.button(list, entities[i]);
   }
-  setReadyIfListNotEmpty(list);
 }
 
-function setReadyIfListNotEmpty(list) {
-  var rootEl = list.parentElement;
+function setReadyIfListNotEmpty(list, rootEl) {
   if(list.hasChildNodes()) {
     rootEl.setAttribute('data-o-follow--js', '');
   }
