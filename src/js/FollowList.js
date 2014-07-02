@@ -24,7 +24,7 @@ FollowList.prototype.init = function() {
 FollowList.prototype.destroy = function() {
   document.body.removeEventListener('oFollow.ready');
   user.destroy();
-  followButtons.destroy();
+  followButtons.destroy()
   this.rootEl.parentElement.removeChild(this.rootEl);
 };
 
@@ -82,7 +82,7 @@ function createForUser(list) {
 
 function createForArticle(list, articleId) {
   metadata.get(articleId, function(entities) {
-    renderButtonsForEntities(entities, list);
+    renderButtonsForEntities(entities.authors, list);
     followButtons.setButtonStates(list);
   });
 }
