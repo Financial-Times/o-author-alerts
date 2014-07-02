@@ -2,8 +2,8 @@
 
 'use strict';
 
-var user = require('./user');
-var DomDelegate = require('ftdomdelegate');
+var user = require('./user'),
+    DomDelegate = require('ftdomdelegate');
 
 function init(rootEl) {
   var rootDelegate = new DomDelegate(rootEl);
@@ -12,14 +12,17 @@ function init(rootEl) {
 }
 
 function isBeingFollowed(id, followingList) {
-  var matched = false;
+  var matched = false,
+      i, l;
   followingList = followingList || [];
-  followingList.forEach(function(following) {
-    if(following.id === id) {
+
+  for(i=0,l=followingList.length;i<l;i++) {
+    if(followingList[i].id === id) {
       matched = true;
-      return;
+      break;
     }
-  });
+  }
+
   return matched;
 }
 
@@ -38,12 +41,12 @@ function setInitialState(btn) {
 }
 
 function toggleFollowState(ev) {
-  var btn = ev.target;
-  var isCurrentlyFollowing = (btn.getAttribute('data-o-follow-state') === 'true');
-  var entity = {
-    'id': btn.getAttribute('data-o-follow-id'),
-    'name': btn.getAttribute('data-o-follow-name')
-  };
+  var btn = ev.target,
+      isCurrentlyFollowing = (btn.getAttribute('data-o-follow-state') === 'true'),
+      entity = {
+        'id': btn.getAttribute('data-o-follow-id'),
+        'name': btn.getAttribute('data-o-follow-name')
+      };
 
   if(isCurrentlyFollowing) {
     user.following.stop(entity, user.id );
@@ -65,8 +68,6 @@ function stopFollowing(el) {
   el.innerText = el.innerHTML.replace('Stop', 'Start');
   el.setAttribute('data-o-follow-state', false);
 }
-
-
 
 module.exports = {
   init: init,

@@ -1,19 +1,19 @@
 'use strict';
 
-var user = require('./user');
-var followButtonView = require('./followButtonView');
-var followButtons = require('./followButtons');
-var FollowWidget = require('./FollowWidget');
-var metadata = require('./lib/metadata');
+var user = require('./user'),
+    views = require('./views'),
+    followButtons = require('./followButtons'),
+    FollowWidget = require('./FollowWidget'),
+    metadata = require('./lib/metadata');
 
 
 function FollowList(rootEl) {
 	this.rootEl = rootEl;
-  this.list = null;
 }
 
 FollowList.prototype.init = function() {
   user.init();
+
   if(user.following && user.following.entities) {
     this.setup();
   } else {
@@ -28,22 +28,28 @@ FollowList.prototype.destroy = function() {
 };
 
 FollowList.prototype.setup = function() {
-	var existing = this.rootEl.querySelectorAll('[data-o-follow-id]');
-  this.list = createList(this.rootEl);
-	createButtons(this.rootEl, this.list);
+	var list = views.list(this.rootEl);
+
+	createButtons(this.rootEl, list);
+
   if(this.rootEl.hasAttribute('data-o-follow-widget')) {
-    new FollowWidget(this.list);
+    new FollowWidget(list);
   }
-  followButtons.init(this.list);
+
+  followButtons.init(list);
+
 };
 
+FollowList.prototype.createAllIn = function(rootEl) {
+  var followButtons = [], 
+      fEls, 
+      c, l, 
+      btn;
 
-FollowList.prototype.createAllIn = function(el) {
+  rootEl = rootEl || document.body;
 
-  var followButtons = [], fEls, c, l, btn;
-  el = el || document.body;
-  if (el.querySelectorAll) {
-    fEls = el.querySelectorAll('[data-o-component=o-follow]');
+  if (rootEl.querySelectorAll) {
+    fEls = rootEl.querySelectorAll('[data-o-component=o-follow]');
     for (c = 0, l = fEls.length; c < l; c++) {
       if (!fEls[c].hasAttribute('data-o-follow--js')) {
         btn = new FollowList(fEls[c]);
@@ -52,53 +58,47 @@ FollowList.prototype.createAllIn = function(el) {
       }
     }
   }
+
   return followButtons;
 };
 
 
-function createButtons(el, list) {
-
-  if(el.hasAttribute('data-o-follow-article-id'))  {
-    createForArticle(list, el.getAttribute('data-o-follow-article-id'), el);
+function createButtons(rootEl, list) {
+  if(rootEl.hasAttribute('data-o-follow-article-id'))  {
+    createForArticle(list, rootEl.getAttribute('data-o-follow-article-id'));
+  } else if (rootEl.hasAttribute('data-o-follow-user')) {
+    createForUser(list);
   } else {
-    if (el.hasAttribute('data-o-follow-user')) {
-      createForUser(list);
-    }
-    if(list.hasChildNodes()) {
-      el.setAttribute('data-o-follow--js', '');
-    }
-  } 
-}
-
-function createList(el) {
-  var list = el.querySelector('.o-follow__list');
-  if(!list) {
-    list = document.createElement('ul');
-    list.className = 'o-follow__list';
-    el.appendChild(list);
+    setReadyIfListNotEmpty(list);
   }
-  return list;
 }
 
-function createForUser(el) {
+
+function createForUser(list) {
   var entities = user && user.following ? user.following.entities : [];
-  for(var id in entities) {
-    if(entities.hasOwnProperty(id)) {
-      followButtonView.render(el, entities[id]);
-    }
-  }
+  renderButtonsForEntities(entities, list);
 }
 
-function createForArticle(list, articleId, el) {
+function createForArticle(list, articleId) {
   metadata.get(articleId, function(entities) {
-    if(entities.authors.length) {
-      el.setAttribute('data-o-follow--js', '');
-    }
-    entities.authors.forEach(function(entity) {
-      followButtonView.render(list, entity);
-      followButtons.setButtonStates(list);
-    });
+    renderButtonsForEntities(entities, list);
+    followButtons.setButtonStates(list);
   });
+}
+
+function renderButtonsForEntities(entities, list) {
+  var i, l;
+  for(i=0,l=entities.length; i< l; i++) {
+    views.button(list, entities[i]);
+  }
+  setReadyIfListNotEmpty(list);
+}
+
+function setReadyIfListNotEmpty(list) {
+  var rootEl = list.parentElement;
+  if(list.hasChildNodes()) {
+    rootEl.setAttribute('data-o-follow--js', '');
+  }
 }
 
 module.exports = FollowList;

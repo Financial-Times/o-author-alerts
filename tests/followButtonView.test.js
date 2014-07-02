@@ -1,7 +1,7 @@
 /*global require,describe,it,expect*/
 'use strict';
 
-var followButtonView = require('../src/js/followButtonView.js');
+var views = require('../src/js/views.js');
 
 var container = document.createElement('div');
 container.className = 'o-follow';
@@ -17,7 +17,7 @@ describe('Rendering a follow button', function() {
 			id: 'arjunId'
 		};
 
-		followButtonView.render(container,entity);
+		views.button(container,entity);
 		var buttonWrapper = container.querySelector('.o-follow__entity');
 		expect(buttonWrapper).toBeTruthy();
 		expect(buttonWrapper.querySelector('.o-follow__name').innerText).toEqual('Arjun');
@@ -33,7 +33,7 @@ describe('Rendering a follow button', function() {
 			id: 'arjunId'
 		};
 		
-		var returned = followButtonView.render(container,entity);
+		var returned = views.button(container,entity);
 		expect(returned.className).toBe('o-follow__entity');
 	});
 

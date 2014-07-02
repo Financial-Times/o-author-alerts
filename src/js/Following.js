@@ -1,11 +1,10 @@
 'use strict';
 
-var jsonp = require('./lib/jsonp');
-var BrowserStore = require('./lib/BrowserStore');
-var eventHelper = require('./lib/eventHelper');
-var storage = new BrowserStore(localStorage);
-
-var MAX_ATTEMPTS = 3;
+var jsonp = require('./lib/jsonp'),
+		eventHelper = require('./lib/eventHelper'),
+		BrowserStore = require('./lib/BrowserStore'),
+		storage = new BrowserStore(localStorage),
+		MAX_ATTEMPTS = 3;
 
 function Following(userId) {
 	this.userId = userId;
@@ -24,7 +23,6 @@ Following.prototype.set = function(data, entity, action) {
 			this.sync();
 			eventHelper.dispatch('oFollow.ready', this.entities);
 		}
-		// }
 	} else {
 		if(entity && isRetryable(data)) {
 			this.online = false;
@@ -45,50 +43,57 @@ function isRetryable(data) {
 
 
 Following.prototype.get = function() {
-	var self = this;
 	var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=' + this.userId;
-	jsonp.get(url, 'oFollowGetCallback', function(data) {
-		self.set(data);
-	});
+	jsonp.get(url, 'oFollowGetCallback', this.set.bind(this));
 };
 
 Following.prototype.sync = function() {
-	var self = this;
-	var newEntities = [];
+	var newEntities = [],
+			id,
+			pending;
 
 	//GO through pending
-	for(var id in this.pending) {
+	for(id in this.pending) {
 		if(this.pending.hasOwnProperty(id)) {
-			this.pending[id].tried += 1;
+			pending = this.pending[id];
+			pending.tried += 1;
 			//Get rid of any that have maxed out attemptes
-			if(this.pending[id].tried > MAX_ATTEMPTS) {
-				this.removeFromPending(this.pending[id].entity);
+			if(pending.tried > MAX_ATTEMPTS) {
+				this.removeFromPending(pending.entity);
 				continue;
 			}
+
 			//start/stop
-			if(this.pending[id].action === 'start') {
+			if(pending.action === 'start') {
 				//if its a new one, add it to the list we have gotten from the server
-				newEntities.push(this.pending[id].entity);
-				this.start(this.pending[id].entity);
+				newEntities.push(pending.entity);
+				this.start(pending.entity);
 			} else {
-				this.stop(this.pending[id].entity);
+				this.stop(pending.entity);
 			}
 		}
 	}
 
-	//go through the stuff from the server, and only keep it if we haven't told it to stop
-	this.entities.forEach(function(followingEntity) {
-		if(self.pending[followingEntity.id]) {
-			if(self.pending[followingEntity.id].action !== 'stop') {
+	this.entities = newEntities.concat(anythingThatIsntDueToStop(this.entities, this.pending));
+};
+
+function anythingThatIsntDueToStop(entities, pending) {
+	var newEntities = [],
+			followingEntity,
+			i, l;
+
+	for(i=0,l=entities.length; i < l; i++) {
+		followingEntity = entities[i]; 
+		if(pending[followingEntity.id]) {
+			if(pending[followingEntity.id].action !== 'stop') {
 				newEntities.push(followingEntity);
 			}
 		} else {
 			newEntities.push(followingEntity);
 		}
-	});
-
-	this.entities = newEntities;
-};
+	}
+	return newEntities;
+}
 
 Following.prototype.addToPending = function(entity, action) {
 	if(this.pending[entity.id] ) {
@@ -123,22 +128,25 @@ Following.prototype.savePending = function() {
 
 
 Following.prototype.clearPending = function() {
-	storage.delete('oFollowUserCache-'+this.userId);
+	storage.delete('oFollowUserCache-' + this.userId);
 };
 
 Following.prototype.start = function(entity) {
+	var url,
+			self = this;
+
 	if(!(this.userId && entity.id && entity.name)){
 		return;
 	}
-	var self = this;
-	var url = 'http://personalisation.ft.com/follow/update?userId=' + 
+
+	url = 'http://personalisation.ft.com/follow/update?userId=' + 
 			this.userId + '&type=authors&name=' +
 			entity.name + '&id=' +
 			entity.id;
-	//TODO - move this to a method?
+
 	if(this.online) {
-		jsonp.get(url, 'oFollowStartCallback', function(data) {
-			self.set(data, entity, 'start');
+		jsonp.get(url, 'oFollowStartCallback', function (data) {
+			self.set( data, entity, 'start');
 		});
 	} else {
 		this.addToPending(entity, 'start');
@@ -146,17 +154,19 @@ Following.prototype.start = function(entity) {
 };
 
 Following.prototype.stop = function(entity) {
+	var url
+			self = this;
 	if(!(this.userId && entity.id && entity.name)) {
 		return;
 	} 
-	var self = this;
-	var url = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
+	
+	url = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
 			this.userId + '&type=authors&id='+
 			entity.id;
 
 	if(this.online) {
-		jsonp.get(url, 'oFollowStopCallback', function(data) {
-			self.set(data, entity, 'stop');
+		jsonp.get(url, 'oFollowStopCallback', function (data) {
+			self.set( data, entity, 'stop');
 		});
 	} else {
 		this.addToPending(entity, 'stop');

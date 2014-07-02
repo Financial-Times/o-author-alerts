@@ -16,6 +16,7 @@
 			padding: 0;
 			font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 	}
+
 	.#{$classname}__entity {
 		list-style: none;
 		overflow: auto;
@@ -63,6 +64,7 @@
 			margin-left: 8px;
 		}
 	}
+	
 	.#{$classname}__popover {
 		visibility: hidden;
     opacity: 0;
@@ -74,7 +76,7 @@
 		background-color: oColorsGetColorFor(modal, background);
 		color: oColorsGetColorFor(modal, text);
 		border: 1px solid;
-		border-color:  oColorsGetColorFor(modal, border);
+		border-color: oColorsGetColorFor(modal, border);
 		position: absolute;
 		top: auto;
 		left: auto;

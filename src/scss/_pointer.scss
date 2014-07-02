@@ -29,6 +29,7 @@
     z-index: $z-index;
   }
 }
+
 @function opposite-direction($directions) {
       $opposite-directions: ();
       $direction-map: (
@@ -53,6 +54,6 @@
   @return $opposite-directions;
 }
 @mixin pointer-bordered($direction, $color, $border-color, $size: 10px, $position: 50%) {
-  @include pointer($direction, $border-color, $size,false, $position);
+  @include pointer($direction, $border-color, $size, false, $position);
   @include pointer($direction, $color, $size, true, $position);
 }

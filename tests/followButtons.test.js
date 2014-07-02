@@ -2,7 +2,7 @@
 'use strict';
 
 var followButtons = require('../src/js/followButtons.js');
-var followButtonView = require('../src/js/followButtonView.js');
+var views = require('../src/js/views.js');
 var jsonp = require('../src/js/lib/jsonp.js');
 var user = require('../src/js/user.js');
 
@@ -29,11 +29,11 @@ describe('Initialising a button', function() {
 
 	it('sets the initial state assuming that the user is initialised', function() {
 		var entity = {id: 'author1', name: 'First Author'};
-		followButtonView.render(testEl, entity);
+		views.button(testEl, entity);
 		user.following.entities  = [entity];
 		followButtons.init(testEl);
 		var button = testEl.querySelector('[data-o-follow-id]');		
-		expect(button.innerText).toBe('Stop Following');
+		expect(button.innerText).toBe('Stop');
 	});
 
 });
@@ -57,7 +57,7 @@ describe('Clicking the button', function() {
 
 	it('toggles between states', function() {
 		var entity = {id: 'author1', name: 'First Author'};
-		followButtonView.render(testEl, entity);
+		views.button(testEl, entity);
 
 		user.following.entities  = [];
 		var stopSpy = spyOn(user.following, 'stop');
