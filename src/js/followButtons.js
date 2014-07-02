@@ -3,12 +3,19 @@
 'use strict';
 
 var user = require('./user'),
-    DomDelegate = require('ftdomdelegate');
+    DomDelegate = require('ftdomdelegate'),
+    rootDelegate;
 
 function init(rootEl) {
-  var rootDelegate = new DomDelegate(rootEl);
+  rootDelegate = new DomDelegate(rootEl);
   rootDelegate.on('click', '[data-o-follow-id]', toggleFollowState);
   setButtonStates(rootEl);
+}
+
+function destroy() {
+  if(rootDelegate) {
+    rootDelegate.off();
+  }
 }
 
 function isBeingFollowed(id, followingList) {
@@ -71,6 +78,7 @@ function stopFollowing(el) {
 
 module.exports = {
   init: init,
+  destroy: destroy,
   setButtonStates: setButtonStates
 };
 

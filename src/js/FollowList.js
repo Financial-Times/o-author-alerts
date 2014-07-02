@@ -24,6 +24,7 @@ FollowList.prototype.init = function() {
 FollowList.prototype.destroy = function() {
   document.body.removeEventListener('oFollow.ready');
   user.destroy();
+  followButtons.destroy();
   this.rootEl.parentElement.removeChild(this.rootEl);
 };
 
