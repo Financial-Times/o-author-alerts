@@ -18,6 +18,10 @@
 				@include oFtIconsBaseIconStyles();
 				margin-left: 8px;
 			}
+			&:hover {
+				cursor: pointer;
+				color: oColorsGetColorFor(link-hover, text);
+			}
 		}
 
 		.#{$classname}__popover {
@@ -27,7 +31,7 @@
 			transition-property: opacity, visibility;
 			transition-delay: 0, 300ms;
 			box-shadow: 1px 1px 1px #ccc;
-			@include pointer-bordered(top, oColorsGetColorFor(modal, background), oColorsGetColorFor(modal, border), 16px, 65px);
+			@include pointer-bordered(top, oColorsGetColorFor(modal, background), oColorsGetColorFor(modal, border), 16px, 60px);
 			background-color: oColorsGetColorFor(modal, background);
 			color: oColorsGetColorFor(modal, text);
 			border: 1px solid;

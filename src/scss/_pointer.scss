@@ -26,6 +26,7 @@
     height: 0;
     border: $border-size solid transparent;
     border-#{opposite-direction($direction)}-color: $color;
+    border-#{$direction}-width: 0;
     z-index: $z-index;
   }
 }

@@ -12,7 +12,7 @@ FollowWidget.prototype.init = function(list, rootEl) {
 	this.delegate = new DomDelegate(rootEl);
 	this.list = list;
 	this.rootEl = rootEl;
-	this.popover =  views.popover(rootEl);
+	this.popover = views.popover(rootEl);
 	this.widget = views.widget(rootEl);
 	this.bindEvents();
 	this.timeout = null;

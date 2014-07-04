@@ -64,8 +64,7 @@ exports.widget = function(rootEl) {
 			icon = widget ? widget.querySelector('i') : null;
 
   if(!widget) {
-    widget = document.createElement('a');
-    widget.href = '';
+    widget = document.createElement('span');
     widget.innerText = "Alerts";
     widget.classList.add('o-follow__widget');
     rootEl.insertBefore(widget, popover);
