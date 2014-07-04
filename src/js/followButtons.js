@@ -41,6 +41,7 @@ function setButtonStates(rootEl) {
     setInitialState(buttons[i]);
   }
 }
+
 function setInitialState(btn) {
   if(isBeingFollowed(btn.getAttribute('data-o-follow-id'), user.following.entities)) {
     startFollowing(btn);

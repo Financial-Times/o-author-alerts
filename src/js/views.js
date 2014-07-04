@@ -61,13 +61,12 @@ exports.popover = function(rootEl) {
 exports.widget = function(rootEl) {
 	var popover = rootEl.querySelector('.o-follow__popover'),
   		widget = rootEl.querySelector('.o-follow__widget'),
-			text = rootEl.getAttribute('data-o-follow-widget') || 'Alerts',
 			icon = widget ? widget.querySelector('i') : null;
 
   if(!widget) {
     widget = document.createElement('a');
     widget.href = '';
-    widget.innerText = text;
+    widget.innerText = "Alerts";
     widget.classList.add('o-follow__widget');
     rootEl.insertBefore(widget, popover);
   }

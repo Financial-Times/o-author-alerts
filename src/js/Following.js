@@ -154,7 +154,7 @@ Following.prototype.start = function(entity) {
 };
 
 Following.prototype.stop = function(entity) {
-	var url
+	var url,
 			self = this;
 	if(!(this.userId && entity.id && entity.name)) {
 		return;

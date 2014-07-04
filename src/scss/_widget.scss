@@ -1,0 +1,53 @@
+@mixin oFollowWidgetTheme($classname: o-follow) {
+
+
+	.#{$classname}--theme {
+		.#{$classname}__widget {
+			background-color: #fff;
+			color: oColorsGetColorFor(link, text);
+			display: inline-block;
+			box-sizing: border-box;
+			border-radius: 10px;
+			padding: 5px 10px;
+			font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
+			text-decoration: none;
+			font-size: 13px;
+			line-height: 1em;
+			i {
+				@extend %o-ft-icons-icon--arrow-down;
+				@include oFtIconsBaseIconStyles();
+				margin-left: 8px;
+			}
+		}
+
+		.#{$classname}__popover {
+			visibility: hidden;
+			opacity: 0;
+			transition-duration: 300ms, 0;
+			transition-property: opacity, visibility;
+			transition-delay: 0, 300ms;
+			box-shadow: 1px 1px 1px #ccc;
+			@include pointer-bordered(top, oColorsGetColorFor(modal, background), oColorsGetColorFor(modal, border), 16px, 65px);
+			background-color: oColorsGetColorFor(modal, background);
+			color: oColorsGetColorFor(modal, text);
+			border: 1px solid;
+			border-color: oColorsGetColorFor(modal, border);
+			position: absolute;
+			top: auto;
+			left: auto;
+			padding: 10px 20px;
+			margin-top: 16px;
+			z-index: 2;
+		}
+
+		&.open .#{$classname}__popover {
+			transition-duration: 0, 300ms;
+			transition-property: visibility, opacity;
+			transition-delay: 0;
+			visibility: visible;
+			opacity: 1;
+
+		}
+
+	}
+}

@@ -4,20 +4,26 @@
 		},
 		"demos": [
 			{
-				"name": "author",
-				"template": "demos/author.mustache",
+				"name": "ArticleList",
+				"template": "demos/article_list.mustache",
 				"js": "demos/src/demos.js",
 				"sass": "demos/src/demos.scss"
 			},
 			{
-				"name": "article",
-				"template": "demos/article.mustache",
+				"name": "ArticleWidget",
+				"template": "demos/article_widget.mustache",
 				"js": "demos/src/demos.js",
 				"sass": "demos/src/demos.scss"
 			},
 			{
 				"name": "user",
 				"template": "demos/user.mustache",
+				"js": "demos/src/demos.js",
+				"sass": "demos/src/demos.scss"
+			},
+			{
+				"name": "Author",
+				"template": "demos/author.mustache",
 				"js": "demos/src/demos.js",
 				"sass": "demos/src/demos.scss"
 			}

@@ -1,12 +1,10 @@
 
-<div class="o-follow" data-o-component="o-follow" data-o-version="0.1.0" data-o-follow-widget>
-	<a href="" class="o-follow__widget">Author Alerts</a>
-	<ul class="o-follow__list">
-{{#authors}}
-	<li class="o-follow__entity">
-		<span class="o-follow__name">{{name}}</span>
-		<button  class="o-follow__button" data-o-follow-id="{{id}}" data-o-follow-name="{{name}}">Start</button> 
-	</li>
-{{/authors}}
-	</ul>
+<div class="o-follow" data-o-component="o-follow" data-o-version="0.1.0">
+	<div class="o-follow__list">
+{{#authors.0}}
+	<div class="o-follow__entity">
+		<button  class="o-follow__button" data-o-follow-id="{{id}}" data-o-follow-name="{{name}}">Start alerts for {{name}}</button> 
+	</div>
+{{/authors.0}}
+	</div>
 </div>

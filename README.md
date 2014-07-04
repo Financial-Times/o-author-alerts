@@ -15,25 +15,59 @@ Alternatively, you can use the `createAllIn` method on the prototype, as follows
 	oFollow.prototype.createAllIn(rootEl);
 
 where `rootEl` defaults to `document.body` if not specified.
-	
-###Use cases
-1. *Given an Article ID, I want buttons that lets me start/stop following all authors of that article*
 
-		<ul class="o-follow" data-o-component="o-follow" data-o-version="0.1.0" data-o-follow-article-id="{{articleId}}"></ul>
+##Content
+The buttons can be created from elements already existing in the DOM (i.e. if you already have author ID/name available on the page), or by passing in a data attribute on the root element:
+
+* `data-o-follow-article-id="<article UUID>""`
+* `data-o-follow-user`
+
+##Appearance
+By default, the follow component applies minimal styles to the list and header. There is also an option of displaying it as a widget. To do so, construct the HTML as shown in use case 2 below, with the `o-follow--theme` class.
+
+
+##Use cases
+
+1. *Given an Article ID, I want a list of buttons that lets me start/stop following all authors of that article*
+
+		<div class="o-follow" data-o-component="o-follow" data-o-version="0.1.0" data-o-follow-article-id="{{articleId}}">
+			<h3 class="o-follow__header">HEADER</h3>
+			<ul class="o-follow__list">
+			</ul>
+		</div>
 		
+1. *Given an Article ID, I want a widget that displays the list of authors on hover*
+
+		<div class="o-follow o-follow--theme" data-o-component="o-follow" data-o-version="0.1.0" data-o-follow-article-id="{{articleId}}">
+			<a href="" class="o-follow__widget">Author Alerts<i class="icon-arrow-down"></i></a>
+			<div class="o-follow__popover" will-change>
+			<h3 class="o-follow__header">HEADER</h3>
+			<ul class="o-follow__list">
+
+			</ul>
+			</div>
+		</div>
+
 2. *Given a logged in user, I want to create buttons for all the users that the user currently follows*
 
-		<ul class="o-follow" data-o-component="o-follow" data-o-version="0.1.0" data-o-follow-user></ul>
-	
-3. *Given an author ID, I want a button that lets me start/stop following that particular author*
+		<div class="o-follow" data-o-component="o-follow" data-o-version="0.1.0" data-o-follow-user>
+			<a href="" class="o-follow__widget">Your Alerts<i class="icon-arrow-down"></i></a>
+			<div class="o-follow__popover" will-change>
+			<h3 class="o-follow__header">You are following:</h3>
+			<ul class="o-follow__list">
 
-		<ul class="o-follow" data-o-component="o-follow" data-o-version="0.1.0" data-o-follow-entity='{"id": "Q0ItMDAwMDY0Mg==-QXV0aG9ycw==", "name": "Roman Olearchyk", "type": "author"}'>
-			<li class="o-follow__entity">
-				<span class="o-follow__name">Roman Olearchyk</span>
-				<button data-o-follow-id="Q0ItMDAwMDY0Mg==-QXV0aG9ycw==" data-o-follow-name="Roman Olearchyk">Start Following</button>
-			</li>
-			<li class="o-follow__entity">
-				<span class="o-follow__name">Christian Oliver</span>
-				<button data-o-follow-id="Q0ItMDAwMDY1MA==-QXV0aG9ycw==" data-o-follow-name="Christian Oliver">Start Following</button>
-			</li>
-		</ul>
+			</ul>
+			</div>
+		</div>
+
+3. *I want to create a standalone author alert button for an author I already have.
+
+
+		<div class="o-follow" data-o-component="o-follow" data-o-version="0.1.0">
+			<div class="o-follow__list">
+			<div class="o-follow__entity">
+				<button  class="o-follow__button" data-o-follow-id="{{authorId}}" data-o-follow-name="{{authorName}}">Start Following</button> 
+			</div>
+			</div>
+		</div>
+

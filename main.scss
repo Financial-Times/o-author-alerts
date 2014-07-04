@@ -1,6 +1,7 @@
 @import "src/scss/variables";
 @import "src/scss/pointer";
 @import "src/scss/follow";
+@import "src/scss/widget";
 @import "o-ft-buttons/main";
 @import "o-colors/main";
 @import "o-fonts/main";
@@ -9,4 +10,5 @@
 
 @if (not $o-follow-is-silent) {
 	@include oFollowBase();
+	@include oFollowWidgetTheme();
 }

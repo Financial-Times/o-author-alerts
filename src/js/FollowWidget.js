@@ -1,19 +1,39 @@
-var views = require('./views');
+'use strict';
 
-function FollowWidget(list) {
-  var rootEl = list.parentElement;
-	this.list = list;
-	this.popover = views.popover(rootEl);
-	this.widget = views.widget(rootEl);
-	this.bindEvents();
-	this.timeout = null;
+var views = require('./views'),
+    DomDelegate = require('ftdomdelegate');
+
+
+function FollowWidget() {
+
 }
 
+FollowWidget.prototype.init = function(list, rootEl) {
+	this.delegate = new DomDelegate(rootEl);
+	this.list = list;
+	this.rootEl = rootEl;
+	this.popover = rootEl.querySelector('.o-follow__popover') || views.popover(rootEl);
+	this.widget = rootEl.querySelector('.o-follow__widget') || views.widget(rootEl);
+	this.bindEvents();
+	this.timeout = null;
+};
+
+FollowWidget.prototype.destroy = function() {
+	this.popover.parentElement.removeChild(this.popover);
+	this.widget.parentElement.removeChild(this.widget);
+
+	this.delegate.off();
+};
+
 FollowWidget.prototype.bindEvents = function() {
-	this.widget.addEventListener('mouseover', this.show.bind(this));
-	this.widget.addEventListener('mouseout', this.hide.bind(this));
-	this.popover.addEventListener('mouseover', this.mouseover.bind(this));
-	this.popover.addEventListener('mouseout', this.hide.bind(this));
+	var isTouch = ('ontouchstart' in window || 'onmsgesturechange' in window);
+	if(isTouch) {
+		this.delegate.on('touchstart', '.o-follow__widget', this.show.bind(this));
+		this.delegate.on('touchend', '.o-follow__widget', this.hide.bind(this));
+	} else {
+		this.delegate.on('mouseover', '.o-follow__popover, .o-follow__widget', this.show.bind(this));
+		this.delegate.on('mouseout', '.o-follow__popover, .o-follow__widget', this.hide.bind(this));
+	}
 };
 
 FollowWidget.prototype.mouseover = function() {
@@ -22,13 +42,13 @@ FollowWidget.prototype.mouseover = function() {
 
 FollowWidget.prototype.show = function() {
 	this.mouseover();
-	this.widget.parentElement.classList.add('open');
+	this.rootEl.classList.add('open');
 };
 
 FollowWidget.prototype.hide = function() {
 	var self = this;
 	this.timeout = setTimeout(function() {
-  	self.widget.parentElement.classList.remove('open');
+  	self.rootEl.classList.remove('open');
 	}, 500);
 };
 

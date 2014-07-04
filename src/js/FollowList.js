@@ -6,9 +6,9 @@ var user = require('./user'),
     FollowWidget = require('./FollowWidget'),
     metadata = require('./lib/metadata');
 
-
 function FollowList(rootEl) {
 	this.rootEl = rootEl;
+  this.widget = null;
 }
 
 FollowList.prototype.init = function() {
@@ -24,7 +24,8 @@ FollowList.prototype.init = function() {
 FollowList.prototype.destroy = function() {
   document.body.removeEventListener('oFollow.ready');
   user.destroy();
-  followButtons.destroy()
+  followButtons.destroy();
+  this.widget.destroy();
   this.rootEl.parentElement.removeChild(this.rootEl);
 };
 
@@ -33,8 +34,8 @@ FollowList.prototype.setup = function() {
 
 	createButtons( list, this.rootEl);
 
-  if(this.rootEl.hasAttribute('data-o-follow-widget')) {
-    new FollowWidget(list);
+  if(isWidget(this.rootEl)) {
+    this.widget = new FollowWidget().init(list, this.rootEl);
   }
 
   followButtons.init(list);
@@ -63,7 +64,9 @@ FollowList.prototype.createAllIn = function(rootEl) {
   return followButtons;
 };
 
-
+function isWidget(rootEl) {
+  return rootEl.querySelector('.o-follow__widget') && rootEl.classList.contains('o-follow--theme');
+}
 function createButtons(list, rootEl) {
   if(rootEl.hasAttribute('data-o-follow-article-id'))  {
     createForArticle(list, rootEl);
@@ -73,7 +76,6 @@ function createButtons(list, rootEl) {
     setReadyIfListNotEmpty(list, rootEl);
   }
 }
-
 
 function createForUser(list, rootEl) {
   var entities = user && user.following ? user.following.entities : [];
@@ -98,7 +100,7 @@ function renderButtonsForEntities(entities, list) {
 }
 
 function setReadyIfListNotEmpty(list, rootEl) {
-  if(list.hasChildNodes()) {
+  if(list.querySelector('.o-follow__entity')) {
     rootEl.setAttribute('data-o-follow--js', '');
   }
 }
