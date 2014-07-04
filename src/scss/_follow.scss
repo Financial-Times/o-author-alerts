@@ -29,6 +29,7 @@
 
 	.#{$classname}__header {
 		@extend %o-ft-typography-heading2-text;
+		margin: 10px 0;
 	}
 
 	.#{$classname}__name {
