@@ -19,15 +19,28 @@ Following.prototype.set = function(data, entity, action) {
 		this.entities = data.taxonomies;
 		if(entity) {
 			this.removeFromPending(entity);
+			eventHelper.dispatch('oFollow.updateSaved', {
+				data: data,
+				entity: entity,
+				action: action,
+				userId: this.userId
+			});
 		} else {
 			this.sync();
 			eventHelper.dispatch('oFollow.ready', this.entities);
 		}
 	} else {
+		eventHelper.dispatch('oFollow.serverError', {
+			data: data,
+			entity: entity,
+			action: action,
+			userId: this.userId
+		});
 		if(entity && isRetryable(data)) {
 			this.online = false;
 			this.addToPending(entity, action);
 		}
+
 	}
 };
 
@@ -171,6 +184,7 @@ Following.prototype.stop = function(entity) {
 	} else {
 		this.addToPending(entity, 'stop');
 	}
+
 };
 
 

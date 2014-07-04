@@ -4,6 +4,7 @@
 var followButtons = require('../src/js/followButtons.js');
 var views = require('../src/js/views.js');
 var jsonp = require('../src/js/lib/jsonp.js');
+var eventHelper = require('../src/js/lib/eventHelper.js');
 var user = require('../src/js/user.js');
 
 var testEl;
@@ -62,6 +63,7 @@ describe('Clicking the button', function() {
 		user.following.entities  = [];
 		var stopSpy = spyOn(user.following, 'stop');
 		var startSpy = spyOn(user.following, 'start');
+		var eventSpy = spyOn(eventHelper, 'dispatch');
 
 		followButtons.init(testEl);
 		var button = testEl.querySelector('[data-o-follow-id]');
@@ -71,9 +73,20 @@ describe('Clicking the button', function() {
 		// expect(button.el.innerText).toBe('Stop Following');
 		expect(button.getAttribute('data-o-follow-state')).toBe('true');
 
+		expect(eventSpy).toHaveBeenCalledWith('oFollow.startFollowing', {
+			entity: entity,
+			userId: 'userId'
+		}, testEl);	
+
 		button.click();
 		expect(stopSpy).toHaveBeenCalledWith(entity, 'userId');
 		// expect(button.el.innerText).toBe('Start Following');
 		expect(button.getAttribute('data-o-follow-state')).toBe('false');
+
+		expect(eventSpy).toHaveBeenCalledWith('oFollow.stopFollowing', {
+			entity: entity,
+			userId: 'userId'
+		}, testEl);	
+
 	});
 });

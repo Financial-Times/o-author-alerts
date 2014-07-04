@@ -1,6 +1,7 @@
 'use strict';
 
 var views = require('./views'),
+    eventHelper = require('./lib/eventHelper'),
     DomDelegate = require('ftdomdelegate');
 
 
@@ -43,6 +44,7 @@ FollowWidget.prototype.mouseover = function() {
 FollowWidget.prototype.show = function() {
 	this.mouseover();
 	this.rootEl.classList.add('open');
+	eventHelper.dispatch('oFollow.widgetOpened', null, this.rootEl);
 };
 
 FollowWidget.prototype.hide = function() {

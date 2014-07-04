@@ -27,9 +27,11 @@ describe('Getting the initial model', function() {
 
 	it('set() updates the model based on the data recieved', function() {
 		var data = {"status":"success", "taxonomies":[{"id":"Q0ItMDAwMDcxOA==-QXV0aG9ycw==","name":"Jack Farchy","type":"authors"}]};
+		var eventSpy = spyOn(eventHelper, 'dispatch');
 		following.set(data);
 		expect(following.entities.length).toBe(1);
 		expect(following.entities[0].id).toBe(data.taxonomies[0].id);
+		expect(eventSpy).toHaveBeenCalledWith('oFollow.ready', following.entities);
 	});
 
 
@@ -67,9 +69,9 @@ describe('Updating the model while online', function() {
 		following.online = true;
 		following.stop(entity);
 		var expectedUrl = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
-			'userId&type=authors&id=arjunId';
+			'userId&type=authors&id=arjunId';	
 
-		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oFollowStopCallback', jasmine.any(Function));
+	 expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oFollowStopCallback', jasmine.any(Function));
 	});
 });
 
@@ -152,7 +154,13 @@ describe('Handles response from the server', function() {
 		//only set offline in certain cases if follow/unfollow request failed, not the initial one
 		expect(following.online).toBe(true);
 		expect(syncSpy).not.toHaveBeenCalled();
-		expect(eventSpy).not.toHaveBeenCalled();
+		expect(eventSpy).not.toHaveBeenCalledWith('oFollow.ready', following.entities);
+		expect(eventSpy).toHaveBeenCalledWith('oFollow.serverError', {
+			data: mockData,
+			entity: undefined,
+			action: undefined,
+			userId: 'userId'
+		});
 	});
 
 it('successfully recieves data from update requests', function() {
@@ -170,7 +178,12 @@ it('successfully recieves data from update requests', function() {
 		expect(following.online).toBe(true);
 		expect(removeSpy).toHaveBeenCalledWith(mockEntity);
 		expect(syncSpy).not.toHaveBeenCalled();
-		expect(eventSpy).not.toHaveBeenCalled();
+		expect(eventSpy).toHaveBeenCalledWith('oFollow.updateSaved', {
+			data: mockData,
+			entity: mockEntity,
+			action: 'start',
+			userId: 'userId'
+		});	
 	});
 
 	it('retryable errors from update request will add to the list', function() {
@@ -188,7 +201,12 @@ it('successfully recieves data from update requests', function() {
 		expect(following.online).toBe(false);
 		expect(addSpy).toHaveBeenCalledWith(mockEntity, 'start');
 		expect(syncSpy).not.toHaveBeenCalled();
-		expect(eventSpy).not.toHaveBeenCalled();
+		expect(eventSpy).toHaveBeenCalledWith('oFollow.serverError', {
+			data: mockData,
+			entity: mockEntity,
+			action: 'start',
+			userId: 'userId'
+		});	
 	});
 
 

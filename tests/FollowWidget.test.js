@@ -1,7 +1,8 @@
-/*global require,describe,beforeEach,afterEach,it,expect,spyOn*/
+/*global require,describe,beforeEach,afterEach,it,expect,spyOn,jasmine*/
 'use strict';
 
 var FollowWidget = require('../src/js/FollowWidget.js');
+var eventHelper = require('../src/js/lib/eventHelper.js');
 
 
 var rootEl, list;
@@ -13,7 +14,7 @@ describe('The widget object', function() {
 		rootEl = document.createElement('div');
 		rootEl.setAttribute('data-o-follow-user', '');
 		rootEl.className = 'o-follow';
-		rootEl.innerHTML = '<ul class="o-follow__list"></ul>'
+		rootEl.innerHTML = '<ul class="o-follow__list"></ul>';
 		document.body.appendChild(rootEl);
 		list = rootEl.querySelector('.o-follow__list');
 	});
@@ -51,7 +52,7 @@ describe('The widget object', function() {
 		expect(widgetEls.length).toEqual(1);
 
 		var popoverEls = rootEl.querySelectorAll('div.o-follow__popover');
-		expect(widgetEls.length).toEqual(1);
+		expect(popoverEls.length).toEqual(1);
 	});
 
 	it('binds events', function() {
@@ -67,16 +68,18 @@ describe('The widget object', function() {
 	it('shows and hides (with a delay)', function(done) {
     jasmine.Clock.useMock();
 		var widget = new FollowWidget();
-
+		var eventSpy = spyOn(eventHelper, 'dispatch');
 		widget.init(list, rootEl);
 		widget.show();
-
 		expect(rootEl.className).toEqual('o-follow open');
+		expect(eventSpy).toHaveBeenCalledWith('oFollow.widgetOpened', null, rootEl);
+
+
 		widget.hide();
 		expect(rootEl.className).toEqual('o-follow open');
     jasmine.Clock.tick(501);
 		expect(rootEl.className).toEqual('o-follow');
 
 
-	})
+	});
 	});
