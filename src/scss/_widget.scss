@@ -36,13 +36,19 @@
 			color: oColorsGetColorFor(modal, text);
 			border: 1px solid;
 			border-color: oColorsGetColorFor(modal, border);
+			max-width: 100%;
+			box-sizing: border-box;
 			position: absolute;
 			top: auto;
 			left: auto;
 			padding: 10px 20px;
 			margin-top: 16px;
 			z-index: 2;
+			@media (screen and max-width: 400px) {
+				padding: 5px 10px;
+			}
 		}
+
 
 		&.open .#{$classname}__popover {
 			transition-duration: 0, 300ms;
