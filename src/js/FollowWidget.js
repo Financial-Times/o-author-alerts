@@ -5,11 +5,11 @@ var views = require('./views'),
 
 
 function FollowWidget() {
-
+	this.delegate = new DomDelegate(); 
 }
 
 FollowWidget.prototype.init = function(list, rootEl) {
-	this.delegate = new DomDelegate(rootEl);
+	this.delegate.root(rootEl);
 	this.list = list;
 	this.rootEl = rootEl;
 	this.popover = views.popover(rootEl);
