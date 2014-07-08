@@ -60,7 +60,7 @@ By default, the follow component applies minimal styles to the list and header. 
 			</div>
 		</div>
 
-3. *I want to create a standalone author alert button for an author I already have.
+3. *I want to create a standalone author alert button for an author I already have.*
 
 
 		<div class="o-follow" data-o-component="o-follow" data-o-version="0.1.0">
@@ -86,7 +86,7 @@ The follow component fires the following events:
 
 * `oFollow.widgetOpened` - triggered on the root element 
 	* Fired when the user hovers over a widget and it is opened.
-	
+
 * `oFollow.startFollowing`, `oFollow.stopFollowing` - - triggered on the root element
 	* Fired when a request to start/stop following has been fired (regardless of whether it was successful or not)
 	* _event.detail_ 
@@ -100,6 +100,7 @@ The follow component fires the following events:
 			userId: <userId>
 	 	}
 	 ```
+
 
 * `oFollow.updateSaved` - triggered on `document.body`
 	* Fired when a request to start/stop has been successfully saved to the server
@@ -116,6 +117,7 @@ The follow component fires the following events:
 			userId: <userId>
 	 	}
 	 ```
+	 
 
 * `oFollow.serverError` - triggered on `document.body`
 	* Fired when the personalisation service comes back with an error, either when updating or loading user preferences.
