@@ -76,9 +76,12 @@ By default, the follow component applies minimal styles to the list and header. 
 
 The follow component fires the following events:
 
-* `oFollow.ready` - triggered on `document.body`
+* `oFollow.userPreferencesLoaded` - triggered on `document.body`
 	* Fired when the user preferences have been successfully loaded
 	* sends a list of entities being followed as the event detail.
+* `oFollow.shown` - triggered on the root element
+	* Fired if the follow widget/list is made visible on the page (i.e. if all backend calls 
+		were successful, and there is at least one entity to display.)
 * `oFollow.widgetOpened` - triggered on the root element 
 	* Fired when the user hovers over a widget and it is opened.
 * `oFollow.startFollowing`, `oFollow.stopFollowing` - - triggered on the root element

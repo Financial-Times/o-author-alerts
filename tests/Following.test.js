@@ -31,7 +31,7 @@ describe('Getting the initial model', function() {
 		following.set(data);
 		expect(following.entities.length).toBe(1);
 		expect(following.entities[0].id).toBe(data.taxonomies[0].id);
-		expect(eventSpy).toHaveBeenCalledWith('oFollow.ready', following.entities);
+		expect(eventSpy).toHaveBeenCalledWith('oFollow.userPreferencesLoaded', following.entities);
 	});
 
 
@@ -140,7 +140,7 @@ describe('Handles response from the server', function() {
 		expect(following.entities[0]).toBe('a');
 		expect(following.online).toBe(true);
 		expect(syncSpy).toHaveBeenCalled();
-		expect(eventSpy).toHaveBeenCalledWith('oFollow.ready', following.entities);
+		expect(eventSpy).toHaveBeenCalledWith('oFollow.userPreferencesLoaded', following.entities);
 	});
 
 	it('handles errors from the initial call', function() {
@@ -154,7 +154,7 @@ describe('Handles response from the server', function() {
 		//only set offline in certain cases if follow/unfollow request failed, not the initial one
 		expect(following.online).toBe(true);
 		expect(syncSpy).not.toHaveBeenCalled();
-		expect(eventSpy).not.toHaveBeenCalledWith('oFollow.ready', following.entities);
+		expect(eventSpy).not.toHaveBeenCalledWith('oFollow.userPreferencesLoaded', following.entities);
 		expect(eventSpy).toHaveBeenCalledWith('oFollow.serverError', {
 			data: mockData,
 			entity: undefined,

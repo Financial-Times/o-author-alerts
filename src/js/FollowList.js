@@ -2,6 +2,7 @@
 
 var user = require('./user'),
     views = require('./views'),
+    eventHelper = require('./lib/eventHelper'),
     followButtons = require('./followButtons'),
     FollowWidget = require('./FollowWidget'),
     metadata = require('./lib/metadata');
@@ -17,12 +18,12 @@ FollowList.prototype.init = function() {
   if(user.following && user.following.entities) {
     this.setup();
   } else {
-    document.body.addEventListener('oFollow.ready', this.setup.bind(this), false);
+    document.body.addEventListener('oFollow.userPreferencesLoaded', this.setup.bind(this), false);
   }
 };
 
 FollowList.prototype.destroy = function() {
-  document.body.removeEventListener('oFollow.ready');
+  document.body.removeEventListener('oFollow.userPreferencesLoaded');
   user.destroy();
   followButtons.destroy();
   if(this.widget) {
@@ -104,6 +105,7 @@ function renderButtonsForEntities(entities, list) {
 function setReadyIfListNotEmpty(list, rootEl) {
   if(list.querySelector('.o-follow__entity')) {
     rootEl.setAttribute('data-o-follow--js', '');
+    eventHelper.dispatch('oFollow.shown', null, rootEl);
   }
 }
 

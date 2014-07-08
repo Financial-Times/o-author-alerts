@@ -27,7 +27,7 @@ Following.prototype.set = function(data, entity, action) {
 			});
 		} else {
 			this.sync();
-			eventHelper.dispatch('oFollow.ready', this.entities);
+			eventHelper.dispatch('oFollow.userPreferencesLoaded', this.entities);
 		}
 	} else {
 		eventHelper.dispatch('oFollow.serverError', {

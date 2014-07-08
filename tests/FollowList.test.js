@@ -35,22 +35,25 @@ describe('Initialising a follow list', function() {
 
 	it('initialises the buttons if the user preferences are available and there are authors', function() {
 		var entity = {id:'author1', name: 'First Author'};
+		var eventSpy = spyOn(eventHelper, 'dispatch');
 		user.init();
 		user.following.entities= [entity];
 
 		list.init();
 
 		expect(list.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
+		expect(eventSpy).toHaveBeenCalledWith('oFollow.shown', null, rootEl);
 	});
 
-	it('does not initialis if there are authors', function() {
+	it('does not initialise if there are authors', function() {
 		var entity = {id:'author1', name: 'First Author'};
+		var eventSpy = spyOn(eventHelper, 'dispatch');
 		user.init();
 		user.following.entities= [entity];
 		rootEl.removeAttribute('data-o-follow-user');
 		list.init();
-
 		expect(list.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
+		expect(eventSpy).not.toHaveBeenCalledWith('oFollow.shown', null, rootEl);
 	});
 
 
@@ -61,7 +64,7 @@ describe('Initialising a follow list', function() {
 		expect(list.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
 		user.init();
 		user.following.entities= [entity];
-		eventHelper.dispatch('oFollow.ready');
+		eventHelper.dispatch('oFollow.userPreferencesLoaded');
 
 		expect(list.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
 		expect(btnInitSpy).toHaveBeenCalledWith(document.querySelector('.o-follow__list'));
