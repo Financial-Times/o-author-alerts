@@ -10,6 +10,7 @@ var user = require('./user'),
 function FollowList(rootEl) {
 	this.rootEl = rootEl;
   this.widget = null;
+  this.message = null;
 }
 
 FollowList.prototype.init = function() {
@@ -18,12 +19,12 @@ FollowList.prototype.init = function() {
   if(user.following && user.following.entities) {
     this.setup();
   } else {
-    document.body.addEventListener('oFollow.userPreferencesLoaded', this.setup.bind(this), false);
+    document.body.addEventListener('oFollow.userPreferencesLoad', this.setup.bind(this), false);
   }
 };
 
 FollowList.prototype.destroy = function() {
-  document.body.removeEventListener('oFollow.userPreferencesLoaded');
+  document.body.removeEventListener('oFollow.userPreferencesLoad');
   user.destroy();
   followButtons.destroy();
   if(this.widget) {
@@ -33,17 +34,42 @@ FollowList.prototype.destroy = function() {
 };
 
 FollowList.prototype.setup = function() {
-	var list = views.list(this.rootEl);
+	this.list = views.list(this.rootEl);
 
-	createButtons( list, this.rootEl);
+	createButtons( this.list, this.rootEl);
 
   if(isWidget(this.rootEl)) {
-    this.widget = new FollowWidget().init(list, this.rootEl);
+    this.widget = new FollowWidget().init(this.list, this.rootEl);
   }
 
-  followButtons.init(list);
+  document.body.addEventListener('oFollow.serverError', this.onUpdateError.bind(this), false);
+  document.body.addEventListener('oFollow.updateSave', this.onUpdateSuccess.bind(this), false);
+
+  followButtons.init(this.list);
 
 };
+
+FollowList.prototype.onUpdateError = function() {
+  this.createMessage('There was a problem saving your preferences. We\'ll try again when you next visit an article.', 'error');
+}
+
+FollowList.prototype.onUpdateSuccess = function() {
+  if(this.message && this.message.className.indexOf('error')) {
+    this.createMessage('Preferences successfully synced to server!', 'success');
+  }
+}
+
+FollowList.prototype.createMessage = function(msg, type) {
+  if(!this.message) {
+    this.message = document.createElement('span');
+    this.message.className = 'o-follow__message';
+
+    this.list.insertBefore(this.message, this.list.querySelector('.o-follow__entity'));
+
+  }
+  this.message.innerText = msg;
+  this.rootEl.setAttribute('data-o-follow-message', type);
+}
 
 FollowList.prototype.createAllIn = function(rootEl) {
   var followButtons = [], 
@@ -105,8 +131,10 @@ function renderButtonsForEntities(entities, list) {
 function setReadyIfListNotEmpty(list, rootEl) {
   if(list.querySelector('.o-follow__entity')) {
     rootEl.setAttribute('data-o-follow--js', '');
-    eventHelper.dispatch('oFollow.shown', null, rootEl);
+    eventHelper.dispatch('oFollow.show', null, rootEl);
   }
 }
+
+
 
 module.exports = FollowList;

@@ -43,14 +43,14 @@ FollowWidget.prototype.mouseover = function() {
 
 FollowWidget.prototype.show = function() {
 	this.mouseover();
-	this.rootEl.classList.add('open');
-	eventHelper.dispatch('oFollow.widgetOpened', null, this.rootEl);
+	this.rootEl.setAttribute('aria-expanded', '');
+	eventHelper.dispatch('oFollow.widgetOpen', null, this.rootEl);
 };
 
 FollowWidget.prototype.hide = function() {
 	var self = this;
 	this.timeout = setTimeout(function() {
-  	self.rootEl.classList.remove('open');
+  	self.rootEl.removeAttribute('aria-expanded');
 	}, 500);
 };
 

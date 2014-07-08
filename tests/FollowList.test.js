@@ -42,7 +42,7 @@ describe('Initialising a follow list', function() {
 		list.init();
 
 		expect(list.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
-		expect(eventSpy).toHaveBeenCalledWith('oFollow.shown', null, rootEl);
+		expect(eventSpy).toHaveBeenCalledWith('oFollow.show', null, rootEl);
 	});
 
 	it('does not initialise if there are authors', function() {
@@ -53,7 +53,7 @@ describe('Initialising a follow list', function() {
 		rootEl.removeAttribute('data-o-follow-user');
 		list.init();
 		expect(list.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
-		expect(eventSpy).not.toHaveBeenCalledWith('oFollow.shown', null, rootEl);
+		expect(eventSpy).not.toHaveBeenCalledWith('oFollow.show', null, rootEl);
 	});
 
 
@@ -64,7 +64,7 @@ describe('Initialising a follow list', function() {
 		expect(list.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
 		user.init();
 		user.following.entities= [entity];
-		eventHelper.dispatch('oFollow.userPreferencesLoaded');
+		eventHelper.dispatch('oFollow.userPreferencesLoad');
 
 		expect(list.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
 		expect(btnInitSpy).toHaveBeenCalledWith(document.querySelector('.o-follow__list'));

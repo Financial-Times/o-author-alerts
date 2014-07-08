@@ -19,7 +19,7 @@ Following.prototype.set = function(data, entity, action) {
 		this.entities = data.taxonomies;
 		if(entity) {
 			this.removeFromPending(entity);
-			eventHelper.dispatch('oFollow.updateSaved', {
+			eventHelper.dispatch('oFollow.updateSave', {
 				data: data,
 				entity: entity,
 				action: action,
@@ -27,7 +27,7 @@ Following.prototype.set = function(data, entity, action) {
 			});
 		} else {
 			this.sync();
-			eventHelper.dispatch('oFollow.userPreferencesLoaded', this.entities);
+			eventHelper.dispatch('oFollow.userPreferencesLoad', this.entities);
 		}
 	} else {
 		eventHelper.dispatch('oFollow.serverError', {
@@ -65,7 +65,7 @@ Following.prototype.sync = function() {
 			id,
 			pending;
 
-	//GO through pending
+	//G through pending
 	for(id in this.pending) {
 		if(this.pending.hasOwnProperty(id)) {
 			pending = this.pending[id];

@@ -23,6 +23,16 @@
 				color: oColorsGetColorFor(link-hover, text);
 			}
 		}
+		&[data-o-follow-message='error'] {
+			.#{$classname}__widget {
+				color: red;
+			}	
+		}
+		&[data-o-follow-message='success'] {
+			.#{$classname}__widget {
+				color: green;
+			}	
+		}
 
 		.#{$classname}__popover {
 			visibility: hidden;
@@ -50,7 +60,7 @@
 		}
 
 
-		&.open .#{$classname}__popover {
+		&[aria-expanded] .#{$classname}__popover {
 			transition-duration: 0, 300ms;
 			transition-property: visibility, opacity;
 			transition-delay: 0;

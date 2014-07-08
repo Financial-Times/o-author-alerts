@@ -26,6 +26,25 @@
 	.#{$classname}__widget {
 		display: none;
 	}
+	.#{$classname}__message {
+		display: none;
+	}
+
+	[data-o-follow-message='success'] {
+		.#{$classname}__message {
+			display: block;
+			color: green;
+		}
+	}
+
+	[data-o-follow-message='error'] {
+		.#{$classname}__message {
+			display: block;
+			color: red;
+		}
+	}
+
+
 
 	.#{$classname}__header {
 		@extend %o-ft-typography-heading2-text;
@@ -43,7 +62,7 @@
 	.#{$classname}__button {
 		float: right;
 	}
-	@include oFtButtonsButton(o-follow__button);
+	@include oFtButtonsButton(#{$classname}__button);
 
 
 }

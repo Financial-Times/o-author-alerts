@@ -71,14 +71,14 @@ describe('The widget object', function() {
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 		widget.init(list, rootEl);
 		widget.show();
-		expect(rootEl.className).toEqual('o-follow open');
-		expect(eventSpy).toHaveBeenCalledWith('oFollow.widgetOpened', null, rootEl);
+		expect(rootEl.hasAttribute('aria-expanded')).toBeTruthy();;
+		expect(eventSpy).toHaveBeenCalledWith('oFollow.widgetOpen', null, rootEl);
 
 
 		widget.hide();
-		expect(rootEl.className).toEqual('o-follow open');
+		expect(rootEl.hasAttribute('aria-expanded')).toBeTruthy();;
     jasmine.Clock.tick(501);
-		expect(rootEl.className).toEqual('o-follow');
+		expect(rootEl.hasAttribute('aria-expanded')).not.toBeTruthy();;
 
 
 	});
