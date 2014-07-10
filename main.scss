@@ -9,8 +9,3 @@
 @import "src/scss/pointer";
 @import "src/scss/follow";
 @import "src/scss/widget";
-
-@if (not $o-follow-is-silent) {
-	@include oFollowBase();
-	@include oFollowWidgetTheme();
-}

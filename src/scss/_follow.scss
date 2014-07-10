@@ -1,67 +1,65 @@
-@mixin oFollowBase($classname: o-follow) {
-	.#{$classname} {
-		display: none;
-		line-height: 1em;
-	}
-	[data-o-follow--js].#{$classname} {
-		display: inline-block;
-	}
-
-	@include oFontsInclude(BentonSans, normal);
-	@include oFtIconsFontFace();
-	@include oFtTypographyIncludeFont(heading);
-
-	.#{$classname}__list {
-			margin: 0;
-			padding: 0;
-			font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
-	}
-
-	.#{$classname}__entity {
-		list-style: none;
-		overflow: auto;
-		padding: 5px;
-	}
-
-	.#{$classname}__widget {
-		display: none;
-	}
-	.#{$classname}__message {
-		display: none;
-	}
-
-
-	//NOT IMPLEMENTED YET
-	[data-o-follow-message='success'] {
-		.#{$classname}__message {
-			display: block;
-		}
-	}
-
-	[data-o-follow-message='error'] {
-		.#{$classname}__message {
-			display: block;
-			color: oColorsGetColorFor(error, text);;
-		}
-	}
-
-	.#{$classname}__header {
-		@extend %o-ft-typography-heading2-text;
-		margin: 10px 0;
-	}
-
-	.#{$classname}__name {
-		float: left;
-		margin-right: 20px;
-		font-size: 14px;
-		line-height: 22px;
-		font-weight: normal;
-	}
-
-	.#{$classname}__button {
-		float: right;
-	}
-	@include oFtButtonsButton(#{$classname}__button);
-
-
+.o-follow {
+	display: none;
+	line-height: 1em;
 }
+
+[data-o-follow--js].o-follow {
+	display: inline-block;
+}
+
+@include oFontsInclude(BentonSans, normal);
+@include oFtIconsFontFace();
+@include oFtTypographyIncludeFont(heading);
+
+.o-follow__list {
+		margin: 0;
+		padding: 0;
+		font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
+}
+
+.o-follow__entity {
+	list-style: none;
+	overflow: auto;
+	padding: 5px;
+}
+
+.o-follow__widget {
+	display: none;
+}
+.o-follow__message {
+	display: none;
+}
+
+
+//NOT IMPLEMENTED YET
+[data-o-follow-message='success'] {
+	.o-follow__message {
+		display: block;
+	}
+}
+
+[data-o-follow-message='error'] {
+	.o-follow__message {
+		display: block;
+		color: oColorsGetColorFor(error, text);;
+	}
+}
+
+.o-follow__header {
+	@extend %o-ft-typography-heading2-text;
+	margin: 10px 0;
+}
+
+.o-follow__name {
+	float: left;
+	margin-right: 20px;
+	font-size: 14px;
+	line-height: 22px;
+	font-weight: normal;
+}
+
+.o-follow__button {
+	float: right;
+}
+@include oFtButtonsButton(o-follow__button);
+
