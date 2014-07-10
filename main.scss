@@ -1,12 +1,14 @@
-@import "src/scss/variables";
-@import "src/scss/pointer";
-@import "src/scss/follow";
-@import "src/scss/widget";
+
 @import "o-ft-buttons/main";
 @import "o-colors/main";
 @import "o-fonts/main";
 @import "o-ft-typography/main";
 @import "o-ft-icons/main";
+
+@import "src/scss/variables";
+@import "src/scss/pointer";
+@import "src/scss/follow";
+@import "src/scss/widget";
 
 @if (not $o-follow-is-silent) {
 	@include oFollowBase();

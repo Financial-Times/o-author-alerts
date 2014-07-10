@@ -8,7 +8,8 @@ module.exports = function(config) {
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: '',
+        //NOTE: have to go back to root because browserify (i think?) has issues resolving the test files
+        basePath: '..',
 
 
         // frameworks to use

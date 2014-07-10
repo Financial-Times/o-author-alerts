@@ -42,8 +42,9 @@ FollowList.prototype.setup = function() {
     this.widget = new FollowWidget().init(this.list, this.rootEl);
   }
 
-  document.body.addEventListener('oFollow.serverError', this.onUpdateError.bind(this), false);
-  document.body.addEventListener('oFollow.updateSave', this.onUpdateSuccess.bind(this), false);
+  
+  // document.body.addEventListener('oFollow.serverError', this.onUpdateError.bind(this), false);
+  // document.body.addEventListener('oFollow.updateSave', this.onUpdateSuccess.bind(this), false);
 
   followButtons.init(this.list);
 
@@ -94,7 +95,7 @@ FollowList.prototype.createAllIn = function(rootEl) {
 };
 
 function isWidget(rootEl) {
-  return rootEl.querySelector('.o-follow__widget') && rootEl.classList.contains('o-follow--theme');
+  return rootEl.querySelector('.o-follow__widget') && rootEl.className.indexOf('o-follow--theme') >= 0;
 }
 function createButtons(list, rootEl) {
   if(rootEl.hasAttribute('data-o-follow-article-id'))  {

@@ -134,4 +134,9 @@ The follow component fires the following events:
 			userId: <userId>
 	 	}
 	 ```
+
+##Development Notes
+
+* To test, run `npm test` in the root directory
+* The follow functionality only works if there is a valid `FT_User` cookie with an eRights ID. You'll need to make sure this cookie exists when running the demos locally.
 	 	 

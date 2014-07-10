@@ -5,25 +5,25 @@
 		"demos": [
 			{
 				"name": "ArticleList",
-				"template": "demos/article_list.mustache",
+				"template": "demos/src/article_list.mustache",
 				"js": "demos/src/demos.js",
 				"sass": "demos/src/demos.scss"
 			},
 			{
 				"name": "ArticleWidget",
-				"template": "demos/article_widget.mustache",
+				"template": "demos/src/article_widget.mustache",
 				"js": "demos/src/demos.js",
 				"sass": "demos/src/demos.scss"
 			},
 			{
 				"name": "user",
-				"template": "demos/user.mustache",
+				"template": "demos/src/user.mustache",
 				"js": "demos/src/demos.js",
 				"sass": "demos/src/demos.scss"
 			},
 			{
 				"name": "Author",
-				"template": "demos/author.mustache",
+				"template": "demos/src/author.mustache",
 				"js": "demos/src/demos.js",
 				"sass": "demos/src/demos.scss"
 			}

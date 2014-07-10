@@ -37,6 +37,7 @@ describe('Initialising a follow list', function() {
 		var entity = {id:'author1', name: 'First Author'};
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 		user.init();
+		user.id = 'test'
 		user.following.entities= [entity];
 
 		list.init();

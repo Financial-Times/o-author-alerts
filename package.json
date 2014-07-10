@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "test": "./node_modules/karma/bin/karma start karma.conf.js"
+    "test": "./node_modules/karma/bin/karma start ./tests/karma.conf.js"
   },
   "devDependencies": {
     "phantomjs": "^1.9.7-3",
@@ -9,7 +9,7 @@
     "karma": "^0.12.6",
     "karma-jasmine": "^0.1.5",
     "karma-phantomjs-launcher": "^0.1.4",
-    "karma-browserify": "^0.0.6",
+    "karma-bro": "^0.6.0",
     "debowerify": "^0.7.0",
     "karma-spec-reporter": "0.0.13",
     "karma-story-reporter": "^0.2.2"
