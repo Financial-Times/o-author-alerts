@@ -13,6 +13,13 @@ function Following(userId) {
 	this.online = true;
 }
 
+
+Following.prototype.get = function() {
+	var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=' + this.userId;
+	jsonp.get(url, 'oFollowGetCallback', this.set.bind(this));
+};
+
+
 Following.prototype.set = function(data, entity, action) {
 	var eventToTrigger = '';
 
@@ -20,20 +27,23 @@ Following.prototype.set = function(data, entity, action) {
 		eventToTrigger = 'updateSave';
 		this.online = true;
 		this.entities = data.taxonomies;
-		if(entity) {
+
+		if(entity) { // Update call
 			this.removeFromPending(entity);
-		} else {
+		} else { // Initial call to get user preferences
 			this.sync();
 			eventHelper.dispatch('oFollow.userPreferencesLoad', this.entities);
 		}
 	} else {
 		eventToTrigger = 'serverError';
 		if(entity && isRetryable(data)) {
+			//Likely to be an invalid session, so save off further requests to try later
 			this.online = false;
 			this.addToPending(entity, action);
 		}
 	}
 
+	//TODO: use this tho display error messages within the module
 	eventHelper.dispatch('oFollow.' + eventToTrigger, {
 		data: data,
 		entity: entity,
@@ -62,30 +72,26 @@ function isRetryable(data) {
 }
 
 
-Following.prototype.get = function() {
-	var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=' + this.userId;
-	jsonp.get(url, 'oFollowGetCallback', this.set.bind(this));
-};
-
 Following.prototype.sync = function() {
 	var newEntities = [],
 			id,
 			pending;
 
-	//G through pending
+	//Go through pending requests from previous page visits
 	for(id in this.pending) {
 		if(this.pending.hasOwnProperty(id)) {
 			pending = this.pending[id];
 			pending.tried += 1;
-			//Get rid of any that have maxed out attemptes
+			//Give up on any that have maxed out attempts
 			if(pending.tried > MAX_ATTEMPTS) {
 				this.removeFromPending(pending.entity);
 				continue;
 			}
 
-			//start/stop
+			//start/stop these pending requests
 			if(pending.action === 'start') {
 				//if its a new one, add it to the list we have gotten from the server
+				//so the display can update assuming that the user is already following them
 				newEntities.push(pending.entity);
 				this.start(pending.entity);
 			} else {
@@ -93,7 +99,10 @@ Following.prototype.sync = function() {
 			}
 		}
 	}
-
+	//ensure that the list we work with
+	// a) Includes he properly synced entities from the server
+	// b) Includes the entities they want to follow, but havent been synced yet
+	// c) Excludes the entities they want to stop following, but havent been synced
 	this.entities = newEntities.concat(anythingThatIsntDueToStop(this.entities, this.pending));
 };
 
@@ -142,6 +151,7 @@ Following.prototype.savePending = function() {
 	if(this.pending && Object.keys(this.pending).length) {
 		storage.put('oFollowUserCache-'+this.userId, JSON.stringify(this.pending));
 	} else {
+		//get rid of the key from localstorage
 		this.clearPending();
 	}
 };
@@ -169,6 +179,7 @@ Following.prototype.start = function(entity) {
 			self.set( data, entity, 'start');
 		});
 	} else {
+		//don't execute jsonp call, but save it to do on another page visit
 		this.addToPending(entity, 'start');
 	}
 };
@@ -189,6 +200,7 @@ Following.prototype.stop = function(entity) {
 			self.set( data, entity, 'stop');
 		});
 	} else {
+		//don't execute jsonp call, but save it to do on another page visit
 		this.addToPending(entity, 'stop');
 	}
 

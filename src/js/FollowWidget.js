@@ -4,7 +4,6 @@ var views = require('./views'),
     eventHelper = require('./lib/eventHelper'),
     DomDelegate = require('ftdomdelegate');
 
-
 function FollowWidget() {
 	this.delegate = new DomDelegate(); 
 }
@@ -38,6 +37,7 @@ FollowWidget.prototype.bindEvents = function() {
 };
 
 FollowWidget.prototype.mouseover = function() {
+	//used to stop flicker when moving mouse between widget and popover
 	clearTimeout(this.timeout);
 };
 

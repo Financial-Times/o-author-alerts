@@ -17,9 +17,9 @@ FollowList.prototype.init = function() {
   user.init();
 
   if(user.following && user.following.entities) {
-    this.setup();
+    this.setupElements();
   } else {
-    document.body.addEventListener('oFollow.userPreferencesLoad', this.setup.bind(this), false);
+    document.body.addEventListener('oFollow.userPreferencesLoad', this.setupElements.bind(this), false);
   }
 };
 
@@ -33,7 +33,7 @@ FollowList.prototype.destroy = function() {
   this.rootEl.parentElement.removeChild(this.rootEl);
 };
 
-FollowList.prototype.setup = function() {
+FollowList.prototype.setupElements = function() {
 	this.list = views.list(this.rootEl);
 
 	createButtons( this.list, this.rootEl);
@@ -96,8 +96,10 @@ FollowList.prototype.createAllIn = function(rootEl) {
 };
 
 function isWidget(rootEl) {
-  return rootEl.querySelector('.o-follow__widget') && rootEl.className.indexOf('o-follow--theme') >= 0;
+  return rootEl.className.indexOf('o-follow--theme') >= 0;
 }
+
+
 function createButtons(list, rootEl) {
   if(rootEl.hasAttribute('data-o-follow-article-id'))  {
     createForArticle(list, rootEl);
@@ -108,18 +110,23 @@ function createButtons(list, rootEl) {
   }
 }
 
+//We've already initialised the user, so create buttons for ell the entities that they
+//are already following
 function createForUser(list, rootEl) {
   var entities = user && user.following ? user.following.entities : [];
   renderButtonsForEntities(entities, list);
   setReadyIfListNotEmpty(list, rootEl);
 }
 
+//Make an async call to get the metadata for the given article, and render buttons
+//for the entities for that article
 function createForArticle(list, rootEl) {
   var articleId = rootEl.getAttribute('data-o-follow-article-id');
   metadata.get(articleId, function(entities) {
     renderButtonsForEntities(entities.authors, list);
     setReadyIfListNotEmpty(list, rootEl);
-    followButtons.setButtonStates(list);
+    // Reset the button states now they have been created asynchronously
+    followButtons.setInitialStates(list);
   });
 }
 
@@ -131,6 +138,7 @@ function renderButtonsForEntities(entities, list) {
 }
 
 function setReadyIfListNotEmpty(list, rootEl) {
+  //Only show the component if there are entities to follow
   if(list.querySelector('.o-follow__entity')) {
     rootEl.setAttribute('data-o-follow--js', '');
     eventHelper.dispatch('oFollow.show', null, rootEl);

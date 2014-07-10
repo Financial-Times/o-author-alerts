@@ -7,17 +7,31 @@ var user = require('./user'),
     DomDelegate = require('ftdomdelegate'),
     rootDelegate;
 
+//initialise all buttons in the rootEl
 function init(rootEl) {
   rootDelegate = new DomDelegate(rootEl);
   rootDelegate.on('click', '[data-o-follow-id]', function(ev) {
     toggleFollowState(ev, rootEl);
   });
-  setButtonStates(rootEl);
+  setInitialStates(rootEl);
 }
 
 function destroy() {
   if(rootDelegate) {
     rootDelegate.off();
+  }
+}
+
+
+function setInitialStates(rootEl) {
+  var buttons = rootEl.querySelectorAll('[data-o-follow-id]'),
+      i, l, btn
+
+  for(i=0,l=buttons.length; i<l;i++) {
+    btn = buttons[i];
+    if(isBeingFollowed(btn.getAttribute('data-o-follow-id'), user.following.entities)) {
+      startFollowing(btn);
+    }
   }
 }
 
@@ -34,21 +48,6 @@ function isBeingFollowed(id, followingList) {
   }
 
   return matched;
-}
-
-function setButtonStates(rootEl) {
-  var buttons = rootEl.querySelectorAll('[data-o-follow-id]'),
-      i, l;
-
-  for(i=0,l=buttons.length; i<l;i++) {
-    setInitialState(buttons[i]);
-  }
-}
-
-function setInitialState(btn) {
-  if(isBeingFollowed(btn.getAttribute('data-o-follow-id'), user.following.entities)) {
-    startFollowing(btn);
-  }
 }
 
 function toggleFollowState(ev, rootEl) {
@@ -73,7 +72,6 @@ function toggleFollowState(ev, rootEl) {
   eventHelper.dispatch('oTracking.Event', { model: 'oFollow', type: eventName, value: entity.id}, window);
 }
 
-
 function startFollowing(el) {
   //note: using innerHTML in second instance since element is hidden so innerText returns ''
   el.innerText = el.innerHTML.replace('Start', 'Stop');
@@ -90,7 +88,7 @@ function stopFollowing(el) {
 module.exports = {
   init: init,
   destroy: destroy,
-  setButtonStates: setButtonStates
+  setInitialStates: setInitialStates
 };
 
 

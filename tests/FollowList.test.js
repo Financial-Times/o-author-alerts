@@ -27,7 +27,7 @@ describe('Initialising a follow list', function() {
 
 	it('sets up the user', function() {
 		var userSpy = spyOn(user, 'init');
-		spyOn(list, 'setup');
+		spyOn(list, 'setupElements');
 		list.init();
 		expect(userSpy).toHaveBeenCalled();
 
