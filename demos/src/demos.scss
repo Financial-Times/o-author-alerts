@@ -1,7 +1,5 @@
 @import '../../main.scss';
 @import 'o-colors/main';
-@include oFollowBase();
-@include oFollowWidgetTheme();
 
 body {
 	background-color: oColorsGetColorFor(page, background);
