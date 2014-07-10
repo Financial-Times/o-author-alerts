@@ -30,21 +30,20 @@
 		display: none;
 	}
 
+
+	//NOT IMPLEMENTED YET
 	[data-o-follow-message='success'] {
 		.#{$classname}__message {
 			display: block;
-			color: green;
 		}
 	}
 
 	[data-o-follow-message='error'] {
 		.#{$classname}__message {
 			display: block;
-			color: red;
+			color: oColorsGetColorFor(error, text);;
 		}
 	}
-
-
 
 	.#{$classname}__header {
 		@extend %o-ft-typography-heading2-text;

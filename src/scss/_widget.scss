@@ -23,14 +23,16 @@
 				color: oColorsGetColorFor(link-hover, text);
 			}
 		}
+
+		//NOT IMPLEMENTED YET
 		&[data-o-follow-message='error'] {
 			.#{$classname}__widget {
-				color: red;
+				background-color: oColorsGetColorFor(status-error, background);
 			}	
 		}
 		&[data-o-follow-message='success'] {
 			.#{$classname}__widget {
-				color: green;
+				background-color: oColorsGetColorFor(status-ok, background);
 			}	
 		}
 

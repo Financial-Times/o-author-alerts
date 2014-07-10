@@ -44,7 +44,7 @@ FollowWidget.prototype.mouseover = function() {
 FollowWidget.prototype.show = function() {
 	this.mouseover();
 	this.rootEl.setAttribute('aria-expanded', '');
-	eventHelper.dispatch('oFollow.widgetOpen', null, this.rootEl);
+  eventHelper.dispatch('oTracking.Event', { model: 'oFollow', type: 'widgetOpen'}, window);
 };
 
 FollowWidget.prototype.hide = function() {

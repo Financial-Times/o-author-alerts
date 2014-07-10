@@ -72,21 +72,22 @@ describe('Clicking the button', function() {
 		expect(startSpy).toHaveBeenCalledWith(entity, 'userId');
 		// expect(button.el.innerText).toBe('Stop Following');
 		expect(button.getAttribute('data-o-follow-state')).toBe('true');
+		
+		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
+			model: 'oFollow', type: 'startFollowing', value: 'author1'
+		}, window);
 
-		expect(eventSpy).toHaveBeenCalledWith('oFollow.startFollowing', {
-			entity: entity,
-			userId: 'userId'
-		}, testEl);	
 
 		button.click();
+		
 		expect(stopSpy).toHaveBeenCalledWith(entity, 'userId');
 		// expect(button.el.innerText).toBe('Start Following');
 		expect(button.getAttribute('data-o-follow-state')).toBe('false');
 
-		expect(eventSpy).toHaveBeenCalledWith('oFollow.stopFollowing', {
-			entity: entity,
-			userId: 'userId'
-		}, testEl);	
+		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
+			model: 'oFollow', type: 'stopFollowing', value: 'author1'
+		}, window);
+
 
 	});
 });

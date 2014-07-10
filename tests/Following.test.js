@@ -155,17 +155,25 @@ describe('Handles response from the server', function() {
 		expect(following.online).toBe(true);
 		expect(syncSpy).not.toHaveBeenCalled();
 		expect(eventSpy).not.toHaveBeenCalledWith('oFollow.userPreferencesLoad', following.entities);
-		expect(eventSpy).toHaveBeenCalledWith('oFollow.serverError', {
-			data: mockData,
-			entity: undefined,
-			action: undefined,
-			userId: 'userId'
-		});
+		
+		expect(eventSpy.argsForCall[0][0]).toBe('oFollow.serverError');
+		expect(eventSpy.argsForCall[0][1].data).toBe(mockData);
+		expect(eventSpy.argsForCall[0][1].entity).toBe(undefined);
+		expect(eventSpy.argsForCall[0][1].action).toBe(undefined);
+		expect(eventSpy.argsForCall[0][2]).toBe(undefined);
+
+		expect(eventSpy.argsForCall[1][0]).toBe('oTracking.Event');
+		expect(eventSpy.argsForCall[1][1].model).toBe('oFollow');
+		expect(eventSpy.argsForCall[1][1].type).toBe('serverError');
+		expect(eventSpy.argsForCall[1][1].value).toBe('entityId=,action=');
+		expect(eventSpy.argsForCall[1][2]).toBe(window);
+
+
 	});
 
 it('successfully recieves data from update requests', function() {
 		var mockData = {'status': 'success', taxonomies: ['a', 'b']};
-		var mockEntity = 'mockEntity';
+		var mockEntity = { id: 'mockEntity' };
 		following.online = false;
 		var syncSpy = spyOn(following, 'sync');
 		var removeSpy = spyOn(following, 'removeFromPending');
@@ -178,17 +186,26 @@ it('successfully recieves data from update requests', function() {
 		expect(following.online).toBe(true);
 		expect(removeSpy).toHaveBeenCalledWith(mockEntity);
 		expect(syncSpy).not.toHaveBeenCalled();
-		expect(eventSpy).toHaveBeenCalledWith('oFollow.updateSave', {
-			data: mockData,
-			entity: mockEntity,
-			action: 'start',
-			userId: 'userId'
-		});	
+		expect(eventSpy.callCount).toEqual(2);
+
+
+		expect(eventSpy.argsForCall[0][0]).toBe('oFollow.updateSave');
+		expect(eventSpy.argsForCall[0][1].data).toBe(mockData);
+		expect(eventSpy.argsForCall[0][1].entity).toBe(mockEntity);
+		expect(eventSpy.argsForCall[0][1].action).toBe('start');
+		expect(eventSpy.argsForCall[0][2]).not.toBeDefined();
+
+		expect(eventSpy.argsForCall[1][0]).toBe('oTracking.Event');
+		expect(eventSpy.argsForCall[1][1].model).toBe('oFollow');
+		expect(eventSpy.argsForCall[1][1].type).toBe('updateSave');
+		expect(eventSpy.argsForCall[1][1].value).toBe('entityId=mockEntity,action=start');
+		expect(eventSpy.argsForCall[1][2]).toBe(window);
+
 	});
 
 	it('retryable errors from update request will add to the list', function() {
 		var mockData = {'status': 'error', 'message': 'retry me please'};
-		var mockEntity = 'mockEntity';
+		var mockEntity = {id: 'mockEntity'} ;
 		following.online = true;
 		var syncSpy = spyOn(following, 'sync');
 		var eventSpy = spyOn(eventHelper, 'dispatch');
@@ -201,12 +218,20 @@ it('successfully recieves data from update requests', function() {
 		expect(following.online).toBe(false);
 		expect(addSpy).toHaveBeenCalledWith(mockEntity, 'start');
 		expect(syncSpy).not.toHaveBeenCalled();
-		expect(eventSpy).toHaveBeenCalledWith('oFollow.serverError', {
-			data: mockData,
-			entity: mockEntity,
-			action: 'start',
-			userId: 'userId'
-		});	
+
+		expect(eventSpy.argsForCall[0][0]).toBe('oFollow.serverError');
+		expect(eventSpy.argsForCall[0][1].data).toBe(mockData);
+		expect(eventSpy.argsForCall[0][1].entity).toBe(mockEntity);
+		expect(eventSpy.argsForCall[0][1].action).toBe('start');
+		expect(eventSpy.argsForCall[0][2]).not.toBeDefined();
+
+		expect(eventSpy.argsForCall[1][0]).toBe('oTracking.Event');
+		expect(eventSpy.argsForCall[1][1].model).toBe('oFollow');
+		expect(eventSpy.argsForCall[1][1].type).toBe('serverError');
+		expect(eventSpy.argsForCall[1][1].value).toBe('entityId=mockEntity,action=start');
+		expect(eventSpy.argsForCall[1][2]).toBe(window);
+
+	
 	});
 
 

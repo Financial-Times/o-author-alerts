@@ -50,27 +50,28 @@ FollowList.prototype.setup = function() {
 
 };
 
-FollowList.prototype.onUpdateError = function() {
-  this.createMessage('There was a problem saving your preferences. We\'ll try again when you next visit an article.', 'error');
-}
+//NOT IMPLEMENTED YET
+// FollowList.prototype.onUpdateError = function() {
+//   this.createMessage('There was a problem saving your preferences. We\'ll try again when you next visit an article.', 'error');
+// };
 
-FollowList.prototype.onUpdateSuccess = function() {
-  if(this.message && this.message.className.indexOf('error')) {
-    this.createMessage('Preferences successfully synced to server!', 'success');
-  }
-}
+// FollowList.prototype.onUpdateSuccess = function() {
+//   if(this.message && this.message.className.indexOf('error')) {
+//     this.createMessage('Preferences successfully synced to server!', 'success');
+//   }
+// };
 
-FollowList.prototype.createMessage = function(msg, type) {
-  if(!this.message) {
-    this.message = document.createElement('span');
-    this.message.className = 'o-follow__message';
+// FollowList.prototype.createMessage = function(msg, type) {
+//   if(!this.message) {
+//     this.message = document.createElement('span');
+//     this.message.className = 'o-follow__message';
 
-    this.list.insertBefore(this.message, this.list.querySelector('.o-follow__entity'));
+//     this.list.insertBefore(this.message, this.list.querySelector('.o-follow__entity'));
 
-  }
-  this.message.innerText = msg;
-  this.rootEl.setAttribute('data-o-follow-message', type);
-}
+//   }
+//   this.message.innerText = msg;
+//   this.rootEl.setAttribute('data-o-follow-message', type);
+// };
 
 FollowList.prototype.createAllIn = function(rootEl) {
   var followButtons = [], 
@@ -132,7 +133,7 @@ function renderButtonsForEntities(entities, list) {
 function setReadyIfListNotEmpty(list, rootEl) {
   if(list.querySelector('.o-follow__entity')) {
     rootEl.setAttribute('data-o-follow--js', '');
-    eventHelper.dispatch('oFollow.show', null, rootEl);
+    eventHelper.dispatch('oTracking.Event', { model: 'oFollow', type: 'load'}, window);
   }
 }
 

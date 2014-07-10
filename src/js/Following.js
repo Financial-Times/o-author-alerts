@@ -14,34 +14,41 @@ function Following(userId) {
 }
 
 Following.prototype.set = function(data, entity, action) {
+	var eventToTrigger = '';
+
 	if(data.status === 'success' && data.taxonomies) {
+		eventToTrigger = 'updateSave';
 		this.online = true;
 		this.entities = data.taxonomies;
 		if(entity) {
 			this.removeFromPending(entity);
-			eventHelper.dispatch('oFollow.updateSave', {
-				data: data,
-				entity: entity,
-				action: action,
-				userId: this.userId
-			});
 		} else {
 			this.sync();
 			eventHelper.dispatch('oFollow.userPreferencesLoad', this.entities);
 		}
 	} else {
-		eventHelper.dispatch('oFollow.serverError', {
-			data: data,
-			entity: entity,
-			action: action,
-			userId: this.userId
-		});
+		eventToTrigger = 'serverError';
 		if(entity && isRetryable(data)) {
 			this.online = false;
 			this.addToPending(entity, action);
 		}
-
 	}
+
+	eventHelper.dispatch('oFollow.' + eventToTrigger, {
+		data: data,
+		entity: entity,
+		action: action,
+		userId: this.userId
+	});
+
+  eventHelper.dispatch(
+  	'oTracking.Event', 
+  	{ model: 'oFollow', 
+  		type: eventToTrigger, 
+  		value: 'entityId=' + (entity ? entity.id : '') + ',action=' + (action || '') }, 
+  	window
+	);
+
 };
 
 function isRetryable(data) {

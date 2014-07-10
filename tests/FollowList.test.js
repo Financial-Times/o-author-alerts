@@ -37,13 +37,15 @@ describe('Initialising a follow list', function() {
 		var entity = {id:'author1', name: 'First Author'};
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 		user.init();
-		user.id = 'test'
+		user.id = 'test';
 		user.following.entities= [entity];
 
 		list.init();
 
 		expect(list.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
-		expect(eventSpy).toHaveBeenCalledWith('oFollow.show', null, rootEl);
+		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
+			model: 'oFollow', type: 'load'
+		}, window);
 	});
 
 	it('does not initialise if there are authors', function() {
