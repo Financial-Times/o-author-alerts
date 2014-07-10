@@ -43,9 +43,17 @@ describe('Initialising a follow list', function() {
 		list.init();
 
 		expect(list.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
-		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
-			model: 'oFollow', type: 'load'
-		}, window);
+		expect(eventSpy.callCount).toEqual(2);
+
+
+		expect(eventSpy.argsForCall[0][0]).toBe('oFollow.show');
+		expect(eventSpy.argsForCall[0][1]).toBe(null);
+		expect(eventSpy.argsForCall[0][2]).toBe(rootEl);
+
+		expect(eventSpy.argsForCall[1][0]).toBe('oTracking.Event');
+		expect(eventSpy.argsForCall[1][1].model).toBe('oFollow');
+		expect(eventSpy.argsForCall[1][1].type).toBe('show');
+		expect(eventSpy.argsForCall[1][2]).toBe(window);
 	});
 
 	it('does not initialise if there are authors', function() {

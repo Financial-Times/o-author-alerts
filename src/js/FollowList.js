@@ -133,7 +133,8 @@ function renderButtonsForEntities(entities, list) {
 function setReadyIfListNotEmpty(list, rootEl) {
   if(list.querySelector('.o-follow__entity')) {
     rootEl.setAttribute('data-o-follow--js', '');
-    eventHelper.dispatch('oTracking.Event', { model: 'oFollow', type: 'load'}, window);
+    eventHelper.dispatch('oFollow.show', null, rootEl);
+    eventHelper.dispatch('oTracking.Event', { model: 'oFollow', type: 'show'}, window);
   }
 }
 

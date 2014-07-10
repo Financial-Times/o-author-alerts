@@ -80,27 +80,9 @@ The follow component fires the following events:
 	* Fired when the user preferences have been successfully loaded
 	* sends a list of entities being followed as the event detail.
 
-* `oFollow.shown` - triggered on the root element
+* `oFollow.show` - triggered on the root element
 	* Fired if the follow widget/list is made visible on the page (i.e. if all backend calls 
 		were successful, and there is at least one entity to display.)
-
-* `oFollow.widgetOpened` - triggered on the root element 
-	* Fired when the user hovers over a widget and it is opened.
-
-* `oFollow.startFollowing`, `oFollow.stopFollowing` - - triggered on the root element
-	* Fired when a request to start/stop following has been fired (regardless of whether it was successful or not)
-	* _event.detail_ 
-	
-	```
-		{
-			entity: {
-				id: <entity id>,
-				name: <entity name>
-			},
-			userId: <userId>
-	 	}
-	 ```
-
 
 * `oFollow.updateSaved` - triggered on `document.body`
 	* Fired when a request to start/stop has been successfully saved to the server
@@ -134,6 +116,12 @@ The follow component fires the following events:
 			userId: <userId>
 	 	}
 	 ```
+
+There are also tracking events fired for various events on the page:
+	* When a widget is shown on a page
+	* When the widget is opened
+	* When a user starts/stops following someone
+	* On the server update/errors
 
 ##Development Notes
 
