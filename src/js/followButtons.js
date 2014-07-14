@@ -25,7 +25,7 @@ function destroy() {
 
 function setInitialStates(rootEl) {
   var buttons = rootEl.querySelectorAll('[data-o-follow-id]'),
-      i, l, btn
+      i, l, btn;
 
   for(i=0,l=buttons.length; i<l;i++) {
     btn = buttons[i];

@@ -34,8 +34,5 @@
       "description": "Standalone button for an author",
       "expanded": false
     }
-  ],
-  "ci": {
-    "travis": "https://api.travis-ci.org/repos/Financial-Times/o-follow/builds.json"
-  }
+  ]
 }
