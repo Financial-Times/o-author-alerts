@@ -74,15 +74,22 @@ function toggleFollowState(ev, rootEl) {
 
 function startFollowing(el) {
   //note: using innerHTML in second instance since element is hidden so innerText returns ''
-  el.innerText = el.innerHTML.replace('Start', 'Stop');
+  setTextContent(el, el.innerHTML.replace('Start', 'Stop'));
   el.setAttribute('data-o-follow-state', true);
-
 }
 
 function stopFollowing(el) {
-  el.innerText = el.innerHTML.replace('Stop', 'Start');
+  setTextContent(el, el.innerHTML.replace('Stop', 'Start'));
   el.setAttribute('data-o-follow-state', false);
 
+}
+
+function setTextContent(element, text) {
+  if('textContent' in element) {
+    element.textContent = text;
+  } else {
+    element.innerText = text;
+  }
 }
 
 module.exports = {

@@ -7,7 +7,7 @@ A widget providing the UI and functionality to subscribe to Author Alerts on FT.
 
 A product must provide the source HTML as shown below, based on the use case. 
 
-The follow buttons are automatically initialised when the `o.DOMContentLoaded` is triggered.
+The follow buttons are automatically initialised when the `o.DOMContentLoaded` event is triggered.
 
 Alternatively, you can use the `createAllIn` method on the prototype, as follows:
 
@@ -36,10 +36,10 @@ By default, the follow component applies minimal styles to the list and header. 
 			</ul>
 		</div>
 		
-1. *Given an Article ID, I want a widget that displays the list of authors on hover*
+2. *Given an Article ID, I want a widget that displays the list of authors on hover*
 
 		<div class="o-follow o-follow--theme" data-o-component="o-follow" data-o-version="0.1.0" data-o-follow-article-id="{{articleId}}">
-			<a href="" class="o-follow__widget">Author Alerts<i class="icon-arrow-down"></i></a>
+			<span class="o-follow__widget">Author Alerts<i class="icon-arrow-down"></i></span>
 			<div class="o-follow__popover" will-change>
 			<h3 class="o-follow__header">HEADER</h3>
 			<ul class="o-follow__list">
@@ -48,26 +48,26 @@ By default, the follow component applies minimal styles to the list and header. 
 			</div>
 		</div>
 
-2. *Given a logged in user, I want to create buttons for all the users that the user currently follows*
+3. *Given a logged in user, I want to create buttons for all the users that the user currently follows*
 
 		<div class="o-follow" data-o-component="o-follow" data-o-version="0.1.0" data-o-follow-user>
-			<a href="" class="o-follow__widget">Your Alerts<i class="icon-arrow-down"></i></a>
+			<span class="o-follow__widget">Your Alerts<i class="icon-arrow-down"></i></span>
 			<div class="o-follow__popover" will-change>
-			<h3 class="o-follow__header">You are following:</h3>
-			<ul class="o-follow__list">
+				<h3 class="o-follow__header">You are following:</h3>
+				<ul class="o-follow__list">
 
-			</ul>
+				</ul>
 			</div>
 		</div>
 
-3. *I want to create a standalone author alert button for an author I already have.*
+4. *I want to create a standalone author alert button for an author I already have.*
 
 
 		<div class="o-follow" data-o-component="o-follow" data-o-version="0.1.0">
 			<div class="o-follow__list">
-			<div class="o-follow__entity">
-				<button  class="o-follow__button" data-o-follow-id="{{authorId}}" data-o-follow-name="{{authorName}}">Start Following</button> 
-			</div>
+				<div class="o-follow__entity">
+					<button  class="o-follow__button" data-o-follow-id="{{authorId}}" data-o-follow-name="{{authorName}}">Start Following</button> 
+				</div>
 			</div>
 		</div>
 

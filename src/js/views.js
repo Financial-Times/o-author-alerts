@@ -1,5 +1,13 @@
 'use strict';
 
+function setTextContent(element, text) {
+  if('textContent' in element) {
+    element.textContent = text;
+  } else {
+    element.innerText = text;
+  }
+}
+
 function createWrapper(tagName) {
 	var wrapper = document.createElement(tagName);
 	wrapper.className = 'o-follow__entity';
@@ -8,7 +16,7 @@ function createWrapper(tagName) {
 
 function createNameSpan(name){
  	var span = document.createElement('span');
-  span.innerText = name;
+  setTextContent(span, name);
   span.className = 'o-follow__name';
   return span;
 }
@@ -18,7 +26,7 @@ function createButton(entity) {
   btn.className = 'o-follow__button';
   btn.setAttribute('data-o-follow-id', entity.id);
   btn.setAttribute('data-o-follow-name', entity.name);
-  btn.innerText = 'Start';
+  setTextContent(btn, 'Start');
   return btn;
 }
 
@@ -64,7 +72,7 @@ exports.widget = function(rootEl) {
 			icon = widget ? widget.querySelector('i') : null;
   if(!widget) {
     widget = document.createElement('span');
-    widget.innerText = "Alerts";
+    setTextContent(widget, 'Alerts');
     widget.className = 'o-follow__widget';
     rootEl.insertBefore(widget, popover);
   }
