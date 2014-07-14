@@ -28,6 +28,7 @@ describe('Initialising a follow list', function() {
 	it('sets up the user', function() {
 		var userSpy = spyOn(user, 'init');
 		spyOn(list, 'setupElements');
+		spyOn(list, 'setupButtons');
 		list.init();
 		expect(userSpy).toHaveBeenCalled();
 
@@ -63,7 +64,7 @@ describe('Initialising a follow list', function() {
 		user.following.entities= [entity];
 		rootEl.removeAttribute('data-o-follow-user');
 		list.init();
-		expect(list.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
+		expect(list.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
 		expect(eventSpy).not.toHaveBeenCalledWith('oFollow.show', null, rootEl);
 	});
 
@@ -72,7 +73,7 @@ describe('Initialising a follow list', function() {
 		var entity = {id:'author1', name: 'First Author'};
 		var btnInitSpy = spyOn(followButtons, 'init');
 		list.init();
-		expect(list.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
+		expect(list.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
 		user.init();
 		user.following.entities= [entity];
 		eventHelper.dispatch('oFollow.userPreferencesLoad');

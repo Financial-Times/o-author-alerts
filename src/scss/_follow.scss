@@ -12,9 +12,9 @@
 @include oFtTypographyIncludeFont(heading);
 
 .o-follow__list {
-		margin: 0;
-		padding: 0;
-		font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
+	margin: 0;
+	padding: 0;
+	font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 }
 
 .o-follow__entity {
@@ -32,7 +32,7 @@
 
 
 //NOT IMPLEMENTED YET
-[data-o-follow-message='success'] {
+[data-o-follow-message] {
 	.o-follow__message {
 		display: block;
 	}
@@ -40,7 +40,6 @@
 
 [data-o-follow-message='error'] {
 	.o-follow__message {
-		display: block;
 		color: oColorsGetColorFor(error, text);;
 	}
 }

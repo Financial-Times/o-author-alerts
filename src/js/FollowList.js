@@ -15,11 +15,11 @@ function FollowList(rootEl) {
 
 FollowList.prototype.init = function() {
   user.init();
-
+  this.setupElements();
   if(user.following && user.following.entities) {
-    this.setupElements();
+    this.setupButtons();
   } else {
-    document.body.addEventListener('oFollow.userPreferencesLoad', this.setupElements.bind(this), false);
+    document.body.addEventListener('oFollow.userPreferencesLoad', this.setupButtons.bind(this), false);
   }
 };
 
@@ -35,20 +35,26 @@ FollowList.prototype.destroy = function() {
 
 FollowList.prototype.setupElements = function() {
 	this.list = views.list(this.rootEl);
-
-	createButtons( this.list, this.rootEl);
+  this.createMessage('No followable authors found.', '');
 
   if(isWidget(this.rootEl)) {
     this.widget = new FollowWidget().init(this.list, this.rootEl);
   }
 
-  
+  this.rootEl.setAttribute('data-o-follow--js', '');
+
   // document.body.addEventListener('oFollow.serverError', this.onUpdateError.bind(this), false);
   // document.body.addEventListener('oFollow.updateSave', this.onUpdateSuccess.bind(this), false);
 
-  followButtons.init(this.list);
 
 };
+
+FollowList.prototype.setupButtons = function() {
+  console.log('list is', this.list);
+  this.createButtons();
+  followButtons.init(this.list);
+
+}
 
 //NOT IMPLEMENTED YET
 // FollowList.prototype.onUpdateError = function() {
@@ -61,17 +67,24 @@ FollowList.prototype.setupElements = function() {
 //   }
 // };
 
-// FollowList.prototype.createMessage = function(msg, type) {
-//   if(!this.message) {
-//     this.message = document.createElement('span');
-//     this.message.className = 'o-follow__message';
+FollowList.prototype.createMessage = function(msg, type) {
+  if(!this.message) {
+    this.message = document.createElement('span');
+    this.message.className = 'o-follow__message';
 
-//     this.list.insertBefore(this.message, this.list.querySelector('.o-follow__entity'));
+    this.list.insertBefore(this.message, this.list.querySelector('.o-follow__entity'));
 
-//   }
-//   this.message.innerText = msg;
-//   this.rootEl.setAttribute('data-o-follow-message', type);
-// };
+  }
+  this.message.innerText = msg;
+  this.rootEl.setAttribute('data-o-follow-message', type);
+};
+
+FollowList.prototype.removeMessage = function(msg, type) {
+  if(this.message) {
+    this.message.parentElement.removeChild(this.message);
+  }
+  this.rootEl.removeAttribute('data-o-follow-message');
+};
 
 FollowList.prototype.createAllIn = function(rootEl) {
   var followButtons = [], 
@@ -100,33 +113,34 @@ function isWidget(rootEl) {
 }
 
 
-function createButtons(list, rootEl) {
-  if(rootEl.hasAttribute('data-o-follow-article-id'))  {
-    createForArticle(list, rootEl);
-  } else if (rootEl.hasAttribute('data-o-follow-user')) {
-    createForUser(list, rootEl);
+FollowList.prototype.createButtons = function() {
+  if(this.rootEl.hasAttribute('data-o-follow-article-id'))  {
+    this.createForArticle();
+  } else if (this.rootEl.hasAttribute('data-o-follow-user')) {
+    this.createForUser();
   } else {
-    setReadyIfListNotEmpty(list, rootEl);
+    this.setReadyIfListNotEmpty();
   }
 }
 
 //We've already initialised the user, so create buttons for ell the entities that they
 //are already following
-function createForUser(list, rootEl) {
+FollowList.prototype.createForUser = function() {
   var entities = user && user.following ? user.following.entities : [];
-  renderButtonsForEntities(entities, list);
-  setReadyIfListNotEmpty(list, rootEl);
+  renderButtonsForEntities(entities, this.list);
+  this.setReadyIfListNotEmpty();
 }
 
 //Make an async call to get the metadata for the given article, and render buttons
 //for the entities for that article
-function createForArticle(list, rootEl) {
-  var articleId = rootEl.getAttribute('data-o-follow-article-id');
+FollowList.prototype.createForArticle = function() {
+  var self = this,
+      articleId = this.rootEl.getAttribute('data-o-follow-article-id');
   metadata.get(articleId, function(entities) {
-    renderButtonsForEntities(entities.authors, list);
-    setReadyIfListNotEmpty(list, rootEl);
+    renderButtonsForEntities(entities.authors, self.list);
+    self.setReadyIfListNotEmpty();
     // Reset the button states now they have been created asynchronously
-    followButtons.setInitialStates(list);
+    followButtons.setInitialStates(self.list);
   });
 }
 
@@ -137,12 +151,12 @@ function renderButtonsForEntities(entities, list) {
   }
 }
 
-function setReadyIfListNotEmpty(list, rootEl) {
+FollowList.prototype.setReadyIfListNotEmpty = function() {
   //Only show the component if there are entities to follow
-  if(list.querySelector('.o-follow__entity')) {
-    rootEl.setAttribute('data-o-follow--js', '');
-    eventHelper.dispatch('oFollow.show', null, rootEl);
+  if(this.list.querySelector('.o-follow__entity')) {
+    eventHelper.dispatch('oFollow.show', null, this.rootEl);
     eventHelper.dispatch('oTracking.Event', { model: 'oFollow', type: 'show'}, window);
+    this.removeMessage();
   }
 }
 
