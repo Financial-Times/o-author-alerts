@@ -61,8 +61,7 @@ describe('The widget object', function() {
 
 		widget.init(list, rootEl);
 		//NOTE: phantomjs thinks it's a touch browser
-		expect(delSpy).toHaveBeenCalledWith('touchstart', '.o-follow__widget', jasmine.any(Function));
-		expect(delSpy).toHaveBeenCalledWith('touchend', '.o-follow__widget', jasmine.any(Function));
+		expect(delSpy).toHaveBeenCalledWith('click', '.o-follow__widget', jasmine.any(Function));
 	});
 
 	it('shows and hides (with a delay)', function(done) {
@@ -77,8 +76,6 @@ describe('The widget object', function() {
 		}, window);
 
 		widget.hide();
-		expect(rootEl.hasAttribute('aria-expanded')).toBeTruthy();
-    jasmine.Clock.tick(501);
 		expect(rootEl.hasAttribute('aria-expanded')).not.toBeTruthy();
 
 
