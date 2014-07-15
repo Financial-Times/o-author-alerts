@@ -16,6 +16,23 @@ Alternatively, you can use the `createAllIn` method on the prototype, as follows
 
 where `rootEl` defaults to `document.body` if not specified.
 
+####Configuration
+You can optionally pass in some configuration to the Javascript, as follows:
+
+	var oFollow = require('o-follow');
+	oFollow.prototype.createAllIn(rootEl, {
+		startFollowingText: "Follow %entityName%", //default: 'Start'
+		stopFollowingText: "Unfollow %entityName%", //default: 'Stop'
+		widgetText: 'Your Alerts', //default: 'Author Alerts'
+		popoverHeadingText: 'You are following:' //default: 'Get alerts for:'
+	});
+
+* Note: widgetText and popoverHeadingText will only be used if you do not already have the required elements in your markup, and are relying on the Javascript to create them.
+
+* `%entityName%` will bre replaced with the name of the entity in the above examples.
+
+
+
 ##Content
 The buttons can be created from elements already existing in the DOM (i.e. if you already have author ID/name available on the page), or by passing in a data attribute on the root element:
 

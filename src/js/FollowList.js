@@ -8,7 +8,7 @@ var user = require('./user'),
     metadata = require('./lib/metadata'),
     config = require('./config.js');
 
-function FollowList(rootEl, opts) {
+function FollowList(rootEl) {
 	this.rootEl = rootEl;
   this.widget = null;
   this.message = null;
@@ -74,26 +74,27 @@ FollowList.prototype.setupElements = function() {
 // };
 
 FollowList.prototype.createAllIn = function(rootEl, opts) {
-  var followButtons = [], 
+  var followComponents = [], 
       fEls, 
       c, l, 
-      btn;
+      list;
 
   rootEl = rootEl || document.body;
   //set config with overrides passed through
+  config.set(opts);
 
   if (rootEl.querySelectorAll) {
     fEls = rootEl.querySelectorAll('[data-o-component=o-follow]');
     for (c = 0, l = fEls.length; c < l; c++) {
       if (!fEls[c].hasAttribute('data-o-follow--js')) {
-        btn = new FollowList(fEls[c]);
-        btn.init();
-        followButtons.push(btn);
+        list = new FollowList(fEls[c]);
+        list.init();
+        followComponents.push(list);
       }
     }
   }
 
-  return followButtons;
+  return followComponents;
 };
 
 function isWidget(rootEl) {
@@ -107,6 +108,7 @@ function createButtons(list, rootEl) {
   } else if (rootEl.hasAttribute('data-o-follow-user')) {
     createForUser(list, rootEl);
   } else {
+    followButtons.setInitialStates(list);
     setReadyIfListNotEmpty(list, rootEl);
   }
 }

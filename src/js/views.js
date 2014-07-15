@@ -43,6 +43,7 @@ exports.button = function(list, entity) {
 
 exports.list = function(rootEl) {
   var list = rootEl.querySelector('.o-follow__list');
+
   if(!list) {
     list = document.createElement('ul');
     list.className = 'o-follow__list';
@@ -53,14 +54,13 @@ exports.list = function(rootEl) {
 
 exports.popover = function(rootEl) {
 	var list = rootEl.querySelector('.o-follow__list'),
-  		popover = rootEl.querySelector('.o-follow__popover'),
-  		header = config.popoverHeadingText;
+  		popover = rootEl.querySelector('.o-follow__popover');
 
   if(!popover) {
   	popover = document.createElement('div');
   	popover.className = 'o-follow__popover';
     popover.setAttribute('will-change', '');
-  	popover.innerHTML = '<h3 class="o-follow__header">' + header + '</div>';
+  	popover.innerHTML = '<h3 class="o-follow__header">' + config.popoverHeadingText + '</div>';
   	rootEl.insertBefore(popover, list);
   	popover.appendChild(list);
   }
@@ -74,7 +74,6 @@ exports.widget = function(rootEl) {
 			icon = widget ? widget.querySelector('i') : null;
   if(!widget) {
     widget = document.createElement('span');
-    console.log('config', config);
     setTextContent(widget, config.widgetText);
     widget.className = 'o-follow__widget';
     rootEl.insertBefore(widget, popover);

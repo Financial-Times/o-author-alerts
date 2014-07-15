@@ -26,30 +26,31 @@ function destroy() {
 
 function setInitialStates(rootEl) {
   var buttons = rootEl.querySelectorAll('[data-o-follow-id]'),
-      i, l, btn, entityBeingFollowed;
+      i, l, btn;
 
   for(i=0,l=buttons.length; i<l;i++) {
     btn = buttons[i];
-    entityBeingFollowed = isBeingFollowed(btn.getAttribute('data-o-follow-id'), user.following.entities);
-    if(entityBeingFollowed) {
-      startFollowing(btn, entityBeingFollowed.name);
+    if(isBeingFollowed(btn.getAttribute('data-o-follow-id'), user.following.entities)) {
+      startFollowing(btn);
+    } else {
+      stopFollowing(btn);
     }
   }
 }
 
 function isBeingFollowed(id, followingList) {
-  var entity = null,
+  var matched = false,
       i, l;
   followingList = followingList || [];
 
   for(i=0,l=followingList.length;i<l;i++) {
     if(followingList[i].id === id) {
-      entity = followingList[i];
+      matched = true;
       break;
     }
   }
 
-  return entity;
+  return matched;
 }
 
 function toggleFollowState(ev, rootEl) {
@@ -63,24 +64,26 @@ function toggleFollowState(ev, rootEl) {
 
   if(isCurrentlyFollowing) {
     user.following.stop(entity, user.id );
-    stopFollowing(btn, entity.name);
+    stopFollowing(btn);
     eventName = 'stopFollowing';
   } else {
     user.following.start(entity, user.id);
-    startFollowing(btn, entity.name);
+    startFollowing(btn);
     eventName = 'startFollowing';
   }
 
   eventHelper.dispatch('oTracking.Event', { model: 'oFollow', type: eventName, value: entity.id}, window);
 }
 
-function startFollowing(el, name) {
+function startFollowing(el) {
+  var name = el.getAttribute('data-o-follow-name');
   //note: using innerHTML in second instance since element is hidden so innerText returns ''
   setTextContent(el, config.stopFollowingText.replace(/\%entityName\%/g, name));
   el.setAttribute('data-o-follow-state', true);
 }
 
-function stopFollowing(el, name) {
+function stopFollowing(el) {
+  var name = el.getAttribute('data-o-follow-name');
   setTextContent(el, config.startFollowingText.replace(/\%entityName\%/g, name));
   el.setAttribute('data-o-follow-state', false);
 
