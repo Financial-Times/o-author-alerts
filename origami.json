@@ -13,7 +13,7 @@
     {
       "title": "Article - Widget View",
       "path": "/demos/ArticleWidget.html",
-      "description": "Authors for an article, rendered with the widget theme and elements already in the DOM"
+      "description": "Authors for an article, rendered with the widget theme and elements already in the DOM",
       "expanded": true
     },
     {
@@ -25,7 +25,7 @@
     {
       "title": "User's following",
       "path": "/demos/User.html",
-      "description": "Authors for a logged in user, rendered with widget theme and default elements created by JS"
+      "description": "Authors for a logged in user, rendered with widget theme and default elements created by JS",
       "expanded": false
     },
     {
