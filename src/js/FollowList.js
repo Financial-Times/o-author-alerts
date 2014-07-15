@@ -11,7 +11,6 @@ var user = require('./user'),
 function FollowList(rootEl) {
 	this.rootEl = rootEl;
   this.widget = null;
-  this.message = null;
 }
 
 FollowList.prototype.init = function() {
@@ -43,35 +42,9 @@ FollowList.prototype.setupElements = function() {
     this.widget = new FollowWidget().init(this.list, this.rootEl);
   } 
 
-  // document.body.addEventListener('oFollow.serverError', this.onUpdateError.bind(this), false);
-  // document.body.addEventListener('oFollow.updateSave', this.onUpdateSuccess.bind(this), false);
-
   followButtons.init(this.list);
 
 };
-
-//NOT IMPLEMENTED YET
-// FollowList.prototype.onUpdateError = function() {
-//   this.createMessage('There was a problem saving your preferences. We\'ll try again when you next visit an article.', 'error');
-// };
-
-// FollowList.prototype.onUpdateSuccess = function() {
-//   if(this.message && this.message.className.indexOf('error')) {
-//     this.createMessage('Preferences successfully synced to server!', 'success');
-//   }
-// };
-
-// FollowList.prototype.createMessage = function(msg, type) {
-//   if(!this.message) {
-//     this.message = document.createElement('span');
-//     this.message.className = 'o-follow__message';
-
-//     this.list.insertBefore(this.message, this.list.querySelector('.o-follow__entity'));
-
-//   }
-//   this.message.innerText = msg;
-//   this.rootEl.setAttribute('data-o-follow-message', type);
-// };
 
 FollowList.prototype.createAllIn = function(rootEl, opts) {
   var followComponents = [], 

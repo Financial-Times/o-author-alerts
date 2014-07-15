@@ -30,21 +30,6 @@
 	display: none;
 }
 
-
-//NOT IMPLEMENTED YET
-[data-o-follow-message='success'] {
-	.o-follow__message {
-		display: block;
-	}
-}
-
-[data-o-follow-message='error'] {
-	.o-follow__message {
-		display: block;
-		color: oColorsGetColorFor(error, text);;
-	}
-}
-
 .o-follow__header {
 	@extend %o-ft-typography-heading2-text;
 	margin: 10px 0;

@@ -22,9 +22,10 @@ describe ('CreateAllin', function() {
 		list = new FollowList(rootEl);
 	});
 
-	afterEach(function(){
-	});
-})
+
+
+});
+
 describe('Initialising a follow list', function() {
 
 	beforeEach(function() {
