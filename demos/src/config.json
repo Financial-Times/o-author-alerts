@@ -18,7 +18,7 @@
 			{
 				"name": "user",
 				"template": "demos/src/user.mustache",
-				"js": "demos/src/demos.js",
+				"js": "demos/src/demo-custom-config.js",
 				"sass": "demos/src/demos.scss"
 			},
 			{

@@ -4,6 +4,7 @@
 
 var user = require('./user'),
     eventHelper = require('./lib/eventHelper'),
+    config = require('./config.js'),
     DomDelegate = require('ftdomdelegate'),
     rootDelegate;
 
@@ -25,29 +26,30 @@ function destroy() {
 
 function setInitialStates(rootEl) {
   var buttons = rootEl.querySelectorAll('[data-o-follow-id]'),
-      i, l, btn;
+      i, l, btn, entityBeingFollowed;
 
   for(i=0,l=buttons.length; i<l;i++) {
     btn = buttons[i];
-    if(isBeingFollowed(btn.getAttribute('data-o-follow-id'), user.following.entities)) {
-      startFollowing(btn);
+    entityBeingFollowed = isBeingFollowed(btn.getAttribute('data-o-follow-id'), user.following.entities);
+    if(entityBeingFollowed) {
+      startFollowing(btn, entityBeingFollowed.name);
     }
   }
 }
 
 function isBeingFollowed(id, followingList) {
-  var matched = false,
+  var entity = null,
       i, l;
   followingList = followingList || [];
 
   for(i=0,l=followingList.length;i<l;i++) {
     if(followingList[i].id === id) {
-      matched = true;
+      entity = followingList[i];
       break;
     }
   }
 
-  return matched;
+  return entity;
 }
 
 function toggleFollowState(ev, rootEl) {
@@ -61,25 +63,25 @@ function toggleFollowState(ev, rootEl) {
 
   if(isCurrentlyFollowing) {
     user.following.stop(entity, user.id );
-    stopFollowing(btn);
+    stopFollowing(btn, entity.name);
     eventName = 'stopFollowing';
   } else {
     user.following.start(entity, user.id);
-    startFollowing(btn);
+    startFollowing(btn, entity.name);
     eventName = 'startFollowing';
   }
 
   eventHelper.dispatch('oTracking.Event', { model: 'oFollow', type: eventName, value: entity.id}, window);
 }
 
-function startFollowing(el) {
+function startFollowing(el, name) {
   //note: using innerHTML in second instance since element is hidden so innerText returns ''
-  setTextContent(el, el.innerHTML.replace('Start', 'Stop'));
+  setTextContent(el, config.stopFollowingText.replace(/\%entityName\%/g, name));
   el.setAttribute('data-o-follow-state', true);
 }
 
-function stopFollowing(el) {
-  setTextContent(el, el.innerHTML.replace('Stop', 'Start'));
+function stopFollowing(el, name) {
+  setTextContent(el, config.startFollowingText.replace(/\%entityName\%/g, name));
   el.setAttribute('data-o-follow-state', false);
 
 }

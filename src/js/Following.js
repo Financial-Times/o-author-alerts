@@ -4,6 +4,7 @@ var jsonp = require('./lib/jsonp'),
 		eventHelper = require('./lib/eventHelper'),
 		BrowserStore = require('./lib/BrowserStore'),
 		storage = new BrowserStore(localStorage),
+		config = require('./config.js'),
 		MAX_ATTEMPTS = 3;
 
 function Following(userId) {
@@ -169,7 +170,7 @@ Following.prototype.start = function(entity) {
 		return;
 	}
 
-	url = 'http://personalisation.ft.com/follow/update?userId=' + 
+	url = config.startFollowingUrl + '?userId=' +
 			this.userId + '&type=authors&name=' +
 			entity.name + '&id=' +
 			entity.id;
@@ -191,7 +192,7 @@ Following.prototype.stop = function(entity) {
 		return;
 	} 
 	
-	url = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
+	url = config.stopFollowingUrl + '?userId=' + 
 			this.userId + '&type=authors&id='+
 			entity.id;
 

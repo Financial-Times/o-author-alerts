@@ -8,6 +8,23 @@ var user = require('../src/js/user.js');
 var eventHelper = require('../src/js/lib/eventHelper');
 
 var list, rootEl;
+
+describe ('CreateAllin', function() {
+	beforeEach(function() {
+		if(list) {
+			list.destroy();
+		}
+		spyOn(jsonp, 'get');
+		rootEl = document.createElement('ul');
+		rootEl.setAttribute('data-o-follow-user', '');
+		rootEl.className = 'o-follow';
+		document.body.appendChild(rootEl);
+		list = new FollowList(rootEl);
+	});
+
+	afterEach(function(){
+	});
+})
 describe('Initialising a follow list', function() {
 
 	beforeEach(function() {

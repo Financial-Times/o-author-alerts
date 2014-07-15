@@ -1,5 +1,7 @@
 'use strict';
 
+var config = require('./config.js');
+
 function setTextContent(element, text) {
   if('textContent' in element) {
     element.textContent = text;
@@ -26,7 +28,7 @@ function createButton(entity) {
   btn.className = 'o-follow__button';
   btn.setAttribute('data-o-follow-id', entity.id);
   btn.setAttribute('data-o-follow-name', entity.name);
-  setTextContent(btn, 'Start');
+  setTextContent(btn, config.startFollowingText);
   return btn;
 }
 
@@ -52,7 +54,7 @@ exports.list = function(rootEl) {
 exports.popover = function(rootEl) {
 	var list = rootEl.querySelector('.o-follow__list'),
   		popover = rootEl.querySelector('.o-follow__popover'),
-  		header = rootEl.getAttribute('data-o-follow-header') || 'Get alerts for:';
+  		header = config.popoverHeadingText;
 
   if(!popover) {
   	popover = document.createElement('div');
@@ -72,7 +74,8 @@ exports.widget = function(rootEl) {
 			icon = widget ? widget.querySelector('i') : null;
   if(!widget) {
     widget = document.createElement('span');
-    setTextContent(widget, 'Alerts');
+    console.log('config', config);
+    setTextContent(widget, config.widgetText);
     widget.className = 'o-follow__widget';
     rootEl.insertBefore(widget, popover);
   }

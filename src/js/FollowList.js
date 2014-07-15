@@ -5,9 +5,10 @@ var user = require('./user'),
     eventHelper = require('./lib/eventHelper'),
     followButtons = require('./followButtons'),
     FollowWidget = require('./FollowWidget'),
-    metadata = require('./lib/metadata');
+    metadata = require('./lib/metadata'),
+    config = require('./config.js');
 
-function FollowList(rootEl) {
+function FollowList(rootEl, opts) {
 	this.rootEl = rootEl;
   this.widget = null;
   this.message = null;
@@ -72,13 +73,14 @@ FollowList.prototype.setupElements = function() {
 //   this.rootEl.setAttribute('data-o-follow-message', type);
 // };
 
-FollowList.prototype.createAllIn = function(rootEl) {
+FollowList.prototype.createAllIn = function(rootEl, opts) {
   var followButtons = [], 
       fEls, 
       c, l, 
       btn;
 
   rootEl = rootEl || document.body;
+  //set config with overrides passed through
 
   if (rootEl.querySelectorAll) {
     fEls = rootEl.querySelectorAll('[data-o-component=o-follow]');
