@@ -40,9 +40,8 @@ FollowList.prototype.setupElements = function() {
 
   if(isWidget(this.rootEl)) {
     this.widget = new FollowWidget().init(this.list, this.rootEl);
-  }
+  } 
 
-  
   // document.body.addEventListener('oFollow.serverError', this.onUpdateError.bind(this), false);
   // document.body.addEventListener('oFollow.updateSave', this.onUpdateSuccess.bind(this), false);
 
