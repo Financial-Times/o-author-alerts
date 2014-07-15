@@ -36,14 +36,14 @@ You can optionally pass in some configuration to the Javascript, as follows:
 ##Content
 The buttons can be created from elements already existing in the DOM (i.e. if you already have author ID/name available on the page), or by passing in a data attribute on the root element:
 
-* `data-o-follow-article-id="<article UUID>""`
+* `data-o-follow-article-id="<article UUID>"`
 * `data-o-follow-user`
 
 ##Appearance
 By default, the follow component applies minimal styles to the list and header. There is also an option of displaying it as a widget. To do so, construct the HTML as shown in use case 2 below, with the `o-follow--theme` class.
 
 
-##Use cases
+##Examples
 
 1. *Given an Article ID, I want a list of buttons that lets me start/stop following all authors of that article*
 
@@ -79,11 +79,10 @@ By default, the follow component applies minimal styles to the list and header. 
 
 4. *I want to create a standalone author alert button for an author I already have.*
 
-
 		<div class="o-follow" data-o-component="o-follow" data-o-version="0.1.0">
 			<div class="o-follow__list">
 				<div class="o-follow__entity">
-					<button  class="o-follow__button" data-o-follow-id="{{authorId}}" data-o-follow-name="{{authorName}}">Start Following</button> 
+					<button class="o-follow__button" data-o-follow-id="{{authorId}}" data-o-follow-name="{{authorName}}">Start Following</button> 
 				</div>
 			</div>
 		</div>
@@ -117,7 +116,6 @@ The follow component fires the following events:
 	 	}
 	 ```
 	 
-
 * `oFollow.serverError` - triggered on `document.body`
 	* Fired when the personalisation service comes back with an error, either when updating or loading user preferences.
 	* _event.detail_ 

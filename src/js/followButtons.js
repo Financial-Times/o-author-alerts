@@ -86,7 +86,6 @@ function stopFollowing(el) {
   var name = el.getAttribute('data-o-follow-name');
   setTextContent(el, config.startFollowingText.replace(/\%entityName\%/g, name));
   el.setAttribute('data-o-follow-state', false);
-
 }
 
 function setTextContent(element, text) {
