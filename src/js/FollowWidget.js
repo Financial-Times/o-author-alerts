@@ -26,7 +26,7 @@ FollowWidget.prototype.destroy = function() {
 };
 
 FollowWidget.prototype.bindEvents = function() {
-	var isTouch = ('ontouchstart' in window || 'onmsgesturechange' in window);
+	var isTouch = ('ontouchstart' in window);
 	if(isTouch) {
 		this.delegate.on('touchstart', '.o-follow__widget', this.show.bind(this));
 		this.delegate.on('touchend', '.o-follow__widget', this.hide.bind(this));

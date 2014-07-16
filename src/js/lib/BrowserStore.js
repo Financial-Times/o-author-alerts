@@ -34,7 +34,7 @@ BrowserStore.prototype.put = function(key, value) {
   }
 };
 
-BrowserStore.prototype.delete = function(key) {
+BrowserStore.prototype.remove = function(key) {
 	if(this.isSupported) {
     return this.storage.removeItem(key);
   }

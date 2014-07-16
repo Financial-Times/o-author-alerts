@@ -159,7 +159,7 @@ Following.prototype.savePending = function() {
 
 
 Following.prototype.clearPending = function() {
-	storage.delete('oFollowUserCache-' + this.userId);
+	storage.remove('oFollowUserCache-' + this.userId);
 };
 
 Following.prototype.start = function(entity) {
