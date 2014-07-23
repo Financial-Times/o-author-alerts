@@ -23,7 +23,7 @@
       "expanded": false
     },
     {
-      "title": "User's following",
+      "title": "User following",
       "path": "/demos/User.html",
       "description": "Authors for a logged in user, rendered with widget theme and default elements created by JS",
       "expanded": false
