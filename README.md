@@ -27,7 +27,7 @@ You can optionally pass in some configuration to the Javascript, as follows:
 		popoverHeadingText: 'You are following:' //default: 'Get alerts for:'
 	});
 
-* `%entityName%` will bre replaced with the name of the entity in the above examples.
+* `%entityName%` will be replaced with the name of the entity in the above examples.
 
 
 
