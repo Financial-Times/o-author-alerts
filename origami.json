@@ -24,13 +24,13 @@
     },
     {
       "title": "User following",
-      "path": "/demos/User.html",
+      "path": "/demos/user.html",
       "description": "Authors for a logged in user, rendered with widget theme and default elements created by JS",
       "expanded": false
     },
     {
       "title": "Standalone button",
-      "path": "/demos/Author.html",
+      "path": "/demos/author.html",
       "description": "Standalone button for an author",
       "expanded": false
     }
