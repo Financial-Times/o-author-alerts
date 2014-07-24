@@ -2,7 +2,7 @@
 @import 'o-colors/main';
 
 html, body {
-	min-height: 100px;
+	min-height: 200px;
 }
 body {
 	background-color: oColorsGetColorFor(page, background);
