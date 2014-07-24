@@ -4,6 +4,7 @@
 
 var user = require('./user'),
     eventHelper = require('./lib/eventHelper'),
+    config = require('./config.js'),
     DomDelegate = require('ftdomdelegate'),
     rootDelegate;
 
@@ -31,6 +32,8 @@ function setInitialStates(rootEl) {
     btn = buttons[i];
     if(isBeingFollowed(btn.getAttribute('data-o-follow-id'), user.following.entities)) {
       startFollowing(btn);
+    } else {
+      stopFollowing(btn);
     }
   }
 }
@@ -73,16 +76,24 @@ function toggleFollowState(ev, rootEl) {
 }
 
 function startFollowing(el) {
+  var name = el.getAttribute('data-o-follow-name');
   //note: using innerHTML in second instance since element is hidden so innerText returns ''
-  el.innerText = el.innerHTML.replace('Start', 'Stop');
+  setTextContent(el, config.stopFollowingText.replace(/\%entityName\%/g, name));
   el.setAttribute('data-o-follow-state', true);
-
 }
 
 function stopFollowing(el) {
-  el.innerText = el.innerHTML.replace('Stop', 'Start');
+  var name = el.getAttribute('data-o-follow-name');
+  setTextContent(el, config.startFollowingText.replace(/\%entityName\%/g, name));
   el.setAttribute('data-o-follow-state', false);
+}
 
+function setTextContent(element, text) {
+  if('textContent' in element) {
+    element.textContent = text;
+  } else {
+    element.innerText = text;
+  }
 }
 
 module.exports = {

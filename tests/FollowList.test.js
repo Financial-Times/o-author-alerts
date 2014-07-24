@@ -8,6 +8,24 @@ var user = require('../src/js/user.js');
 var eventHelper = require('../src/js/lib/eventHelper');
 
 var list, rootEl;
+
+describe ('CreateAllin', function() {
+	beforeEach(function() {
+		if(list) {
+			list.destroy();
+		}
+		spyOn(jsonp, 'get');
+		rootEl = document.createElement('ul');
+		rootEl.setAttribute('data-o-follow-user', '');
+		rootEl.className = 'o-follow';
+		document.body.appendChild(rootEl);
+		list = new FollowList(rootEl);
+	});
+
+
+
+});
+
 describe('Initialising a follow list', function() {
 
 	beforeEach(function() {
@@ -57,14 +75,14 @@ describe('Initialising a follow list', function() {
 		expect(eventSpy.argsForCall[1][2]).toBe(window);
 	});
 
-	it('does not initialise if there are authors', function() {
+	it('does not initialise if there are no authors', function() {
 		var entity = {id:'author1', name: 'First Author'};
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 		user.init();
 		user.following.entities= [entity];
 		rootEl.removeAttribute('data-o-follow-user');
 		list.init();
-		expect(list.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
+		expect(list.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
 		expect(eventSpy).not.toHaveBeenCalledWith('oFollow.show', null, rootEl);
 	});
 
@@ -73,7 +91,7 @@ describe('Initialising a follow list', function() {
 		var entity = {id:'author1', name: 'First Author'};
 		var btnInitSpy = spyOn(followButtons, 'init');
 		list.init();
-		expect(list.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
+		expect(list.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
 		user.init();
 		user.following.entities= [entity];
 		eventHelper.dispatch('oFollow.userPreferencesLoad');

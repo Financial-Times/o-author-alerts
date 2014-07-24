@@ -1,8 +1,10 @@
 'use strict';
 
-var jsonp = require('./jsonp');
+var jsonp = require('./jsonp'),
+		config = require('../config.js');
+
 
 exports.get = function(articleId, callback) {
-	var url = 'http://metadata-cache.webservices.ft.com/v1/getAuthors/' + articleId;
+	var url = config.metadataUrl + articleId;
 	jsonp.get(url, 'oFollowMetadataCallback', callback);
 };

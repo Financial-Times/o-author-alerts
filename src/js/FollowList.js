@@ -5,12 +5,12 @@ var user = require('./user'),
     eventHelper = require('./lib/eventHelper'),
     followButtons = require('./followButtons'),
     FollowWidget = require('./FollowWidget'),
-    metadata = require('./lib/metadata');
+    metadata = require('./lib/metadata'),
+    config = require('./config.js');
 
 function FollowList(rootEl) {
 	this.rootEl = rootEl;
   this.widget = null;
-  this.message = null;
 }
 
 FollowList.prototype.init = function() {
@@ -35,13 +35,12 @@ FollowList.prototype.destroy = function() {
 
 FollowList.prototype.setupElements = function() {
 	this.list = views.list(this.rootEl);
-  this.createMessage('No followable authors found.', '');
+  this.createMessage('Unable to initialise.', '');
 
   if(isWidget(this.rootEl)) {
     this.widget = new FollowWidget().init(this.list, this.rootEl);
   }
 
-  this.rootEl.setAttribute('data-o-follow--js', '');
 
   // document.body.addEventListener('oFollow.serverError', this.onUpdateError.bind(this), false);
   // document.body.addEventListener('oFollow.updateSave', this.onUpdateSuccess.bind(this), false);
@@ -50,11 +49,9 @@ FollowList.prototype.setupElements = function() {
 };
 
 FollowList.prototype.setupButtons = function() {
-  console.log('list is', this.list);
   this.createButtons();
   followButtons.init(this.list);
-
-}
+};
 
 //NOT IMPLEMENTED YET
 // FollowList.prototype.onUpdateError = function() {
@@ -86,26 +83,28 @@ FollowList.prototype.removeMessage = function(msg, type) {
   this.rootEl.removeAttribute('data-o-follow-message');
 };
 
-FollowList.prototype.createAllIn = function(rootEl) {
-  var followButtons = [], 
+FollowList.prototype.createAllIn = function(rootEl, opts) {
+  var followComponents = [], 
       fEls, 
       c, l, 
-      btn;
+      list;
 
   rootEl = rootEl || document.body;
+  //set config with overrides passed through
+  config.set(opts);
 
   if (rootEl.querySelectorAll) {
     fEls = rootEl.querySelectorAll('[data-o-component=o-follow]');
     for (c = 0, l = fEls.length; c < l; c++) {
       if (!fEls[c].hasAttribute('data-o-follow--js')) {
-        btn = new FollowList(fEls[c]);
-        btn.init();
-        followButtons.push(btn);
+        list = new FollowList(fEls[c]);
+        list.init();
+        followComponents.push(list);
       }
     }
   }
 
-  return followButtons;
+  return followComponents;
 };
 
 function isWidget(rootEl) {
@@ -121,7 +120,7 @@ FollowList.prototype.createButtons = function() {
   } else {
     this.setReadyIfListNotEmpty();
   }
-}
+};
 
 //We've already initialised the user, so create buttons for ell the entities that they
 //are already following
@@ -129,7 +128,7 @@ FollowList.prototype.createForUser = function() {
   var entities = user && user.following ? user.following.entities : [];
   renderButtonsForEntities(entities, this.list);
   this.setReadyIfListNotEmpty();
-}
+};
 
 //Make an async call to get the metadata for the given article, and render buttons
 //for the entities for that article
@@ -142,7 +141,7 @@ FollowList.prototype.createForArticle = function() {
     // Reset the button states now they have been created asynchronously
     followButtons.setInitialStates(self.list);
   });
-}
+};
 
 function renderButtonsForEntities(entities, list) {
   var i, l;
@@ -157,8 +156,9 @@ FollowList.prototype.setReadyIfListNotEmpty = function() {
     eventHelper.dispatch('oFollow.show', null, this.rootEl);
     eventHelper.dispatch('oTracking.Event', { model: 'oFollow', type: 'show'}, window);
     this.removeMessage();
+    this.rootEl.setAttribute('data-o-follow--js', '');
   }
-}
+};
 
 
 

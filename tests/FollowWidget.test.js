@@ -32,7 +32,7 @@ describe('The widget object', function() {
 
 		var widgetEl = rootEl.querySelector('span.o-follow__widget');
 		expect(widgetEl).toBeTruthy();
-		expect(widgetEl.innerText).toEqual('Alerts');
+		expect(widgetEl.innerText).toEqual('Author Alerts');
 		expect(widgetEl.querySelector('i').className).toEqual('icon-arrow-down');
 
 		var popoverEl = rootEl.querySelector('div.o-follow__popover');

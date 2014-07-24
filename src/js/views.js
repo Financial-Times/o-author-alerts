@@ -1,5 +1,15 @@
 'use strict';
 
+var config = require('./config.js');
+
+function setTextContent(element, text) {
+  if('textContent' in element) {
+    element.textContent = text;
+  } else {
+    element.innerText = text;
+  }
+}
+
 function createWrapper(tagName) {
 	var wrapper = document.createElement(tagName);
 	wrapper.className = 'o-follow__entity';
@@ -8,7 +18,7 @@ function createWrapper(tagName) {
 
 function createNameSpan(name){
  	var span = document.createElement('span');
-  span.innerText = name;
+  setTextContent(span, name);
   span.className = 'o-follow__name';
   return span;
 }
@@ -18,7 +28,7 @@ function createButton(entity) {
   btn.className = 'o-follow__button';
   btn.setAttribute('data-o-follow-id', entity.id);
   btn.setAttribute('data-o-follow-name', entity.name);
-  btn.innerText = 'Start';
+  setTextContent(btn, config.startFollowingText);
   return btn;
 }
 
@@ -33,6 +43,7 @@ exports.button = function(list, entity) {
 
 exports.list = function(rootEl) {
   var list = rootEl.querySelector('.o-follow__list');
+
   if(!list) {
     list = document.createElement('ul');
     list.className = 'o-follow__list';
@@ -43,14 +54,13 @@ exports.list = function(rootEl) {
 
 exports.popover = function(rootEl) {
 	var list = rootEl.querySelector('.o-follow__list'),
-  		popover = rootEl.querySelector('.o-follow__popover'),
-  		header = rootEl.getAttribute('data-o-follow-header') || 'Get alerts for:';
+  		popover = rootEl.querySelector('.o-follow__popover');
 
   if(!popover) {
   	popover = document.createElement('div');
   	popover.className = 'o-follow__popover';
     popover.setAttribute('will-change', '');
-  	popover.innerHTML = '<h3 class="o-follow__header">' + header + '</div>';
+  	popover.innerHTML = '<h3 class="o-follow__header">' + config.popoverHeadingText + '</div>';
   	rootEl.insertBefore(popover, list);
   	popover.appendChild(list);
   }
@@ -64,7 +74,7 @@ exports.widget = function(rootEl) {
 			icon = widget ? widget.querySelector('i') : null;
   if(!widget) {
     widget = document.createElement('span');
-    widget.innerText = "Alerts";
+    setTextContent(widget, config.widgetText);
     widget.className = 'o-follow__widget';
     rootEl.insertBefore(widget, popover);
   }
