@@ -6,6 +6,7 @@
     "o-fonts": "~1.4.1",
     "o-ft-buttons": "~1.5.2",
     "o-ft-icons": "~2.0.0",
+    "o-layers": "^0.1.0",
     "ftdomdelegate": "~1.0.0",
     "o-ft-typography": "~1.12.1"
     },
