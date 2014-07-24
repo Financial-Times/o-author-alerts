@@ -76,7 +76,7 @@ describe('The widget object', function() {
 			model: 'oFollow', type: 'widgetOpen'
 		}, window);
 
-		widget.hide();
+		widget.mouseout();
 		expect(rootEl.hasAttribute('aria-expanded')).toBeTruthy();
     jasmine.Clock.tick(501);
 		expect(rootEl.hasAttribute('aria-expanded')).not.toBeTruthy();

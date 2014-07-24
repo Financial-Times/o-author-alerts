@@ -41,10 +41,12 @@
 	font-size: 14px;
 	line-height: 22px;
 	font-weight: normal;
+	font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 }
 
 .o-follow__button {
 	float: right;
 }
+
 @include oFtButtonsButton(o-follow__button);
 

@@ -26,14 +26,23 @@ FollowWidget.prototype.destroy = function() {
 };
 
 FollowWidget.prototype.bindEvents = function() {
-	var isTouch = ('ontouchstart' in window);
+	var isTouch = ('ontouchstart' in window),
+			self = this;
 	if(isTouch) {
 		this.delegate.on('touchstart', '.o-follow__widget', this.show.bind(this));
 		this.delegate.on('touchend', '.o-follow__widget', this.hide.bind(this));
 	} else {
 		this.delegate.on('mouseover', '.o-follow__popover, .o-follow__widget', this.show.bind(this));
-		this.delegate.on('mouseout', '.o-follow__popover, .o-follow__widget', this.hide.bind(this));
+		this.delegate.on('mouseout', '.o-follow__popover, .o-follow__widget', this.mouseout.bind(this));
 	}
+
+	//Hide the current popover if any other layer is opened
+	document.body.addEventListener('oLayers.new', function(ev) {
+		if(ev.detail.el !== self.popover) {
+			self.hide();
+		}
+	});
+
 };
 
 FollowWidget.prototype.mouseover = function() {
@@ -41,17 +50,23 @@ FollowWidget.prototype.mouseover = function() {
 	clearTimeout(this.timeout);
 };
 
+FollowWidget.prototype.mouseout = function() {
+	this.timeout = setTimeout(this.hide.bind(this), 500);
+};
+
 FollowWidget.prototype.show = function() {
 	this.mouseover();
 	this.rootEl.setAttribute('aria-expanded', '');
   eventHelper.dispatch('oTracking.Event', { model: 'oFollow', type: 'widgetOpen'}, window);
+  eventHelper.dispatch('oLayers.new', { el: this.popover }, document.body);
 };
 
+
 FollowWidget.prototype.hide = function() {
-	var self = this;
-	this.timeout = setTimeout(function() {
-  	self.rootEl.removeAttribute('aria-expanded');
-	}, 500);
+  this.rootEl.removeAttribute('aria-expanded');
+  eventHelper.dispatch('oLayers.close', { el: this.popover }, document.body);
 };
+
+
 
 module.exports = FollowWidget;
