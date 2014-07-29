@@ -8,10 +8,12 @@ function User() {
 }
 
 User.prototype.init = function() {
-	if(!this.id) {
+	if(!(this.id && this.following)) {
 		this.id = oCookies.getParam('FT_User', 'ERIGHTSID');
 		this.following = new Following(this.id);
-		this.following.get();
+		if(this.id) {
+			this.following.get();
+		}
 	}
 };
 
