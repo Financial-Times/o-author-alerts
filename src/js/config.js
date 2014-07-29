@@ -9,7 +9,8 @@ var defaults = {
 	startFollowingText: "Start",
 	stopFollowingText: "Stop",
 	widgetText: "Author Alerts",
-	popoverHeadingText: "Get alerts for:"
+	popoverHeadingText: "Get alerts for:",
+	displayName: "%entityName%"
 };
 
 
@@ -23,7 +24,7 @@ Config.prototype.set = function(opts) {
 	opts = opts || {};
 	for(key in defaults) {
 		if(defaults.hasOwnProperty(key)) {
-			this[key] = opts[key] || defaults[key];
+			this[key] = (opts[key] !== undefined) ? opts[key] : defaults[key];
 		}
 	}
 };

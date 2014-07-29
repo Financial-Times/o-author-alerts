@@ -24,7 +24,8 @@ You can optionally pass in some configuration to the Javascript, as follows:
 		startFollowingText: "Follow %entityName%", //default: 'Start'
 		stopFollowingText: "Unfollow %entityName%", //default: 'Stop'
 		widgetText: 'Your Alerts', //default: 'Author Alerts'
-		popoverHeadingText: 'You are following:' //default: 'Get alerts for:'
+		popoverHeadingText: 'You are following:' //default: 'Get alerts for:',
+		displayName: "Get email for %entityName%" //default: '%entityName%'. Set to false to hide the name.
 	});
 
 * `%entityName%` will be replaced with the name of the entity in the above examples.
@@ -32,10 +33,11 @@ You can optionally pass in some configuration to the Javascript, as follows:
 
 
 ##Content
-The buttons can be created from elements already existing in the DOM (i.e. if you already have author ID/name available on the page), or by passing in a data attribute on the root element:
+The buttons can be created for you by passing in a data attribute on the root element:
 
 * `data-o-follow-article-id="<article UUID>"`
 * `data-o-follow-user`
+* `data-o-follow-entities='[{"name": "<entity name>", "id": "<entity id>"}, {"name": "<entity name>", "id": "<entity id>"}]'
 
 ##Appearance
 By default, the follow component applies minimal styles to the list and header. There is also an option of displaying it as a widget. To do so, construct the HTML as shown in use case 2 below, with the `o-follow--theme` class.
@@ -57,13 +59,7 @@ By default, the follow component applies minimal styles to the list and header. 
 
 4. *I want to create a standalone author alert button for an author I already have.*
 
-		<div class="o-follow" data-o-component="o-follow" data-o-version="0.1.0">
-			<div class="o-follow__list">
-				<div class="o-follow__entity">
-					<button class="o-follow__button" data-o-follow-id="{{authorId}}" data-o-follow-name="{{authorName}}">Start Following</button> 
-				</div>
-			</div>
-		</div>
+		<div class="o-follow" data-o-component="o-follow" data-o-version="0.1.0" data-o-follow-entities="[{"name": "Roman Olearchyk", "id": "Q0ItMDAwMDY0Mg==-QXV0aG9ycw=="}]"></div>
 
 
 ##Events

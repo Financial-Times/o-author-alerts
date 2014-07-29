@@ -45,6 +45,10 @@
 
 .o-follow__header {
 	@extend %o-ft-typography-heading2-text;
+}
+
+//Added specificity to override ft typography margins.
+.o-follow h3.o-follow__header {
 	margin: 10px 0;
 }
 

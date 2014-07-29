@@ -35,7 +35,9 @@ function createButton(entity) {
 exports.button = function(list, entity) {
 	var tagName = list.tagName === ('UL') ? 'li' : 'div';
 	var wrapper = createWrapper(tagName);
-	wrapper.appendChild(createNameSpan(entity.name));
+  if(config.displayName) {
+    wrapper.appendChild(createNameSpan(config.displayName.replace(/\%entityName\%/g, entity.name)));
+  }
 	wrapper.appendChild(createButton(entity));
 	list.appendChild(wrapper);
 	return wrapper;
@@ -60,7 +62,7 @@ exports.popover = function(rootEl) {
   	popover = document.createElement('div');
   	popover.className = 'o-follow__popover';
     popover.setAttribute('will-change', '');
-  	popover.innerHTML = '<h3 class="o-follow__header">' + config.popoverHeadingText + '</div>';
+  	popover.innerHTML = '<h3 class="o-follow__header">' + config.popoverHeadingText + '</h3>';
   	rootEl.insertBefore(popover, list);
   	popover.appendChild(list);
   }

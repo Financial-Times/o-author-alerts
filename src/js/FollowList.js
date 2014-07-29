@@ -117,6 +117,8 @@ FollowList.prototype.createButtons = function() {
     this.createForArticle();
   } else if (this.rootEl.hasAttribute('data-o-follow-user')) {
     this.createForUser();
+  } else if (this.rootEl.hasAttribute('data-o-follow-entities')) {
+    this.createForEntities();
   } else {
     this.setReadyIfListNotEmpty();
   }
@@ -135,12 +137,20 @@ FollowList.prototype.createForUser = function() {
 FollowList.prototype.createForArticle = function() {
   var self = this,
       articleId = this.rootEl.getAttribute('data-o-follow-article-id');
-  metadata.get(articleId, function(entities) {
+
+    metadata.get(articleId, function(entities) {
     renderButtonsForEntities(entities.authors, self.list);
     self.setReadyIfListNotEmpty();
     // Reset the button states now they have been created asynchronously
     followButtons.setInitialStates(self.list);
   });
+};
+
+FollowList.prototype.createForEntities = function() {
+    var entities = JSON.parse(this.rootEl.getAttribute('data-o-follow-entities'));
+      
+    renderButtonsForEntities(entities, this.list);
+    this.setReadyIfListNotEmpty();
 };
 
 function renderButtonsForEntities(entities, list) {
