@@ -21,6 +21,7 @@ You can optionally pass in some configuration to the Javascript, as follows:
 
 	var oFollow = require('o-follow');
 	oFollow.prototype.createAllIn(rootEl, {
+		lazyLoad: false, // the default behaviour for the widget is to only load metadata on hover/click. Set to false to fetch data on page load.
 		startFollowingText: "Follow %entityName%", //default: 'Start'
 		stopFollowingText: "Unfollow %entityName%", //default: 'Stop'
 		widgetText: 'Your Alerts', //default: 'Author Alerts'

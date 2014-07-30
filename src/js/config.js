@@ -5,6 +5,7 @@ var defaults = {
 	startFollowingUrl: "http://personalisation.ft.com/follow/update",
 	stopFollowingUrl: "http://personalisation.ft.com/follow/stopFollowing",
 	metadataUrl: "http://metadata-cache.webservices.ft.com/v1/getAuthors/",
+	lazyLoad: true,
 	entityType: "Author",
 	startFollowingText: "Start",
 	stopFollowingText: "Stop",

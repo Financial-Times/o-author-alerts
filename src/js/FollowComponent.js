@@ -35,11 +35,13 @@ FollowComponent.prototype.destroy = function() {
 
 FollowComponent.prototype.setupElements = function() {
 	this.list = views.list(this.rootEl);
-  this.createMessage('Unable to initialise.', '');
+  this.createMessage('Loading data...', '');
 
   if(isWidget(this.rootEl)) {
     this.widget = new FollowWidget().init(this.list, this.rootEl);
   }
+
+  this.rootEl.setAttribute('data-o-follow--js', '');
 
 
   // document.body.addEventListener('oFollow.serverError', this.onUpdateError.bind(this), false);
@@ -49,8 +51,18 @@ FollowComponent.prototype.setupElements = function() {
 };
 
 FollowComponent.prototype.setupButtons = function() {
-  this.createButtons();
-  followButtons.init(this.list);
+  var self = this,
+      eventToLoadOn = ('onmouseover' in window) ? 'mouseover' : 'click',
+      initialiseButtons = function() {
+        self.createButtons();
+        followButtons.init(self.list);
+        self.rootEl.removeEventListener(eventToLoadOn, initialiseButtons);
+      };
+  if(config.lazyLoad && isWidget(this.rootEl)) {
+    this.rootEl.addEventListener(eventToLoadOn, initialiseButtons, false);
+  } else {
+    initialiseButtons();
+  }
 };
 
 //NOT IMPLEMENTED YET
@@ -139,11 +151,11 @@ FollowComponent.prototype.createForArticle = function() {
       articleId = this.rootEl.getAttribute('data-o-follow-article-id');
 
     metadata.get(articleId, function(entities) {
-    renderButtonsForEntities(entities.authors, self.list);
-    self.setReadyIfListNotEmpty();
-    // Reset the button states now they have been created asynchronously
-    followButtons.setInitialStates(self.list);
-  });
+      renderButtonsForEntities(entities.authors, self.list);
+      self.setReadyIfListNotEmpty();
+      // Reset the button states now they have been created asynchronously
+      followButtons.setInitialStates(self.list);
+    });
 };
 
 FollowComponent.prototype.createForEntities = function() {
@@ -161,12 +173,14 @@ function renderButtonsForEntities(entities, list) {
 }
 
 FollowComponent.prototype.setReadyIfListNotEmpty = function() {
+  this.removeMessage();
   //Only show the component if there are entities to follow
   if(this.list.querySelector('.o-follow__entity')) {
     eventHelper.dispatch('oFollow.show', null, this.rootEl);
     eventHelper.dispatch('oTracking.Event', { model: 'oFollow', type: 'show'}, window);
-    this.removeMessage();
-    this.rootEl.setAttribute('data-o-follow--js', '');
+  } else {
+    //TODO: dont use the word authors!
+    this.createMessage('There are no authors available to follow.', '');
   }
 };
 
