@@ -8,12 +8,12 @@ var user = require('./user'),
     metadata = require('./lib/metadata'),
     config = require('./config.js');
 
-function FollowList(rootEl) {
+function FollowComponent(rootEl) {
 	this.rootEl = rootEl;
   this.widget = null;
 }
 
-FollowList.prototype.init = function() {
+FollowComponent.prototype.init = function() {
   user.init();
   this.setupElements();
   if(user.following && user.following.entities) {
@@ -23,7 +23,7 @@ FollowList.prototype.init = function() {
   }
 };
 
-FollowList.prototype.destroy = function() {
+FollowComponent.prototype.destroy = function() {
   document.body.removeEventListener('oFollow.userPreferencesLoad');
   user.destroy();
   followButtons.destroy();
@@ -33,7 +33,7 @@ FollowList.prototype.destroy = function() {
   this.rootEl.parentElement.removeChild(this.rootEl);
 };
 
-FollowList.prototype.setupElements = function() {
+FollowComponent.prototype.setupElements = function() {
 	this.list = views.list(this.rootEl);
   this.createMessage('Unable to initialise.', '');
 
@@ -48,23 +48,23 @@ FollowList.prototype.setupElements = function() {
 
 };
 
-FollowList.prototype.setupButtons = function() {
+FollowComponent.prototype.setupButtons = function() {
   this.createButtons();
   followButtons.init(this.list);
 };
 
 //NOT IMPLEMENTED YET
-// FollowList.prototype.onUpdateError = function() {
+// FollowComponent.prototype.onUpdateError = function() {
 //   this.createMessage('There was a problem saving your preferences. We\'ll try again when you next visit an article.', 'error');
 // };
 
-// FollowList.prototype.onUpdateSuccess = function() {
+// FollowComponent.prototype.onUpdateSuccess = function() {
 //   if(this.message && this.message.className.indexOf('error')) {
 //     this.createMessage('Preferences successfully synced to server!', 'success');
 //   }
 // };
 
-FollowList.prototype.createMessage = function(msg, type) {
+FollowComponent.prototype.createMessage = function(msg, type) {
   if(!this.message) {
     this.message = document.createElement('span');
     this.message.className = 'o-follow__message';
@@ -76,18 +76,18 @@ FollowList.prototype.createMessage = function(msg, type) {
   this.rootEl.setAttribute('data-o-follow-message', type);
 };
 
-FollowList.prototype.removeMessage = function(msg, type) {
+FollowComponent.prototype.removeMessage = function(msg, type) {
   if(this.message) {
     this.message.parentElement.removeChild(this.message);
   }
   this.rootEl.removeAttribute('data-o-follow-message');
 };
 
-FollowList.prototype.createAllIn = function(rootEl, opts) {
+FollowComponent.prototype.createAllIn = function(rootEl, opts) {
   var followComponents = [], 
       fEls, 
       c, l, 
-      list;
+      component;
 
   rootEl = rootEl || document.body;
   //set config with overrides passed through
@@ -97,9 +97,9 @@ FollowList.prototype.createAllIn = function(rootEl, opts) {
     fEls = rootEl.querySelectorAll('[data-o-component=o-follow]');
     for (c = 0, l = fEls.length; c < l; c++) {
       if (!fEls[c].hasAttribute('data-o-follow--js')) {
-        list = new FollowList(fEls[c]);
-        list.init();
-        followComponents.push(list);
+        component = new FollowComponent(fEls[c]);
+        component.init();
+        followComponents.push(component);
       }
     }
   }
@@ -112,7 +112,7 @@ function isWidget(rootEl) {
 }
 
 
-FollowList.prototype.createButtons = function() {
+FollowComponent.prototype.createButtons = function() {
   if(this.rootEl.hasAttribute('data-o-follow-article-id'))  {
     this.createForArticle();
   } else if (this.rootEl.hasAttribute('data-o-follow-user')) {
@@ -126,7 +126,7 @@ FollowList.prototype.createButtons = function() {
 
 //We've already initialised the user, so create buttons for ell the entities that they
 //are already following
-FollowList.prototype.createForUser = function() {
+FollowComponent.prototype.createForUser = function() {
   var entities = user && user.following ? user.following.entities : [];
   renderButtonsForEntities(entities, this.list);
   this.setReadyIfListNotEmpty();
@@ -134,7 +134,7 @@ FollowList.prototype.createForUser = function() {
 
 //Make an async call to get the metadata for the given article, and render buttons
 //for the entities for that article
-FollowList.prototype.createForArticle = function() {
+FollowComponent.prototype.createForArticle = function() {
   var self = this,
       articleId = this.rootEl.getAttribute('data-o-follow-article-id');
 
@@ -146,7 +146,7 @@ FollowList.prototype.createForArticle = function() {
   });
 };
 
-FollowList.prototype.createForEntities = function() {
+FollowComponent.prototype.createForEntities = function() {
     var entities = JSON.parse(this.rootEl.getAttribute('data-o-follow-entities'));
       
     renderButtonsForEntities(entities, this.list);
@@ -160,7 +160,7 @@ function renderButtonsForEntities(entities, list) {
   }
 }
 
-FollowList.prototype.setReadyIfListNotEmpty = function() {
+FollowComponent.prototype.setReadyIfListNotEmpty = function() {
   //Only show the component if there are entities to follow
   if(this.list.querySelector('.o-follow__entity')) {
     eventHelper.dispatch('oFollow.show', null, this.rootEl);
@@ -172,4 +172,4 @@ FollowList.prototype.setReadyIfListNotEmpty = function() {
 
 
 
-module.exports = FollowList;
+module.exports = FollowComponent;

@@ -1,9 +1,9 @@
 'use strict';
 
-var FollowList = require('./src/js/FollowList');
+var FollowComponent = require('./src/js/FollowComponent');
 
 document.addEventListener("o.DOMContentLoaded", function() {
-    FollowList.prototype.createAllIn(document.body);
+    FollowComponent.prototype.createAllIn(document.body);
 });
 
-module.exports = FollowList;
+module.exports = FollowComponent;
