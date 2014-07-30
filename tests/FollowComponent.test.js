@@ -82,7 +82,7 @@ describe('Initialising a follow followComponent', function() {
 		user.following.entities= [entity];
 		rootEl.removeAttribute('data-o-follow-user');
 		followComponent.init();
-		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
+		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
 		expect(followComponent.message.textContent).toBe('Loading data...');
 		expect(eventSpy).not.toHaveBeenCalledWith('oFollow.show', null, rootEl);
 	});
@@ -92,7 +92,7 @@ describe('Initialising a follow followComponent', function() {
 		var entity = {id:'author1', name: 'First Author'};
 		var btnInitSpy = spyOn(followButtons, 'init');
 		followComponent.init();
-		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
+		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
 		user.init();
 		user.following.entities= [entity];
 		eventHelper.dispatch('oFollow.userPreferencesLoad');

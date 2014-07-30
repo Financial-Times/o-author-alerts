@@ -41,9 +41,6 @@ FollowComponent.prototype.setupElements = function() {
     this.widget = new FollowWidget().init(this.list, this.rootEl);
   }
 
-  this.rootEl.setAttribute('data-o-follow--js', '');
-
-
   // document.body.addEventListener('oFollow.serverError', this.onUpdateError.bind(this), false);
   // document.body.addEventListener('oFollow.updateSave', this.onUpdateSuccess.bind(this), false);
 
@@ -58,6 +55,9 @@ FollowComponent.prototype.setupButtons = function() {
         followButtons.init(self.list);
         self.rootEl.removeEventListener(eventToLoadOn, initialiseButtons);
       };
+
+  this.rootEl.setAttribute('data-o-follow--js', '');
+
   if(config.lazyLoad && isWidget(this.rootEl)) {
     this.rootEl.addEventListener(eventToLoadOn, initialiseButtons, false);
   } else {
