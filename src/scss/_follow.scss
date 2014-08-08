@@ -21,7 +21,11 @@
 .o-follow__entity {
 	list-style: none;
 	overflow: auto;
-	padding: 5px;
+	padding: 10px 0;
+	border-bottom: 1px dotted oColorsGetColorFor(table-row, border);
+	&:last-child {
+		border-bottom: none;
+	}
 }
 
 .o-follow__widget {
@@ -29,6 +33,7 @@
 }
 .o-follow__message {
 	display: none;
+	font-size: 14px;
 }
 
 //NOT IMPLEMENTED YET
@@ -53,15 +58,30 @@
 .o-follow__name {
 	float: left;
 	margin-right: 20px;
-	font-size: 14px;
-	line-height: 22px;
-	font-weight: normal;
+	font-size: 13px;
+	line-height: 24px;
+	font-weight: bold;
 	font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 }
 
 .o-follow__button {
 	float: right;
+	min-width: 100px;
 }
 
 @include oFtButtonsButton(o-follow__button);
+
+//TODO : this should come from o-ft-buttons
+@include oColorsSetUseCase(not-following, background, white);
+@include oColorsSetUseCase(not-following, text, black);
+@include oColorsSetUseCase(following, background, green);
+@include oColorsSetUseCase(following, text, white);
+
+.o-follow__theme .o-follow__button[data-o-follow-state="false"] {
+	@include oColorsFor(not-following);
+
+}
+.o-follow__button[data-o-follow-state="true"] {
+	@include oColorsFor(following);
+}
 

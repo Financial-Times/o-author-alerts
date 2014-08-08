@@ -62,7 +62,9 @@ exports.popover = function(rootEl) {
   	popover = document.createElement('div');
   	popover.className = 'o-follow__popover';
     popover.setAttribute('will-change', '');
-  	popover.innerHTML = '<h3 class="o-follow__header">' + config.popoverHeadingText + '</h3>';
+    if(config.popoverHeadingText) {
+    	popover.innerHTML = '<h3 class="o-follow__header">' + config.popoverHeadingText + '</h3>';
+    }
   	rootEl.insertBefore(popover, list);
   	popover.appendChild(list);
   }

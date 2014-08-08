@@ -7,10 +7,10 @@ var defaults = {
 	metadataUrl: "http://metadata-cache.webservices.ft.com/v1/getAuthors/",
 	lazyLoad: true,
 	entityType: "Author",
-	startFollowingText: "Start",
-	stopFollowingText: "Stop",
+	startFollowingText: "Follow",
+	stopFollowingText: "Following",
 	widgetText: "Author Alerts",
-	popoverHeadingText: "Get alerts for:",
+	popoverHeadingText: null,
 	displayName: "%entityName%"
 };
 

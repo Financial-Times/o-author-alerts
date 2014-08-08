@@ -43,19 +43,19 @@
 		transition-duration: 300ms, 0;
 		transition-property: opacity, visibility;
 		transition-delay: 0, 300ms;
-		box-shadow: 1px 1px 1px #ccc;
-		@include pointer-bordered(top, oColorsGetColorFor(modal, background), oColorsGetColorFor(modal, border), 16px, 60px);
+		@include pointer-bordered(top, oColorsGetColorFor(modal, background), oColorsGetColorFor(modal, border), 10px, 60px);
 		background-color: oColorsGetColorFor(modal, background);
 		color: oColorsGetColorFor(modal, text);
 		border: 1px solid;
 		border-color: oColorsGetColorFor(modal, border);
+		border-radius: 8px;
 		max-width: 100%;
 		box-sizing: border-box;
 		position: absolute;
 		top: auto;
 		left: auto;
 		padding: 10px 20px;
-		margin-top: 16px;
+		margin-top: 12px;
 		z-index: 2;
 		@media (screen and max-width: 400px) {
 			padding: 5px 10px;

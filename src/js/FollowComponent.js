@@ -13,7 +13,8 @@ function FollowComponent(rootEl) {
   this.widget = null;
 }
 
-FollowComponent.prototype.init = function() {
+FollowComponent.prototype.init = function(opts) {
+  config.set(opts);
   user.init();
   this.setupElements();
   if(user.following && user.following.entities) {
@@ -80,9 +81,7 @@ FollowComponent.prototype.createMessage = function(msg, type) {
   if(!this.message) {
     this.message = document.createElement('span');
     this.message.className = 'o-follow__message';
-
     this.list.insertBefore(this.message, this.list.querySelector('.o-follow__entity'));
-
   }
   this.message.innerText = msg;
   this.rootEl.setAttribute('data-o-follow-message', type);
@@ -91,6 +90,7 @@ FollowComponent.prototype.createMessage = function(msg, type) {
 FollowComponent.prototype.removeMessage = function(msg, type) {
   if(this.message) {
     this.message.parentElement.removeChild(this.message);
+    this.message = null;
   }
   this.rootEl.removeAttribute('data-o-follow-message');
 };
@@ -180,7 +180,7 @@ FollowComponent.prototype.setReadyIfListNotEmpty = function() {
     eventHelper.dispatch('oTracking.Event', { model: 'oFollow', type: 'show'}, window);
   } else {
     //TODO: dont use the word authors!
-    this.createMessage('There are no authors available to follow.', '');
+    this.createMessage('No Authors found.', '');
   }
 };
 

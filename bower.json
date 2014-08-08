@@ -2,7 +2,7 @@
   "name": "o-follow",
   "dependencies": {
     "o-cookies": "~1.0.1",
-    "o-colors": "~2.3.15",
+    "o-colors": "~2.3.18",
     "o-fonts": "~1.4.1",
     "o-ft-buttons": "~1.5.2",
     "o-ft-icons": "~2.0.0",
