@@ -21,7 +21,7 @@
 .o-follow__entity {
 	list-style: none;
 	overflow: auto;
-	padding: 10px 5;
+	padding: 10px 5px;
 	border-bottom: 1px dotted oColorsGetColorFor(table-row, border);
 	&:last-child {
 		border-bottom: none;
