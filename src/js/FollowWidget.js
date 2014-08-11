@@ -51,7 +51,7 @@ FollowWidget.prototype.toggle = function() {
 
 FollowWidget.prototype.show = function() {
 	this.rootEl.setAttribute('aria-expanded', '');
-  eventHelper.dispatch('oTracking.Event', { model: 'oFollow', type: 'widgetOpen'}, window);
+  eventHelper.dispatch('oTracking.Event', { model: 'eventonpage', type: 'hover', data: 'followAuthor'}, window);
   eventHelper.dispatch('oLayers.new', { el: this.popover }, document.body);
 };
 

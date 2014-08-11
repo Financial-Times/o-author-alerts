@@ -65,14 +65,14 @@ function toggleFollowState(ev, rootEl) {
   if(isCurrentlyFollowing) {
     user.following.stop(entity, user.id );
     stopFollowing(btn);
-    eventName = 'stopFollowing';
+    eventName = 'unfollow';
   } else {
     user.following.start(entity, user.id);
     startFollowing(btn);
-    eventName = 'startFollowing';
+    eventName = 'follow';
   }
 
-  eventHelper.dispatch('oTracking.Event', { model: 'oFollow', type: eventName, value: entity.id}, window);
+  eventHelper.dispatch('oTracking.Event', { model: 'followme', type: eventName, value: entity.name}, window);
 }
 
 function startFollowing(el) {

@@ -81,7 +81,7 @@
 	@include oColorsFor(not-following);
 
 }
-.o-follow__button[data-o-follow-state="true"] {
-	@include oColorsFor(following);
-}
+// .o-follow__button[data-o-follow-state="true"] {
+// 	@include oColorsFor(following);
+// }
 

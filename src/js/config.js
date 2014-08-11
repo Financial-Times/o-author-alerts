@@ -7,8 +7,8 @@ var defaults = {
 	metadataUrl: "http://metadata-cache.webservices.ft.com/v1/getAuthors/",
 	lazyLoad: true,
 	entityType: "Author",
-	startFollowingText: "Follow",
-	stopFollowingText: "Following",
+	startFollowingText: "Start Alerts",
+	stopFollowingText: "Stop Alerts",
 	widgetText: "Author Alerts",
 	popoverHeadingText: null,
 	displayName: "%entityName%"
