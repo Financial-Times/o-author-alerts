@@ -24,7 +24,7 @@ describe('Rendering a follow button', function() {
 		var button = buttonWrapper.querySelector('button');
 		expect(button.getAttribute('data-o-follow-id')).toBe('arjunId');
 		expect(button.getAttribute('data-o-follow-name')).toBe('Arjun');
-		expect(button.innerText).toBe('Start');
+		expect(button.innerText).toBe('Start Alerts');
 	});
 
 	it('returns the wrapper created', function() {

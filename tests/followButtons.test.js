@@ -34,7 +34,7 @@ describe('Initialising a button', function() {
 		user.following.entities  = [entity];
 		followButtons.init(testEl);
 		var button = testEl.querySelector('[data-o-follow-id]');		
-		expect(button.innerText).toBe('Stop');
+		expect(button.innerText).toBe('Stop Alerts');
 	});
 
 });
@@ -74,7 +74,7 @@ describe('Clicking the button', function() {
 		expect(button.getAttribute('data-o-follow-state')).toBe('true');
 		
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
-			model: 'oFollow', type: 'startFollowing', value: 'author1'
+			model: 'followme', type: 'follow', value: 'First Author'
 		}, window);
 
 
@@ -85,7 +85,7 @@ describe('Clicking the button', function() {
 		expect(button.getAttribute('data-o-follow-state')).toBe('false');
 
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
-			model: 'oFollow', type: 'stopFollowing', value: 'author1'
+			model: 'followme', type: 'unfollow', value: 'First Author'
 		}, window);
 
 

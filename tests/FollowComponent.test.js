@@ -26,7 +26,7 @@ describe ('CreateAllin', function() {
 
 });
 
-describe('Initialising a follow followComponent', function() {
+describe('Initialising a followComponent', function() {
 
 	beforeEach(function() {
 		if(followComponent) {
@@ -37,6 +37,7 @@ describe('Initialising a follow followComponent', function() {
 		rootEl.setAttribute('data-o-follow-user', '');
 		rootEl.className = 'o-follow';
 		document.body.appendChild(rootEl);
+
 		followComponent = new FollowComponent(rootEl);
 	});
 
@@ -47,7 +48,7 @@ describe('Initialising a follow followComponent', function() {
 		var userSpy = spyOn(user, 'init');
 		spyOn(followComponent, 'setupElements');
 		spyOn(followComponent, 'setupButtons');
-		followComponent.init();
+		followComponent.init({lazyLoad: false});
 		expect(userSpy).toHaveBeenCalled();
 
 	});
@@ -59,7 +60,7 @@ describe('Initialising a follow followComponent', function() {
 		user.id = 'test';
 		user.following.entities= [entity];
 
-		followComponent.init();
+		followComponent.init({lazyLoad: false});
 
 		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
 		expect(eventSpy.callCount).toEqual(2);
@@ -69,19 +70,18 @@ describe('Initialising a follow followComponent', function() {
 		expect(eventSpy.argsForCall[0][1]).toBe(null);
 		expect(eventSpy.argsForCall[0][2]).toBe(rootEl);
 
-		expect(eventSpy.argsForCall[1][0]).toBe('oTracking.Event');
-		expect(eventSpy.argsForCall[1][1].model).toBe('oFollow');
-		expect(eventSpy.argsForCall[1][1].type).toBe('show');
+		expect(eventSpy.argsForCall[1][0]).toBe('oTracking.Data');
+		expect(eventSpy.argsForCall[1][1].followme).toBe(true);
 		expect(eventSpy.argsForCall[1][2]).toBe(window);
 	});
 
 	it('does not initialise if there are no authors', function() {
 		var entity = {id:'author1', name: 'First Author'};
 		var eventSpy = spyOn(eventHelper, 'dispatch');
+
 		user.init();
-		user.following.entities= [entity];
-		rootEl.removeAttribute('data-o-follow-user');
-		followComponent.init();
+		user.following.entities= [];
+		followComponent.init({lazyLoad: false});
 		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
 		expect(followComponent.message.textContent).toBe('Loading data...');
 		expect(eventSpy).not.toHaveBeenCalledWith('oFollow.show', null, rootEl);
@@ -91,7 +91,9 @@ describe('Initialising a follow followComponent', function() {
 	it('waits for event if the user preferences are not available', function() {
 		var entity = {id:'author1', name: 'First Author'};
 		var btnInitSpy = spyOn(followButtons, 'init');
-		followComponent.init();
+		
+
+		followComponent.init({lazyLoad: false});
 		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
 		user.init();
 		user.following.entities= [entity];
@@ -143,11 +145,9 @@ describe('Lazy loading the calls to metadata', function() {
 		user.id = 'test';
 		user.following.entities= [];
 
-		config.set({lazyLoad: false});
-
-		followComponent.init();
+		followComponent.init({lazyLoad: false});
 		//widget should be visible
-		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
+		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
 		//but no call to metadata spy yet
 		expect(metadataSpy).toHaveBeenCalled();
 	});
@@ -164,7 +164,6 @@ describe('Lazy loading the calls to metadata', function() {
 		user.id = 'test';
 		user.following.entities= [];
 
-		config.set({lazyLoad: true});
 		
 		followComponent.init();
 		//widget should be visible
@@ -172,4 +171,6 @@ describe('Lazy loading the calls to metadata', function() {
 		//but no call to metadata spy yet
 		expect(metadataSpy).toHaveBeenCalled();
 	});
+
+
 });

@@ -38,7 +38,6 @@ describe('The widget object', function() {
 		var popoverEl = rootEl.querySelector('div.o-follow__popover');
 		expect(popoverEl).toBeTruthy();
 		expect(popoverEl.hasAttribute('will-change')).toBeTruthy();
-		expect(popoverEl.querySelector('h3.o-follow__header').innerText).toEqual('Get alerts for:');
 	});
 
 	it('doesn\t recreate if it already exists', function() {
@@ -72,7 +71,7 @@ describe('The widget object', function() {
 		widget.show();
 		expect(rootEl.hasAttribute('aria-expanded')).toBeTruthy();
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
-			model: 'oFollow', type: 'widgetOpen'
+			model: 'eventonpage', type: 'hover', data: 'followAuthor'
 		}, window);
 
 		widget.hide();

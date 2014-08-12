@@ -41,6 +41,9 @@ FollowComponent.prototype.setupElements = function() {
   if(isWidget(this.rootEl)) {
     this.widget = new FollowWidget().init(this.list, this.rootEl);
   }
+  if(config.lazyLoad) {
+    showComponent(this.rootEl);
+  }
 
   // document.body.addEventListener('oFollow.serverError', this.onUpdateError.bind(this), false);
   // document.body.addEventListener('oFollow.updateSave', this.onUpdateSuccess.bind(this), false);
@@ -57,12 +60,7 @@ FollowComponent.prototype.setupButtons = function() {
         self.rootEl.removeEventListener(eventToLoadOn, initialiseButtons);
       };
 
-  this.rootEl.setAttribute('data-o-follow--js', '');
-  //send traffic events since the widget will be visible
-  eventHelper.dispatch('oFollow.show', null, this.rootEl);
-  eventHelper.dispatch('oTracking.Data', {'followme': true }, window);
-
-  if(config.lazyLoad && isWidget(this.rootEl)) {
+  if(config.lazyLoad === true && isWidget(this.rootEl)) {
     this.rootEl.addEventListener(eventToLoadOn, initialiseButtons, false);
   } else {
     initialiseButtons();
@@ -152,7 +150,7 @@ FollowComponent.prototype.createForUser = function() {
 FollowComponent.prototype.createForArticle = function() {
   var self = this,
       articleId = this.rootEl.getAttribute('data-o-follow-article-id');
-
+      console.log('about tot get metadata for ', articleId)
     metadata.get(articleId, function(entities) {
       renderButtonsForEntities(entities.authors, self.list);
       self.handleEmptyEntityList();
@@ -175,11 +173,23 @@ function renderButtonsForEntities(entities, list) {
   }
 }
 
+function showComponent(rootEl) {
+  rootEl.setAttribute('data-o-follow--js', '');
+
+  //send traffic events since the widget will be visible
+  eventHelper.dispatch('oFollow.show', null, rootEl);
+  eventHelper.dispatch('oTracking.Data', {'followme': true }, window);
+
+
+}
+
 FollowComponent.prototype.handleEmptyEntityList = function() {
   this.removeMessage();
 
   if(!this.list.querySelector('.o-follow__entity')) {
     this.createMessage('No Authors found.', '');
+  } else if (!config.lazyLoad) {
+    showComponent(this.rootEl);
   }
 };
 
