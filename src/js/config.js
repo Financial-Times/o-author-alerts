@@ -25,7 +25,7 @@ Config.prototype.set = function(opts) {
 	opts = opts || {};
 	for(key in defaults) {
 		if(defaults.hasOwnProperty(key)) {
-			this[key] = (opts[key] !== undefined) ? opts[key] : defaults[key];
+			this[key] = (opts[key] !== undefined) ? opts[key] : (this[key] ? this[key] : defaults[key]);
 		}
 	}
 };

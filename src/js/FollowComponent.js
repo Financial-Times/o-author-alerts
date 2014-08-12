@@ -104,14 +104,13 @@ FollowComponent.prototype.createAllIn = function(rootEl, opts) {
 
   rootEl = rootEl || document.body;
   //set config with overrides passed through
-  config.set(opts);
 
   if (rootEl.querySelectorAll) {
     fEls = rootEl.querySelectorAll('[data-o-component=o-follow]');
     for (c = 0, l = fEls.length; c < l; c++) {
       if (!fEls[c].hasAttribute('data-o-follow--js')) {
         component = new FollowComponent(fEls[c]);
-        component.init();
+        component.init(opts);
         followComponents.push(component);
       }
     }
