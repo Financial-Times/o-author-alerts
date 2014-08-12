@@ -141,7 +141,7 @@ FollowComponent.prototype.createButtons = function() {
 FollowComponent.prototype.createForUser = function() {
   var entities = user && user.following ? user.following.entities : [];
   renderButtonsForEntities(entities, this.list);
-  this.handleEmptyEntityList();
+  this.handleEntityLoad();
 };
 
 //Make an async call to get the metadata for the given article, and render buttons
@@ -149,10 +149,9 @@ FollowComponent.prototype.createForUser = function() {
 FollowComponent.prototype.createForArticle = function() {
   var self = this,
       articleId = this.rootEl.getAttribute('data-o-follow-article-id');
-      console.log('about tot get metadata for ', articleId)
     metadata.get(articleId, function(entities) {
       renderButtonsForEntities(entities.authors, self.list);
-      self.handleEmptyEntityList();
+      self.handleEntityLoad();
       // Reset the button states now they have been created asynchronously
       followButtons.setInitialStates(self.list);
     });
@@ -162,7 +161,7 @@ FollowComponent.prototype.createForEntities = function() {
     var entities = JSON.parse(this.rootEl.getAttribute('data-o-follow-entities'));
       
     renderButtonsForEntities(entities, this.list);
-    this.handleEmptyEntityList();
+    this.handleEntityLoad();
 };
 
 function renderButtonsForEntities(entities, list) {
@@ -182,8 +181,9 @@ function showComponent(rootEl) {
 
 }
 
-FollowComponent.prototype.handleEmptyEntityList = function() {
+FollowComponent.prototype.handleEntityLoad = function() {
   this.removeMessage();
+  eventHelper.dispatch('oFollow.entitiesLoaded', null, this.rootEl);
 
   if(!this.list.querySelector('.o-follow__entity')) {
     this.createMessage('No Authors found.', '');
