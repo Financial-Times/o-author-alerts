@@ -40,6 +40,7 @@
 [data-o-follow-message] {
 	.o-follow__message {
 		display: block;
+		padding: 10px 5px;
 	}
 }
 
@@ -70,6 +71,7 @@
 }
 
 @include oFtButtonsButton(o-follow__button);
+@include oFtButtonsButtonStandout(o-follow__button);
 
 //TODO : this should come from o-ft-buttons
 @include oColorsSetUseCase(not-following, background, white);

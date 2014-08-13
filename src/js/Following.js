@@ -207,6 +207,13 @@ Following.prototype.stop = function(entity) {
 
 };
 
+Following.prototype.unfollowAll = function() {
+	var i, n;
+	for(i=0,n=this.entities.length; i<n; i++) {
+		this.stop(this.entities[i]);
+	}
+}
+
 
 
 module.exports = Following;

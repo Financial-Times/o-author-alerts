@@ -63,16 +63,21 @@ describe('Initialising a followComponent', function() {
 		followComponent.init({lazyLoad: false});
 
 		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
-		expect(eventSpy.callCount).toEqual(2);
+		expect(eventSpy.callCount).toEqual(3);
 
 
-		expect(eventSpy.argsForCall[0][0]).toBe('oFollow.show');
+		expect(eventSpy.argsForCall[0][0]).toBe('oFollow.entitiesLoaded');
 		expect(eventSpy.argsForCall[0][1]).toBe(null);
 		expect(eventSpy.argsForCall[0][2]).toBe(rootEl);
 
-		expect(eventSpy.argsForCall[1][0]).toBe('oTracking.Data');
-		expect(eventSpy.argsForCall[1][1].followme).toBe(true);
-		expect(eventSpy.argsForCall[1][2]).toBe(window);
+		expect(eventSpy.argsForCall[1][0]).toBe('oFollow.show');
+		expect(eventSpy.argsForCall[1][1]).toBe(null);
+		expect(eventSpy.argsForCall[1][2]).toBe(rootEl);
+
+
+		expect(eventSpy.argsForCall[2][0]).toBe('oTracking.Data');
+		expect(eventSpy.argsForCall[2][1].followme).toBe(true);
+		expect(eventSpy.argsForCall[2][2]).toBe(window);
 	});
 
 	it('does not initialise if there are no authors', function() {

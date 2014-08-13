@@ -23,14 +23,26 @@ function createNameSpan(name){
   return span;
 }
 
-function createButton(entity) {
+function createButton(entity, text) {
 	var btn = document.createElement('button');
   btn.className = 'o-follow__button';
   btn.setAttribute('data-o-follow-id', entity.id);
   btn.setAttribute('data-o-follow-name', entity.name);
-  setTextContent(btn, config.startFollowingText);
+  setTextContent(btn, (text ? text : config.startFollowingText));
   return btn;
 }
+
+exports.unfollowAll = function(list) {
+  var tagName = list.tagName === ('UL') ? 'li' : 'div';
+  var wrapper = createWrapper(tagName);
+  var btn = document.createElement('button');
+  btn.className = 'o-follow__button o-follow__button--standout';
+  btn.setAttribute('data-o-follow-all', "unfollow");
+  setTextContent(btn, 'Unfollow All');
+  wrapper.appendChild(btn);
+  list.appendChild(wrapper);
+  return btn;
+};
 
 exports.button = function(list, entity) {
 	var tagName = list.tagName === ('UL') ? 'li' : 'div';

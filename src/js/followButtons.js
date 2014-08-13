@@ -12,8 +12,13 @@ var user = require('./user'),
 function init(rootEl) {
   rootDelegate = new DomDelegate(rootEl);
   rootDelegate.on('click', '[data-o-follow-id]', function(ev) {
-    toggleFollowState(ev, rootEl);
+    toggleFollowState(ev.target);
   });
+
+  rootDelegate.on('click', '[data-o-follow-all="unfollow"]', function(ev) {
+    stopAll(ev, rootEl);
+  });
+
   setInitialStates(rootEl);
 }
 
@@ -26,11 +31,12 @@ function destroy() {
 
 function setInitialStates(rootEl) {
   var buttons = rootEl.querySelectorAll('[data-o-follow-id]'),
-      i, l, btn;
+      i, l, btn, id;
 
   for(i=0,l=buttons.length; i<l;i++) {
     btn = buttons[i];
-    if(isBeingFollowed(btn.getAttribute('data-o-follow-id'), user.following.entities)) {
+    id = btn.getAttribute('data-o-follow-id');
+    if(isBeingFollowed(id, user.following.entities)) {
       startFollowing(btn);
     } else {
       stopFollowing(btn);
@@ -53,15 +59,13 @@ function isBeingFollowed(id, followingList) {
   return matched;
 }
 
-function toggleFollowState(ev, rootEl) {
-  var btn = ev.target,
-      isCurrentlyFollowing = (btn.getAttribute('data-o-follow-state') === 'true'),
+function toggleFollowState(btn) {
+  var isCurrentlyFollowing = (btn.getAttribute('data-o-follow-state') === 'true'),
       entity = {
         'id': btn.getAttribute('data-o-follow-id'),
         'name': btn.getAttribute('data-o-follow-name')
       },
       eventName;
-
   if(isCurrentlyFollowing) {
     user.following.stop(entity, user.id );
     stopFollowing(btn);
@@ -86,6 +90,15 @@ function stopFollowing(el) {
   var name = el.getAttribute('data-o-follow-name');
   setTextContent(el, config.startFollowingText.replace(/\%entityName\%/g, name));
   el.setAttribute('data-o-follow-state', false);
+}
+
+function stopAll(ev, rootEl) {
+  var buttons = rootEl.querySelectorAll('[data-o-follow-state="true"]'),
+      i, l;
+  for(i=0,l=buttons.length;i<l;i++) {
+    toggleFollowState(buttons[i]);
+  }
+  ev.target.setAttribute('disabled', true);
 }
 
 function setTextContent(element, text) {

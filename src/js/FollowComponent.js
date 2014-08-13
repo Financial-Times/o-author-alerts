@@ -41,12 +41,12 @@ FollowComponent.prototype.setupElements = function() {
   if(isWidget(this.rootEl)) {
     this.widget = new FollowWidget().init(this.list, this.rootEl);
   }
+
+  //If lazyLoading metadata, show the widget immediately
+  // Note: this means that the widget will still display if no authors found
   if(config.lazyLoad) {
     showComponent(this.rootEl);
   }
-
-  // document.body.addEventListener('oFollow.serverError', this.onUpdateError.bind(this), false);
-  // document.body.addEventListener('oFollow.updateSave', this.onUpdateSuccess.bind(this), false);
 
 
 };
@@ -61,6 +61,7 @@ FollowComponent.prototype.setupButtons = function() {
       };
 
   if(config.lazyLoad === true && isWidget(this.rootEl)) {
+    //Lazy loading metadata on hover of widget
     this.rootEl.addEventListener(eventToLoadOn, initialiseButtons, false);
   } else {
     initialiseButtons();
@@ -132,7 +133,7 @@ FollowComponent.prototype.createButtons = function() {
   } else if (this.rootEl.hasAttribute('data-o-follow-entities')) {
     this.createForEntities();
   } else {
-    this.handleEmptyEntityList();
+    this.handleEntityLoad();
   }
 };
 
@@ -140,7 +141,13 @@ FollowComponent.prototype.createButtons = function() {
 //are already following
 FollowComponent.prototype.createForUser = function() {
   var entities = user && user.following ? user.following.entities : [];
+
   renderButtonsForEntities(entities, this.list);
+
+  //Add an unfollow all button if they are already following multiple things
+  if(entities.length > 1) {
+    views.unfollowAll(this.list);
+  }
   this.handleEntityLoad();
 };
 
@@ -153,10 +160,11 @@ FollowComponent.prototype.createForArticle = function() {
       renderButtonsForEntities(entities.authors, self.list);
       self.handleEntityLoad();
       // Reset the button states now they have been created asynchronously
-      followButtons.setInitialStates(self.list);
+      followButtons.setInitialStates(self.rootEl);
     });
 };
 
+//Entities passed directly to component
 FollowComponent.prototype.createForEntities = function() {
     var entities = JSON.parse(this.rootEl.getAttribute('data-o-follow-entities'));
       
@@ -174,10 +182,9 @@ function renderButtonsForEntities(entities, list) {
 function showComponent(rootEl) {
   rootEl.setAttribute('data-o-follow--js', '');
 
-  //send traffic events since the widget will be visible
+  //send tracking events since the widget will be visible
   eventHelper.dispatch('oFollow.show', null, rootEl);
   eventHelper.dispatch('oTracking.Data', {'followme': true }, window);
-
 
 }
 
