@@ -9,7 +9,7 @@ A product must provide the source HTML as shown below, based on the use case.
 
 The Alerts buttons are automatically initialised when the `o.DOMContentLoaded` event is triggered.
 
-Alternatively, you can use the `createAllIn` method on the prototype, as follows:
+Alternatively, you can use the `init` method, as follows:
 
 	var oAuthorAlerts = require('o-author-alerts');
 	oAuthorAlerts.init(rootEl);

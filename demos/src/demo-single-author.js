@@ -4,8 +4,8 @@
 
 	document.addEventListener("DOMContentLoaded", function() {
     oAuthorAlerts.init(document.body, {
-			startFollowingText: "Start following %entityName%",
-			stopFollowingText: "Stop following %entityName%",
+			startFollowingText: "Start alerts for %entityName%",
+			stopFollowingText: "Stop alerts for %entityName%",
 			displayName: false
 		});
 	});
