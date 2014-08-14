@@ -1,7 +1,7 @@
 /*global require,describe,beforeEach,afterEach,it,expect,spyOn*/
 'use strict';
 
-var followButtons = require('../src/js/followButtons.js');
+var buttons = require('../src/js/buttons.js');
 var views = require('../src/js/views.js');
 var jsonp = require('../src/js/lib/jsonp.js');
 var eventHelper = require('../src/js/lib/eventHelper.js');
@@ -31,10 +31,10 @@ describe('Initialising a button', function() {
 	it('sets the initial state assuming that the user is initialised', function() {
 		var entity = {id: 'author1', name: 'First Author'};
 		views.button(testEl, entity);
-		user.following.entities  = [entity];
-		followButtons.init(testEl);
-		var button = testEl.querySelector('[data-o-follow-id]');		
-		expect(button.innerText).toBe('Stop Alerts');
+		user.subscription.entities  = [entity];
+		buttons.init(testEl);
+		var button = testEl.querySelector('[data-o-author-alerts-id]');		
+		expect(button.innerText).toBe('Alerting');
 	});
 
 });
@@ -60,18 +60,17 @@ describe('Clicking the button', function() {
 		var entity = {id: 'author1', name: 'First Author'};
 		views.button(testEl, entity);
 
-		user.following.entities  = [];
-		var stopSpy = spyOn(user.following, 'stop');
-		var startSpy = spyOn(user.following, 'start');
+		user.subscription.entities  = [];
+		var stopSpy = spyOn(user.subscription, 'stop');
+		var startSpy = spyOn(user.subscription, 'start');
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 
-		followButtons.init(testEl);
-		var button = testEl.querySelector('[data-o-follow-id]');
+		buttons.init(testEl);
+		var button = testEl.querySelector('[data-o-author-alerts-id]');
 		button.click();
 
 		expect(startSpy).toHaveBeenCalledWith(entity, 'userId');
-		// expect(button.el.innerText).toBe('Stop Following');
-		expect(button.getAttribute('data-o-follow-state')).toBe('true');
+		expect(button.getAttribute('data-o-author-alerts-state')).toBe('true');
 		
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
 			model: 'followme', type: 'follow', value: 'First Author'
@@ -81,8 +80,7 @@ describe('Clicking the button', function() {
 		button.click();
 		
 		expect(stopSpy).toHaveBeenCalledWith(entity, 'userId');
-		// expect(button.el.innerText).toBe('Start Following');
-		expect(button.getAttribute('data-o-follow-state')).toBe('false');
+		expect(button.getAttribute('data-o-author-alerts-state')).toBe('false');
 
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
 			model: 'followme', type: 'unfollow', value: 'First Author'

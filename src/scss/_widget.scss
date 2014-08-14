@@ -1,6 +1,6 @@
 
-.o-follow--theme {
-	.o-follow__widget {
+.o-author-alerts--theme {
+	.o-author-alerts__widget {
 		background-color: #fff;
 		color: oColorsGetColorFor(link, text);
 		display: inline-block;
@@ -26,18 +26,18 @@
 	}
 
 	//NOT IMPLEMENTED YET
-	&[data-o-follow-message='error'] {
-		.o-follow__widget {
+	&[data-o-author-alerts-message='error'] {
+		.o-author-alerts__widget {
 			background-color: oColorsGetColorFor(status-error, background);
 		}	
 	}
-	&[data-o-follow-message='success'] {
-		.o-follow__widget {
+	&[data-o-author-alerts-message='success'] {
+		.o-author-alerts__widget {
 			background-color: oColorsGetColorFor(status-ok, background);
 		}	
 	}
 
-	.o-follow__popover {
+	.o-author-alerts__popover {
 		visibility: hidden;
 		opacity: 0;
 		transition-duration: 300ms, 0;
@@ -63,7 +63,7 @@
 	}
 
 
-	&[aria-expanded] .o-follow__popover {
+	&[aria-expanded] .o-author-alerts__popover {
 		transition-duration: 0, 300ms;
 		transition-property: visibility, opacity;
 		transition-delay: 0;

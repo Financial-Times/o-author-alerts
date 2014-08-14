@@ -23,7 +23,7 @@ describe('The user object', function(){
 		user.init();
 		expect(user.id).toEqual('99999');
 		expect(jsonp.get).toHaveBeenCalled();
-		expect(user.following).toBeTruthy();
+		expect(user.subscription).toBeTruthy();
 	});
 
 

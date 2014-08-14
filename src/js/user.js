@@ -1,24 +1,24 @@
 'use strict';
 
 var oCookies = require('o-cookies');
-var Following = require('./Following');
+var Subscription = require('./Subscription');
 
 function User() {
 
 }
 
 User.prototype.init = function() {
-	if(!(this.id && this.following)) {
+	if(!(this.id && this.subscription)) {
 		this.id = oCookies.getParam('FT_User', 'ERIGHTSID');
-		this.following = new Following(this.id);
+		this.subscription = new Subscription(this.id);
 		if(this.id) {
-			this.following.get();
+			this.subscription.get();
 		}
 	}
 };
 
 User.prototype.destroy = function() {
-	this.following = null;
+	this.subscription = null;
 	this.id = null;
 };
 

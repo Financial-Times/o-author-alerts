@@ -1,44 +1,44 @@
 /*global require,describe,beforeEach,afterEach,it,expect,spyOn*/
 'use strict';
 
-var FollowComponent = require('../src/js/FollowComponent.js');
-var followButtons = require('../src/js/followButtons.js');
+var AuthorAlerts = require('../src/js/AuthorAlerts.js');
+var buttons = require('../src/js/buttons.js');
 var jsonp = require('../src/js/lib/jsonp.js');
 var metadata = require('../src/js/lib/metadata.js');
 var config = require('../src/js/config.js');
 var user = require('../src/js/user.js');
 var eventHelper = require('../src/js/lib/eventHelper');
 
-var followComponent, rootEl, widgetEl;
+var authorAlerts, rootEl, widgetEl;
 
 describe ('CreateAllin', function() {
 	beforeEach(function() {
-		if(followComponent) {
-			followComponent.destroy();
+		if(authorAlerts) {
+			authorAlerts.destroy();
 		}
 		spyOn(jsonp, 'get');
 		rootEl = document.createElement('ul');
-		rootEl.setAttribute('data-o-follow-user', '');
-		rootEl.className = 'o-follow';
+		rootEl.setAttribute('data-o-author-alerts-user', '');
+		rootEl.className = 'o-author-alerts';
 		document.body.appendChild(rootEl);
-		followComponent = new FollowComponent(rootEl);
+		authorAlerts = new AuthorAlerts(rootEl);
 	});
 
 });
 
-describe('Initialising a followComponent', function() {
+describe('Initialising authorAlerts', function() {
 
 	beforeEach(function() {
-		if(followComponent) {
-			followComponent.destroy();
+		if(authorAlerts) {
+			authorAlerts.destroy();
 		}
 		spyOn(jsonp, 'get');
 		rootEl = document.createElement('ul');
-		rootEl.setAttribute('data-o-follow-user', '');
-		rootEl.className = 'o-follow';
+		rootEl.setAttribute('data-o-author-alerts-user', '');
+		rootEl.className = 'o-author-alerts';
 		document.body.appendChild(rootEl);
 
-		followComponent = new FollowComponent(rootEl);
+		authorAlerts = new AuthorAlerts(rootEl);
 	});
 
 	afterEach(function(){
@@ -46,9 +46,9 @@ describe('Initialising a followComponent', function() {
 
 	it('sets up the user', function() {
 		var userSpy = spyOn(user, 'init');
-		spyOn(followComponent, 'setupElements');
-		spyOn(followComponent, 'setupButtons');
-		followComponent.init({lazyLoad: false});
+		spyOn(authorAlerts, 'setupElements');
+		spyOn(authorAlerts, 'setupButtons');
+		authorAlerts.init({lazyLoad: false});
 		expect(userSpy).toHaveBeenCalled();
 
 	});
@@ -58,19 +58,19 @@ describe('Initialising a followComponent', function() {
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 		user.init();
 		user.id = 'test';
-		user.following.entities= [entity];
+		user.subscription.entities= [entity];
 
-		followComponent.init({lazyLoad: false});
+		authorAlerts.init({lazyLoad: false});
 
-		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
+		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).toBeTruthy();
 		expect(eventSpy.callCount).toEqual(3);
 
 
-		expect(eventSpy.argsForCall[0][0]).toBe('oFollow.entitiesLoaded');
+		expect(eventSpy.argsForCall[0][0]).toBe('oAuthorAlerts.entitiesLoaded');
 		expect(eventSpy.argsForCall[0][1]).toBe(null);
 		expect(eventSpy.argsForCall[0][2]).toBe(rootEl);
 
-		expect(eventSpy.argsForCall[1][0]).toBe('oFollow.show');
+		expect(eventSpy.argsForCall[1][0]).toBe('oAuthorAlerts.show');
 		expect(eventSpy.argsForCall[1][1]).toBe(null);
 		expect(eventSpy.argsForCall[1][2]).toBe(rootEl);
 
@@ -85,27 +85,27 @@ describe('Initialising a followComponent', function() {
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 
 		user.init();
-		user.following.entities= [];
-		followComponent.init({lazyLoad: false});
-		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
-		expect(followComponent.message.textContent).toBe('Loading data...');
-		expect(eventSpy).not.toHaveBeenCalledWith('oFollow.show', null, rootEl);
+		user.subscription.entities= [];
+		authorAlerts.init({lazyLoad: false});
+		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).not.toBeTruthy();
+		expect(authorAlerts.message.textContent).toBe('Loading data...');
+		expect(eventSpy).not.toHaveBeenCalledWith('oAuthorAlerts.show', null, rootEl);
 	});
 
 
 	it('waits for event if the user preferences are not available', function() {
 		var entity = {id:'author1', name: 'First Author'};
-		var btnInitSpy = spyOn(followButtons, 'init');
+		var btnInitSpy = spyOn(buttons, 'init');
 		
 
-		followComponent.init({lazyLoad: false});
-		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
+		authorAlerts.init({lazyLoad: false});
+		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).not.toBeTruthy();
 		user.init();
-		user.following.entities= [entity];
-		eventHelper.dispatch('oFollow.userPreferencesLoad');
+		user.subscription.entities= [entity];
+		eventHelper.dispatch('oAuthorAlerts.userPreferencesLoad');
 
-		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
-		expect(btnInitSpy).toHaveBeenCalledWith(document.querySelector('.o-follow__list'));
+		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).toBeTruthy();
+		expect(btnInitSpy).toHaveBeenCalledWith(document.querySelector('.o-author-alerts__list'));
 	});
 
 
@@ -115,64 +115,64 @@ describe('Initialising a followComponent', function() {
 describe('Lazy loading the calls to metadata', function() {
 	it('widget lazy loads on mouseover', function() {
 		widgetEl = document.createElement('ul');
-		widgetEl.setAttribute('data-o-follow-article-id', 'test');
-		widgetEl.className = 'o-follow o-follow--theme';
+		widgetEl.setAttribute('data-o-author-alerts-article-id', 'test');
+		widgetEl.className = 'o-author-alerts o-author-alerts--theme';
 		document.body.appendChild(widgetEl);
-		followComponent = new FollowComponent(widgetEl);		
+		authorAlerts = new AuthorAlerts(widgetEl);		
 
 		var metadataSpy = spyOn(metadata, 'get');
 		user.init();
 		user.id = 'test';
-		user.following.entities= [];
+		user.subscription.entities= [];
 
-		followComponent.init();
+		authorAlerts.init();
 		//widget should be visible
-		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
+		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).toBeTruthy();
 		//but no call to metadata spy yet
 		expect(metadataSpy).not.toHaveBeenCalled();
 		//...until we mouseover
 		var evObj = document.createEvent('MouseEvents');
     evObj.initEvent( 'mouseover', true, false );
-    followComponent.rootEl.dispatchEvent(evObj);
+    authorAlerts.rootEl.dispatchEvent(evObj);
     //then it should make the call
 		expect(metadataSpy).toHaveBeenCalled();
 	});
 
 	it('does not lazy load if the config option set to false', function() {
 		widgetEl = document.createElement('ul');
-		widgetEl.setAttribute('data-o-follow-article-id', 'test');
-		widgetEl.className = 'o-follow o-follow--theme';
+		widgetEl.setAttribute('data-o-author-alerts-article-id', 'test');
+		widgetEl.className = 'o-author-alerts o-author-alerts--theme';
 		document.body.appendChild(widgetEl);
-		followComponent = new FollowComponent(widgetEl);		
+		authorAlerts = new AuthorAlerts(widgetEl);		
 
 		var metadataSpy = spyOn(metadata, 'get');
 		user.init();
 		user.id = 'test';
-		user.following.entities= [];
+		user.subscription.entities= [];
 
-		followComponent.init({lazyLoad: false});
+		authorAlerts.init({lazyLoad: false});
 		//widget should be visible
-		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).not.toBeTruthy();
+		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).not.toBeTruthy();
 		//but no call to metadata spy yet
 		expect(metadataSpy).toHaveBeenCalled();
 	});
 
 	it('does not lazy load if it is not a widget', function() {
 		widgetEl = document.createElement('ul');
-		widgetEl.setAttribute('data-o-follow-article-id', 'test');
-		widgetEl.className = 'o-follow'; //no theme class => not a widget
+		widgetEl.setAttribute('data-o-author-alerts-article-id', 'test');
+		widgetEl.className = 'o-author-alerts'; //no theme class => not a widget
 		document.body.appendChild(widgetEl);
-		followComponent = new FollowComponent(widgetEl);		
+		authorAlerts = new AuthorAlerts(widgetEl);		
 
 		var metadataSpy = spyOn(metadata, 'get');
 		user.init();
 		user.id = 'test';
-		user.following.entities= [];
+		user.subscription.entities= [];
 
 		
-		followComponent.init();
+		authorAlerts.init();
 		//widget should be visible
-		expect(followComponent.rootEl.hasAttribute('data-o-follow--js')).toBeTruthy();
+		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).toBeTruthy();
 		//but no call to metadata spy yet
 		expect(metadataSpy).toHaveBeenCalled();
 	});

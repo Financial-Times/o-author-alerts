@@ -4,7 +4,7 @@
 var views = require('../src/js/views.js');
 
 var container = document.createElement('div');
-container.className = 'o-follow';
+container.className = 'o-author-alerts';
 document.body.appendChild(container);
 
 describe('Rendering a follow button', function() {
@@ -18,12 +18,12 @@ describe('Rendering a follow button', function() {
 		};
 
 		views.button(container,entity);
-		var buttonWrapper = container.querySelector('.o-follow__entity');
+		var buttonWrapper = container.querySelector('.o-author-alerts__entity');
 		expect(buttonWrapper).toBeTruthy();
-		expect(buttonWrapper.querySelector('.o-follow__name').innerText).toEqual('Arjun');
+		expect(buttonWrapper.querySelector('.o-author-alerts__name').innerText).toEqual('Arjun');
 		var button = buttonWrapper.querySelector('button');
-		expect(button.getAttribute('data-o-follow-id')).toBe('arjunId');
-		expect(button.getAttribute('data-o-follow-name')).toBe('Arjun');
+		expect(button.getAttribute('data-o-author-alerts-id')).toBe('arjunId');
+		expect(button.getAttribute('data-o-author-alerts-name')).toBe('Arjun');
 		expect(button.innerText).toBe('Start Alerts');
 	});
 
@@ -34,7 +34,7 @@ describe('Rendering a follow button', function() {
 		};
 		
 		var returned = views.button(container,entity);
-		expect(returned.className).toBe('o-follow__entity');
+		expect(returned.className).toBe('o-author-alerts__entity');
 	});
 
 

@@ -7,21 +7,21 @@ var jsonp = require('./lib/jsonp'),
 		config = require('./config.js'),
 		MAX_ATTEMPTS = 3;
 
-function Following(userId) {
+function Subscription(userId) {
 	this.userId = userId;
 	this.entities = null;
-	this.pending = JSON.parse(storage.get('oFollowUserCache-'+this.userId)) || {};
+	this.pending = JSON.parse(storage.get('oAuthorAlertsUserCache-'+this.userId)) || {};
 	this.online = true;
 }
 
 
-Following.prototype.get = function() {
+Subscription.prototype.get = function() {
 	var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=' + this.userId;
-	jsonp.get(url, 'oFollowGetCallback', this.set.bind(this));
+	jsonp.get(url, 'oAuthorAlertsGetCallback', this.set.bind(this));
 };
 
 
-Following.prototype.set = function(data, entity, action) {
+Subscription.prototype.set = function(data, entity, action) {
 	var eventToTrigger = '';
 
 	if(data.status === 'success' && data.taxonomies) {
@@ -33,7 +33,7 @@ Following.prototype.set = function(data, entity, action) {
 			this.removeFromPending(entity);
 		} else { // Initial call to get user preferences
 			this.sync();
-			eventHelper.dispatch('oFollow.userPreferencesLoad', this.entities);
+			eventHelper.dispatch('oAuthorAlerts.userPreferencesLoad', this.entities);
 		}
 	} else {
 		eventToTrigger = 'serverError';
@@ -45,20 +45,12 @@ Following.prototype.set = function(data, entity, action) {
 	}
 
 	//TODO: use this tho display error messages within the module
-	eventHelper.dispatch('oFollow.' + eventToTrigger, {
+	eventHelper.dispatch('oAuthorAlerts.' + eventToTrigger, {
 		data: data,
 		entity: entity,
 		action: action,
 		userId: this.userId
 	});
-
-  eventHelper.dispatch(
-  	'oTracking.Event', 
-  	{ model: 'oFollow', 
-  		type: eventToTrigger, 
-  		value: 'entityId=' + (entity ? entity.id : '') + ',action=' + (action || '') }, 
-  	window
-	);
 
 };
 
@@ -73,7 +65,7 @@ function isRetryable(data) {
 }
 
 
-Following.prototype.sync = function() {
+Subscription.prototype.sync = function() {
 	var newEntities = [],
 			id,
 			pending;
@@ -109,23 +101,23 @@ Following.prototype.sync = function() {
 
 function anythingThatIsntDueToStop(entities, pending) {
 	var newEntities = [],
-			followingEntity,
+			subscribedEntity,
 			i, l;
 
 	for(i=0,l=entities.length; i < l; i++) {
-		followingEntity = entities[i]; 
-		if(pending[followingEntity.id]) {
-			if(pending[followingEntity.id].action !== 'stop') {
-				newEntities.push(followingEntity);
+		subscribedEntity = entities[i]; 
+		if(pending[subscribedEntity.id]) {
+			if(pending[subscribedEntity.id].action !== 'stop') {
+				newEntities.push(subscribedEntity);
 			}
 		} else {
-			newEntities.push(followingEntity);
+			newEntities.push(subscribedEntity);
 		}
 	}
 	return newEntities;
 }
 
-Following.prototype.addToPending = function(entity, action) {
+Subscription.prototype.addToPending = function(entity, action) {
 	if(this.pending[entity.id] ) {
 		if(this.pending[entity.id].action !== action) {
 			this.removeFromPending(entity);
@@ -141,16 +133,16 @@ Following.prototype.addToPending = function(entity, action) {
 	this.savePending();
 };
 
-Following.prototype.removeFromPending = function(entity) {
+Subscription.prototype.removeFromPending = function(entity) {
 	if(this.pending[entity.id]) {
 		delete this.pending[entity.id];
 	}
 	this.savePending();
 };
 
-Following.prototype.savePending = function() {
+Subscription.prototype.savePending = function() {
 	if(this.pending && Object.keys(this.pending).length) {
-		storage.put('oFollowUserCache-'+this.userId, JSON.stringify(this.pending));
+		storage.put('oAuthorAlertsUserCache-'+this.userId, JSON.stringify(this.pending));
 	} else {
 		//get rid of the key from localstorage
 		this.clearPending();
@@ -158,11 +150,11 @@ Following.prototype.savePending = function() {
 };
 
 
-Following.prototype.clearPending = function() {
-	storage.remove('oFollowUserCache-' + this.userId);
+Subscription.prototype.clearPending = function() {
+	storage.remove('oAuthorAlertsUserCache-' + this.userId);
 };
 
-Following.prototype.start = function(entity) {
+Subscription.prototype.start = function(entity) {
 	var url,
 			self = this;
 
@@ -170,13 +162,13 @@ Following.prototype.start = function(entity) {
 		return;
 	}
 
-	url = config.startFollowingUrl + '?userId=' +
+	url = config.startAlertsUrl + '?userId=' +
 			this.userId + '&type=authors&name=' +
 			entity.name + '&id=' +
 			entity.id;
 
 	if(this.online) {
-		jsonp.get(url, 'oFollowStartCallback', function (data) {
+		jsonp.get(url, 'oAuthorAlertsStartCallback', function (data) {
 			self.set( data, entity, 'start');
 		});
 	} else {
@@ -185,19 +177,19 @@ Following.prototype.start = function(entity) {
 	}
 };
 
-Following.prototype.stop = function(entity) {
+Subscription.prototype.stop = function(entity) {
 	var url,
 			self = this;
 	if(!(this.userId && entity.id && entity.name)) {
 		return;
 	} 
 	
-	url = config.stopFollowingUrl + '?userId=' + 
+	url = config.stopAlertsUrl + '?userId=' + 
 			this.userId + '&type=authors&id='+
 			entity.id;
 
 	if(this.online) {
-		jsonp.get(url, 'oFollowStopCallback', function (data) {
+		jsonp.get(url, 'oAuthorAlertsStopCallback', function (data) {
 			self.set( data, entity, 'stop');
 		});
 	} else {
@@ -207,7 +199,7 @@ Following.prototype.stop = function(entity) {
 
 };
 
-Following.prototype.unfollowAll = function() {
+Subscription.prototype.unsubscribeAll = function() {
 	var i, n;
 	for(i=0,n=this.entities.length; i<n; i++) {
 		this.stop(this.entities[i]);
@@ -216,4 +208,4 @@ Following.prototype.unfollowAll = function() {
 
 
 
-module.exports = Following;
+module.exports = Subscription;

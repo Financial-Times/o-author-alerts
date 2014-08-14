@@ -1,109 +1,110 @@
 /*global require,describe,beforeEach,afterEach, jasmine,it,expect,spyOn*/
 'use strict';
 
-var Following = require('../src/js/Following'),
+var Subscription = require('../src/js/Subscription'),
 		eventHelper =  require('../src/js/lib/eventHelper.js'),
 		jsonp =  require('../src/js/lib/jsonp.js');
 
-var following;
+var subscription;
 
 beforeEach(function() {
-	following = new Following('userId');
+	localStorage.removeItem('oAuthorAlertsUserCache-userId');
+	subscription = new Subscription('userId');
 });
 
 afterEach(function() {
-	localStorage.removeItem('oFollowUserCache-userId');
+	localStorage.removeItem('oAuthorAlertsUserCache-userId');
 });
 
 describe('Getting the initial model', function() {
 
 
-	it('get() makes a call to fetch the latest following data for a user', function() {
+	it('get() makes a call to fetch the latest subscription data for a user', function() {
 		var getSpy = spyOn(jsonp, 'get');
-		following.get();
+		subscription.get();
 		var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=userId';
-		expect(getSpy).toHaveBeenCalledWith(url, 'oFollowGetCallback', jasmine.any(Function));
+		expect(getSpy).toHaveBeenCalledWith(url, 'oAuthorAlertsGetCallback', jasmine.any(Function));
 	});
 
 	it('set() updates the model based on the data recieved', function() {
 		var data = {"status":"success", "taxonomies":[{"id":"Q0ItMDAwMDcxOA==-QXV0aG9ycw==","name":"Jack Farchy","type":"authors"}]};
 		var eventSpy = spyOn(eventHelper, 'dispatch');
-		following.set(data);
-		expect(following.entities.length).toBe(1);
-		expect(following.entities[0].id).toBe(data.taxonomies[0].id);
-		expect(eventSpy).toHaveBeenCalledWith('oFollow.userPreferencesLoad', following.entities);
+		subscription.set(data);
+		expect(subscription.entities.length).toBe(1);
+		expect(subscription.entities[0].id).toBe(data.taxonomies[0].id);
+		expect(eventSpy).toHaveBeenCalledWith('oAuthorAlerts.userPreferencesLoad', subscription.entities);
 	});
 
 
 	it('set() only works if the data is correct', function() {
 		var data = {"blah":[{"id":"Q0ItMDAwMDcxOA==-QXV0aG9ycw==","name":"Jack Farchy","type":"authors"}]};
-		following.set(data);
-		expect(following.entities).toBe(null);
+		subscription.set(data);
+		expect(subscription.entities).toBe(null);
 	});
 
 });
 
 describe('Updating the model while online', function() {
 
-	it('will send a request to follow an author', function() {
+	it('will send a request to subscribe to an author', function() {
 		var getSpy = spyOn(jsonp, 'get');
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'
 		};
-		following.online = true;
-		following.start(entity);
+		subscription.online = true;
+		subscription.start(entity);
 		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' + 
 			'userId&type=authors&name=Arjun&id=arjunId';
 
-		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oFollowStartCallback', jasmine.any(Function));
-		// expect(following.entities.hasOwnProperty('arjunId')).toBe(true);
+		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsStartCallback', jasmine.any(Function));
+		// expect(subscription.entities.hasOwnProperty('arjunId')).toBe(true);
 	});
 
-	it('will send a request to unfollow an author', function() {
+	it('will send a request to unsubscribe from an author', function() {
 		var getSpy = spyOn(jsonp, 'get');
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'
 		};
-		following.online = true;
-		following.stop(entity);
+		subscription.online = true;
+		subscription.stop(entity);
 		var expectedUrl = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
 			'userId&type=authors&id=arjunId';	
 
-	 expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oFollowStopCallback', jasmine.any(Function));
+	 expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsStopCallback', jasmine.any(Function));
 	});
 });
 
 describe('Updating the model while offline', function() {
 
-	it('will save a request to follow an author', function() {
+	it('will save a request to subscribe to an author', function() {
 		var getSpy = spyOn(jsonp, 'get');
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'
 		};
-		following.online = false;
-		following.start(entity);
+		subscription.online = false;
+		subscription.start(entity);
 		expect(getSpy).not.toHaveBeenCalled();
-		var pending = JSON.parse(localStorage.getItem('oFollowUserCache-userId'));
+		var pending = JSON.parse(localStorage.getItem('oAuthorAlertsUserCache-userId'));
 		expect(pending.arjunId.tried).toBe(1);
 		expect(pending.arjunId.entity.name).toBe(entity.name);
 		expect(pending.arjunId.action).toBe('start');
 	});
 
-	it('will save a request to unfollow an author', function() {
+	it('will save a request to unsubscribe to an author', function() {
 		var getSpy = spyOn(jsonp, 'get');
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'
 		};
 
-		following.online = false;
-		following.stop(entity);
+		subscription.online = false;
+		subscription.stop(entity);
 
 		expect(getSpy).not.toHaveBeenCalled();
-		var pending = JSON.parse(localStorage.getItem('oFollowUserCache-userId'));
+		var pending = JSON.parse(localStorage.getItem('oAuthorAlertsUserCache-userId'));
 
 		expect(pending.arjunId.tried).toBe(1);
 		expect(pending.arjunId.entity.name).toBe(entity.name);
@@ -117,12 +118,12 @@ describe('Updating the model while offline', function() {
 			id: 'arjunId'
 		};
 
-		following.online = false;
-		following.start(entity);
-		var pending = JSON.parse(localStorage.getItem('oFollowUserCache-userId'));
+		subscription.online = false;
+		subscription.start(entity);
+		var pending = JSON.parse(localStorage.getItem('oAuthorAlertsUserCache-userId'));
 		expect(pending.arjunId.action).toBe('start');
-		following.stop(entity);
-		pending = JSON.parse(localStorage.getItem('oFollowUserCache-userId'));
+		subscription.stop(entity);
+		pending = JSON.parse(localStorage.getItem('oAuthorAlertsUserCache-userId'));
 		expect(pending).not.toBeTruthy();
 	});
 });
@@ -131,133 +132,113 @@ describe('Handles response from the server', function() {
 
 	it('successfully recieves data from the initial call', function() {
 		var mockData = {'status': 'success', taxonomies: ['a', 'b']};
-		following.online = false;
-		var syncSpy = spyOn(following, 'sync');
+		subscription.online = false;
+		var syncSpy = spyOn(subscription, 'sync');
 		var eventSpy = spyOn(eventHelper, 'dispatch');
-		following.set(mockData);
-
-		expect(following.entities.length).toBe(2);
-		expect(following.entities[0]).toBe('a');
-		expect(following.online).toBe(true);
+		subscription.set(mockData);
+		expect(subscription.entities.length).toBe(2);
+		expect(subscription.entities[0]).toBe('a');
+		expect(subscription.online).toBe(true);
 		expect(syncSpy).toHaveBeenCalled();
-		expect(eventSpy).toHaveBeenCalledWith('oFollow.userPreferencesLoad', following.entities);
+		expect(eventSpy).toHaveBeenCalledWith('oAuthorAlerts.userPreferencesLoad', subscription.entities);
 	});
 
 	it('handles errors from the initial call', function() {
 		var mockData = {'status': 'error'};
-		following.online = true;
-		var syncSpy = spyOn(following, 'sync');
+		subscription.online = true;
+		var syncSpy = spyOn(subscription, 'sync');
 		var eventSpy = spyOn(eventHelper, 'dispatch');
-		following.set(mockData);
+		subscription.set(mockData);
 
-		expect(following.entities).toBe(null);
+		expect(subscription.entities).toBe(null);
 		//only set offline in certain cases if follow/unfollow request failed, not the initial one
-		expect(following.online).toBe(true);
+		expect(subscription.online).toBe(true);
 		expect(syncSpy).not.toHaveBeenCalled();
-		expect(eventSpy).not.toHaveBeenCalledWith('oFollow.userPreferencesLoad', following.entities);
+		expect(eventSpy).not.toHaveBeenCalledWith('oAuthorAlerts.userPreferencesLoad', subscription.entities);
 		
-		expect(eventSpy.argsForCall[0][0]).toBe('oFollow.serverError');
+		expect(eventSpy.argsForCall[0][0]).toBe('oAuthorAlerts.serverError');
 		expect(eventSpy.argsForCall[0][1].data).toBe(mockData);
 		expect(eventSpy.argsForCall[0][1].entity).toBe(undefined);
 		expect(eventSpy.argsForCall[0][1].action).toBe(undefined);
 		expect(eventSpy.argsForCall[0][2]).toBe(undefined);
-
-		expect(eventSpy.argsForCall[1][0]).toBe('oTracking.Event');
-		expect(eventSpy.argsForCall[1][1].model).toBe('oFollow');
-		expect(eventSpy.argsForCall[1][1].type).toBe('serverError');
-		expect(eventSpy.argsForCall[1][1].value).toBe('entityId=,action=');
-		expect(eventSpy.argsForCall[1][2]).toBe(window);
-
 
 	});
 
 it('successfully recieves data from update requests', function() {
 		var mockData = {'status': 'success', taxonomies: ['a', 'b']};
 		var mockEntity = { id: 'mockEntity' };
-		following.online = false;
-		var syncSpy = spyOn(following, 'sync');
-		var removeSpy = spyOn(following, 'removeFromPending');
+		subscription.online = false;
+		var syncSpy = spyOn(subscription, 'sync');
+		var removeSpy = spyOn(subscription, 'removeFromPending');
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 
-		following.set(mockData, mockEntity, 'start');
+		subscription.set(mockData, mockEntity, 'start');
 
-		expect(following.entities.length).toBe(2);
-		expect(following.entities[0]).toBe('a');
-		expect(following.online).toBe(true);
+		expect(subscription.entities.length).toBe(2);
+		expect(subscription.entities[0]).toBe('a');
+		expect(subscription.online).toBe(true);
 		expect(removeSpy).toHaveBeenCalledWith(mockEntity);
 		expect(syncSpy).not.toHaveBeenCalled();
-		expect(eventSpy.callCount).toEqual(2);
+		expect(eventSpy.callCount).toEqual(1);
 
 
-		expect(eventSpy.argsForCall[0][0]).toBe('oFollow.updateSave');
+		expect(eventSpy.argsForCall[0][0]).toBe('oAuthorAlerts.updateSave');
 		expect(eventSpy.argsForCall[0][1].data).toBe(mockData);
 		expect(eventSpy.argsForCall[0][1].entity).toBe(mockEntity);
 		expect(eventSpy.argsForCall[0][1].action).toBe('start');
 		expect(eventSpy.argsForCall[0][2]).not.toBeDefined();
-
-		expect(eventSpy.argsForCall[1][0]).toBe('oTracking.Event');
-		expect(eventSpy.argsForCall[1][1].model).toBe('oFollow');
-		expect(eventSpy.argsForCall[1][1].type).toBe('updateSave');
-		expect(eventSpy.argsForCall[1][1].value).toBe('entityId=mockEntity,action=start');
-		expect(eventSpy.argsForCall[1][2]).toBe(window);
 
 	});
 
 	it('retryable errors from update request will add to the list', function() {
 		var mockData = {'status': 'error', 'message': 'retry me please'};
 		var mockEntity = {id: 'mockEntity'} ;
-		following.online = true;
-		var syncSpy = spyOn(following, 'sync');
+		subscription.online = true;
+		var syncSpy = spyOn(subscription, 'sync');
 		var eventSpy = spyOn(eventHelper, 'dispatch');
-		var addSpy = spyOn(following, 'addToPending');
+		var addSpy = spyOn(subscription, 'addToPending');
 
-		following.set(mockData, mockEntity, 'start');
+		subscription.set(mockData, mockEntity, 'start');
 
-		expect(following.entities).toBe(null);
+		expect(subscription.entities).toBe(null);
 		//only set offline in certain cases if follow/unfollow request failed, not the initial one
-		expect(following.online).toBe(false);
+		expect(subscription.online).toBe(false);
 		expect(addSpy).toHaveBeenCalledWith(mockEntity, 'start');
 		expect(syncSpy).not.toHaveBeenCalled();
 
-		expect(eventSpy.argsForCall[0][0]).toBe('oFollow.serverError');
+		expect(eventSpy.argsForCall[0][0]).toBe('oAuthorAlerts.serverError');
 		expect(eventSpy.argsForCall[0][1].data).toBe(mockData);
 		expect(eventSpy.argsForCall[0][1].entity).toBe(mockEntity);
 		expect(eventSpy.argsForCall[0][1].action).toBe('start');
-		expect(eventSpy.argsForCall[0][2]).not.toBeDefined();
-
-		expect(eventSpy.argsForCall[1][0]).toBe('oTracking.Event');
-		expect(eventSpy.argsForCall[1][1].model).toBe('oFollow');
-		expect(eventSpy.argsForCall[1][1].type).toBe('serverError');
-		expect(eventSpy.argsForCall[1][1].value).toBe('entityId=mockEntity,action=start');
-		expect(eventSpy.argsForCall[1][2]).toBe(window);
+		expect(eventSpy.argsForCall[0][2]).not.toBeDefined()
 
 	
 	});
 
 
-	it('dont retry if user is not following that person in the first place', function() {
+	it('dont retry if user is not subscribed to that person in the first place', function() {
 		var mockData = {'status': 'error', 'message': 'user is not following this id'};
 		var mockEntity = 'mockEntity';
-		following.online = true;
-		var addSpy = spyOn(following, 'addToPending');
+		subscription.online = true;
+		var addSpy = spyOn(subscription, 'addToPending');
 
-		following.set(mockData, mockEntity, 'start');
+		subscription.set(mockData, mockEntity, 'start');
 
 		//only set offline in certain cases if follow/unfollow request failed, not the initial one
-		expect(following.online).toBe(true);
+		expect(subscription.online).toBe(true);
 		expect(addSpy).not.toHaveBeenCalled();
 	});
 
-	it('dont retry if user has no following list', function() {
+	it('dont retry if user has no subscription list', function() {
 		var mockData = {'status': 'error', 'message': 'user has no following list'};
 		var mockEntity = 'mockEntity';
-		following.online = true;
-		var addSpy = spyOn(following, 'addToPending');
+		subscription.online = true;
+		var addSpy = spyOn(subscription, 'addToPending');
 
-		following.set(mockData, mockEntity, 'start');
+		subscription.set(mockData, mockEntity, 'start');
  	
 		//only set offline in certain cases if follow/unfollow request failed, not the initial one
-		expect(following.online).toBe(true);
+		expect(subscription.online).toBe(true);
 		expect(addSpy).not.toHaveBeenCalled();
 	});
 
@@ -284,12 +265,12 @@ describe('Keeping the client and server in sync', function() {
 			}
 		};
 
-		localStorage.setItem('oFollowUserCache-userId', JSON.stringify(pending));
-		following = new Following('userId');
-		following.entities = [];
-		var startSpy = spyOn(following, 'start');
-		var stopSpy = spyOn(following, 'stop');
-		following.sync();
+		localStorage.setItem('oAuthorAlertsUserCache-userId', JSON.stringify(pending));
+		subscription = new Subscription('userId');
+		subscription.entities = [];
+		var startSpy = spyOn(subscription, 'start');
+		var stopSpy = spyOn(subscription, 'stop');
+		subscription.sync();
 
 		expect(startSpy).toHaveBeenCalledWith(pending.startId.entity);
 		expect(stopSpy).toHaveBeenCalledWith(pending.stopId.entity);
@@ -309,25 +290,25 @@ describe('Keeping the client and server in sync', function() {
 				"tried": 1,
 				"entity": {
 					"id": "stopId",
-					"name": "Already following"
+					"name": "Already subscribed"
 				},
 				"action": "stop"
 			}
 		};
 
-		localStorage.setItem('oFollowUserCache-userId', JSON.stringify(pending));
-		following = new Following('userId');
-		following.entities = [pending.stopId.entity];
-		spyOn(following, 'start');
-		spyOn(following, 'stop');
+		localStorage.setItem('oAuthorAlertsUserCache-userId', JSON.stringify(pending));
+		subscription = new Subscription('userId');
+		subscription.entities = [pending.stopId.entity];
+		spyOn(subscription, 'start');
+		spyOn(subscription, 'stop');
 
-		expect(following.entities.length).toBe(1);
-		expect(following.entities[0].id).toBe('stopId');
+		expect(subscription.entities.length).toBe(1);
+		expect(subscription.entities[0].id).toBe('stopId');
 
-		following.sync();
+		subscription.sync();
 
-		expect(following.entities.length).toBe(1);
-		expect(following.entities[0].id).toBe('startId');
+		expect(subscription.entities.length).toBe(1);
+		expect(subscription.entities[0].id).toBe('startId');
 	});
 
 	it('Gives up on requests after 3 attempts', function() {
@@ -350,15 +331,15 @@ describe('Keeping the client and server in sync', function() {
 			}
 		};
 
-		localStorage.setItem('oFollowUserCache-userId', JSON.stringify(pending));
-		following = new Following('userId');
-		following.entities = [];
-		var startSpy = spyOn(following, 'start');
-		following.sync();
+		localStorage.setItem('oAuthorAlertsUserCache-userId', JSON.stringify(pending));
+		subscription = new Subscription('userId');
+		subscription.entities = [];
+		var startSpy = spyOn(subscription, 'start');
+		subscription.sync();
 
 		expect(startSpy).toHaveBeenCalledWith(pending.start2.entity);
-		expect(following.entities.length).toBe(1);
-		expect(following.entities[0].name).toBe('Keep trying me');
+		expect(subscription.entities.length).toBe(1);
+		expect(subscription.entities[0].name).toBe('Keep trying me');
 
 	});
 

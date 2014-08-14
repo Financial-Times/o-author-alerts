@@ -19,7 +19,7 @@ exports.reset = function() {
 
 function addScript(url, callbackName, callback) {
 	var script = document.createElement('script');
-	callbackName = (callbackName || 'ftJsonpCallback') + unique++;
+	callbackName = (callbackName || 'oAlertsJsonpCallback') + unique++;
   script.type = 'text/javascript';
 	if(url.indexOf('?') > 0) {
 		url = url + '&callback=' + callbackName;

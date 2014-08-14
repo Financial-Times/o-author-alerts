@@ -1,9 +1,9 @@
 (function() {
 	'use strict';
-	var oFollow = require('../../main.js');
+	var oAuthorAlerts = require('../../main.js');
 
 	document.addEventListener("DOMContentLoaded", function() {
-    oFollow.prototype.createAllIn(document.body, {
+    oAuthorAlerts.init(document.body, {
 			startFollowingText: "Follow",
 			stopFollowingText: "Unfollow",
 			widgetText: 'Your Alerts',

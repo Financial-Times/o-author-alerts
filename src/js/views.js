@@ -12,33 +12,33 @@ function setTextContent(element, text) {
 
 function createWrapper(tagName) {
 	var wrapper = document.createElement(tagName);
-	wrapper.className = 'o-follow__entity';
+	wrapper.className = 'o-author-alerts__entity';
 	return wrapper;
 }
 
 function createNameSpan(name){
  	var span = document.createElement('span');
   setTextContent(span, name);
-  span.className = 'o-follow__name';
+  span.className = 'o-author-alerts__name';
   return span;
 }
 
 function createButton(entity, text) {
 	var btn = document.createElement('button');
-  btn.className = 'o-follow__button';
-  btn.setAttribute('data-o-follow-id', entity.id);
-  btn.setAttribute('data-o-follow-name', entity.name);
-  setTextContent(btn, (text ? text : config.startFollowingText));
+  btn.className = 'o-author-alerts__button';
+  btn.setAttribute('data-o-author-alerts-id', entity.id);
+  btn.setAttribute('data-o-author-alerts-name', entity.name);
+  setTextContent(btn, (text ? text : config.startAlertsText));
   return btn;
 }
 
-exports.unfollowAll = function(list) {
+exports.unsubscribeAll = function(list) {
   var tagName = list.tagName === ('UL') ? 'li' : 'div';
   var wrapper = createWrapper(tagName);
   var btn = document.createElement('button');
-  btn.className = 'o-follow__button o-follow__button--standout';
-  btn.setAttribute('data-o-follow-all', "unfollow");
-  setTextContent(btn, 'Unfollow All');
+  btn.className = 'o-author-alerts__button o-author-alerts__button--standout';
+  btn.setAttribute('data-o-author-alerts-all', "unsubscribe");
+  setTextContent(btn, 'Unsubscribe All');
   wrapper.appendChild(btn);
   list.appendChild(wrapper);
   return btn;
@@ -56,26 +56,26 @@ exports.button = function(list, entity) {
 };
 
 exports.list = function(rootEl) {
-  var list = rootEl.querySelector('.o-follow__list');
+  var list = rootEl.querySelector('.o-author-alerts__list');
 
   if(!list) {
     list = document.createElement('ul');
-    list.className = 'o-follow__list';
+    list.className = 'o-author-alerts__list';
     rootEl.appendChild(list);
   }
   return list;
 };
 
 exports.popover = function(rootEl) {
-	var list = rootEl.querySelector('.o-follow__list'),
-  		popover = rootEl.querySelector('.o-follow__popover');
+	var list = rootEl.querySelector('.o-author-alerts__list'),
+  		popover = rootEl.querySelector('.o-author-alerts__popover');
 
   if(!popover) {
   	popover = document.createElement('div');
-  	popover.className = 'o-follow__popover';
+  	popover.className = 'o-author-alerts__popover';
     popover.setAttribute('will-change', '');
     if(config.popoverHeadingText) {
-    	popover.innerHTML = '<h3 class="o-follow__header">' + config.popoverHeadingText + '</h3>';
+    	popover.innerHTML = '<h3 class="o-author-alerts__header">' + config.popoverHeadingText + '</h3>';
     }
   	rootEl.insertBefore(popover, list);
   	popover.appendChild(list);
@@ -85,13 +85,13 @@ exports.popover = function(rootEl) {
 };
 
 exports.widget = function(rootEl) {
-	var popover = rootEl.querySelector('.o-follow__popover'),
-  		widget = rootEl.querySelector('.o-follow__widget'),
+	var popover = rootEl.querySelector('.o-author-alerts__popover'),
+  		widget = rootEl.querySelector('.o-author-alerts__widget'),
 			icon = widget ? widget.querySelector('i') : null;
   if(!widget) {
     widget = document.createElement('span');
     setTextContent(widget, config.widgetText);
-    widget.className = 'o-follow__widget';
+    widget.className = 'o-author-alerts__widget';
     rootEl.insertBefore(widget, popover);
   }
 

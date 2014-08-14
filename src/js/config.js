@@ -2,13 +2,13 @@
 
 var defaults = {
 	getFollowingUrl: "http://personalisation.ft.com/follow/getFollowingIds",
-	startFollowingUrl: "http://personalisation.ft.com/follow/update",
-	stopFollowingUrl: "http://personalisation.ft.com/follow/stopFollowing",
+	startAlertsUrl: "http://personalisation.ft.com/follow/update",
+	stopAlertsUrl: "http://personalisation.ft.com/follow/stopFollowing",
 	metadataUrl: "http://metadata-cache.webservices.ft.com/v1/getAuthors/",
 	lazyLoad: true,
 	entityType: "Author",
-	startFollowingText: "Start Alerts",
-	stopFollowingText: "Stop Alerts",
+	startAlertsText: "Start Alerts",
+	stopAlertsText: "Alerting",
 	widgetText: "Author Alerts",
 	popoverHeadingText: null,
 	displayName: "%entityName%"

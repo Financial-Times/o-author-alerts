@@ -1,9 +1,9 @@
 'use strict';
 
-var FollowComponent = require('./src/js/FollowComponent');
+var AuthorAlerts = require('./src/js/AuthorAlerts');
 
 document.addEventListener("o.DOMContentLoaded", function() {
-    FollowComponent.prototype.createAllIn(document.body);
+    AuthorAlerts.prototype.createAllIn(document.body);
 });
 
-module.exports = FollowComponent;
+module.exports = AuthorAlerts;

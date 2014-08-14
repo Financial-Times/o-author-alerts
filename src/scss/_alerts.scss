@@ -1,9 +1,9 @@
-.o-follow {
+.o-author-alerts {
 	display: none;
 	line-height: 1em;
 }
 
-[data-o-follow--js].o-follow {
+[data-o-author-alerts--js].o-author-alerts {
 	display: inline-block;
 }
 
@@ -12,13 +12,13 @@
 @include oFtTypographyIncludeFont(heading);
 
 //Added specificity to override ft typography margins.
-.o-follow ul.o-follow__list {
+.o-author-alerts ul.o-author-alerts__list {
 	margin: 0;
 	padding: 0;
 	font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 }
 
-.o-follow__entity {
+.o-author-alerts__entity {
 	list-style: none;
 	overflow: auto;
 	padding: 10px 5px;
@@ -28,35 +28,35 @@
 	}
 }
 
-.o-follow__widget {
+.o-author-alerts__widget {
 	display: none;
 }
-.o-follow__message {
+.o-author-alerts__message {
 	display: none;
 	font-size: 14px;
 }
 
 //NOT IMPLEMENTED YET
-[data-o-follow-message] {
-	.o-follow__message {
+[data-o-author-alerts-message] {
+	.o-author-alerts__message {
 		display: block;
 		padding: 10px 5px;
 	}
 }
 
-[data-o-follow-message='error'] {
-	.o-follow__message {
+[data-o-author-alerts-message='error'] {
+	.o-author-alerts__message {
 		color: oColorsGetColorFor(error, text);;
 	}
 }
 
 //Added specificity to override ft typography margins.
-.o-follow h3.o-follow__header {
+.o-author-alerts h3.o-author-alerts__header {
 	@extend %o-ft-typography-heading2-text;
 	margin: 10px 0;
 }
 
-.o-follow__name {
+.o-author-alerts__name {
 	float: left;
 	margin-right: 20px;
 	font-size: 13px;
@@ -65,25 +65,25 @@
 	font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 }
 
-.o-follow__button {
+.o-author-alerts__button {
 	float: right;
 	min-width: 100px;
 }
 
-@include oFtButtonsButton(o-follow__button);
-@include oFtButtonsButtonStandout(o-follow__button);
+@include oFtButtonsButton(o-author-alerts__button);
+@include oFtButtonsButtonStandout(o-author-alerts__button);
 
 //TODO : this should come from o-ft-buttons
-@include oColorsSetUseCase(not-following, background, white);
-@include oColorsSetUseCase(not-following, text, black);
-@include oColorsSetUseCase(following, background, green);
-@include oColorsSetUseCase(following, text, white);
+@include oColorsSetUseCase(not-alerting, background, white);
+@include oColorsSetUseCase(not-alerting, text, black);
+@include oColorsSetUseCase(alerting, background, green);
+@include oColorsSetUseCase(alerting, text, white);
 
-.o-follow__theme .o-follow__button[data-o-follow-state="false"] {
-	@include oColorsFor(not-following);
-
+.o-author-alerts__theme .o-author-alerts__button[data-o-author-alerts-state="false"] {
+	@include oColorsFor(not-alerting);
 }
-// .o-follow__button[data-o-follow-state="true"] {
-// 	@include oColorsFor(following);
+
+// .o-author-alerts__button[data-o-author-alerts-state="true"] {
+// 	@include oColorsFor(alerting);
 // }
 

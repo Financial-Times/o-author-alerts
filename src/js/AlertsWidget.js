@@ -5,11 +5,11 @@ var views = require('./views'),
     DomDelegate = require('ftdomdelegate'),
     oDom = require('o-dom');
 
-function FollowWidget() {
+function AlertsWidget() {
 	this.delegate = new DomDelegate(); 
 }
 
-FollowWidget.prototype.init = function(list, rootEl) {
+AlertsWidget.prototype.init = function(list, rootEl) {
 	this.delegate.root(rootEl);
 	this.list = list;
 	this.rootEl = rootEl;
@@ -19,16 +19,16 @@ FollowWidget.prototype.init = function(list, rootEl) {
 	this.timeout = null;
 };
 
-FollowWidget.prototype.destroy = function() {
+AlertsWidget.prototype.destroy = function() {
 	this.popover.parentElement.removeChild(this.popover);
 	this.widget.parentElement.removeChild(this.widget);
 
 	this.delegate.off();
 };
 
-FollowWidget.prototype.bindEvents = function() {
+AlertsWidget.prototype.bindEvents = function() {
 	var self = this;
-	this.delegate.on('click', '.o-follow__widget', this.toggle.bind(this));
+	this.delegate.on('click', '.o-author-alerts__widget', this.toggle.bind(this));
 	document.addEventListener('click', this.hide.bind(this), false);
 
 
@@ -40,7 +40,7 @@ FollowWidget.prototype.bindEvents = function() {
 	});
 };
 
-FollowWidget.prototype.toggle = function() {
+AlertsWidget.prototype.toggle = function() {
 	if(this.rootEl.hasAttribute('aria-expanded')) {
 		this.hide();
 	} else {
@@ -49,15 +49,15 @@ FollowWidget.prototype.toggle = function() {
 };
 
 
-FollowWidget.prototype.show = function() {
+AlertsWidget.prototype.show = function() {
 	this.rootEl.setAttribute('aria-expanded', '');
   eventHelper.dispatch('oTracking.Event', { model: 'eventonpage', type: 'hover', data: 'followAuthor'}, window);
   eventHelper.dispatch('oLayers.new', { el: this.popover }, document.body);
 };
 
-FollowWidget.prototype.hide = function(ev) {
+AlertsWidget.prototype.hide = function(ev) {
 	var target = ev ? ev.target : null,
-		isInWidget = oDom.getClosestMatch(target, '[data-o-component=o-follow]');
+		isInWidget = oDom.getClosestMatch(target, '[data-o-component=o-author-alerts]');
 	if(!isInWidget || (!target && this.rootEl.hasAttribute('aria-expanded'))) {
 		this.rootEl.removeAttribute('aria-expanded');
 		 eventHelper.dispatch('oLayers.close', { el: this.popover }, document.body);
@@ -66,4 +66,4 @@ FollowWidget.prototype.hide = function(ev) {
 
 
 
-module.exports = FollowWidget;
+module.exports = AlertsWidget;
