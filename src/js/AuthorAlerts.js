@@ -83,7 +83,7 @@ AuthorAlerts.prototype.createMessage = function(msg, type) {
   if(!this.message) {
     this.message = document.createElement('span');
     this.message.className = 'o-author-alerts__message';
-    this.rootEl.insertBefore(this.message, this.list);
+    this.list.insertBefore(this.message, this.list.querySelector('.o-author-alerts__entity'));
   }
   this.message.innerText = msg;
   this.rootEl.setAttribute('data-o-author-alerts-message', type);
