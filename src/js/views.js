@@ -28,6 +28,7 @@ function createButton(entity, text) {
   btn.className = 'o-author-alerts__button';
   btn.setAttribute('data-o-author-alerts-id', entity.id);
   btn.setAttribute('data-o-author-alerts-name', entity.name);
+  btn.setAttribute('title', 'Click to start alerts for this ' + config.entityType);
   setTextContent(btn, (text ? text : config.startAlertsText));
   return btn;
 }
@@ -97,7 +98,6 @@ exports.widget = function(rootEl) {
 
   if(!icon) {
     icon = document.createElement('i');
-    icon.className = 'icon-arrow-down';
     widget.appendChild(icon);
   }
 

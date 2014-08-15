@@ -12,8 +12,8 @@
 		font-size: 13px;
 		line-height: 13px;
 		i {
-			@extend %o-ft-icons-icon--arrow-down;
 			@include oFtIconsBaseIconStyles();
+			@extend %o-ft-icons-icon--arrow-down;
 			margin-left: 8px;
 			line-height: 13px;
 			font-size: 13px;

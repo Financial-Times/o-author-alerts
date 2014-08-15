@@ -82,14 +82,17 @@ function toggleAlertState(btn) {
 function subscribe(el) {
   var name = el.getAttribute('data-o-author-alerts-name');
   //note: using innerHTML in second instance since element is hidden so innerText returns ''
-  setTextContent(el, config.stopAlertsText.replace(/\%entityName\%/g, name));
+  el.innerHTML = config.stopAlertsText.replace(/\%entityName\%/g, name);
   el.setAttribute('data-o-author-alerts-state', true);
+  el.setAttribute('title', 'Click to stop alerts for this ' + config.entityType);
 }
 
 function unsubscribe(el) {
   var name = el.getAttribute('data-o-author-alerts-name');
   setTextContent(el, config.startAlertsText.replace(/\%entityName\%/g, name));
   el.setAttribute('data-o-author-alerts-state', false);
+  el.setAttribute('title', 'Click to start alerts for this ' + config.entityType);
+
 }
 
 function stopAll(ev, rootEl) {

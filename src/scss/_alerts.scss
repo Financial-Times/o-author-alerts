@@ -73,14 +73,13 @@
 @include oFtButtonsButton(o-author-alerts__button);
 @include oFtButtonsButtonStandout(o-author-alerts__button);
 
-//TODO : this should come from o-ft-buttons
-@include oColorsSetUseCase(not-alerting, background, white);
-@include oColorsSetUseCase(not-alerting, text, black);
-@include oColorsSetUseCase(alerting, background, green);
-@include oColorsSetUseCase(alerting, text, white);
-
-.o-author-alerts__theme .o-author-alerts__button[data-o-author-alerts-state="false"] {
-	@include oColorsFor(not-alerting);
+.o-author-alerts__button[data-o-author-alerts-state="true"] {
+	i {
+		@include oFtIconsBaseIconStyles();
+		@extend %o-ft-icons-icon--tick;
+		margin-left: 8px;
+		line-height: 20px; //stop button from changing heights between states
+	}
 }
 
 // .o-author-alerts__button[data-o-author-alerts-state="true"] {

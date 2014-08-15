@@ -7,9 +7,9 @@ var defaults = {
 	metadataUrl: "http://metadata-cache.webservices.ft.com/v1/getAuthors/",
 	lazyLoad: true,
 	entityType: "Author",
-	startAlertsText: "Start Alerts",
-	stopAlertsText: "Alerting",
-	widgetText: "Author Alerts",
+	startAlertsText: "Start alerts",
+	stopAlertsText: "Alerting<i class=\"o-author-alerts__icon--tick\"></i>",
+	widgetText: "Author alerts",
 	popoverHeadingText: null,
 	displayName: "%entityName%"
 };
