@@ -314,7 +314,7 @@ describe('Keeping the client and server in sync', function() {
 	it('Gives up on requests after 3 attempts', function() {
 		var pending = {
 			"start1": {
-				"tried": 3,
+				"tried": 5,
 				"entity": {
 					"id": "start1",
 					"name": "Give up on me"

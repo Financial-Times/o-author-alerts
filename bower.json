@@ -10,16 +10,13 @@
     "ftdomdelegate": "~1.0.0",
     "o-ft-typography": "~1.12.1",
     "o-dom": "~0.3.0"
-    },
-    "main": [
-      "main.scss",
-      "main.js"
-    ],
-    "ignore": [
-      "package.json",
-      ".gitignore"
-    ],
-    "resolutions": {
-      "o-ft-icons": "2.0.0"
-    }
-  }
+  },
+  "main": [
+    "main.scss",
+    "main.js"
+  ],
+  "ignore": [
+    "package.json",
+    ".gitignore"
+  ]
+}

@@ -5,7 +5,7 @@ var jsonp = require('./lib/jsonp'),
 		BrowserStore = require('./lib/BrowserStore'),
 		storage = new BrowserStore(localStorage),
 		config = require('./config.js'),
-		MAX_ATTEMPTS = 3;
+		MAX_ATTEMPTS = 5;
 
 function Subscription(userId) {
 	this.userId = userId;
