@@ -39,7 +39,8 @@ AuthorAlerts.prototype.setupElements = function() {
   this.createMessage('Loading data...', '');
 
   if(isWidget(this.rootEl)) {
-    this.widget = new AlertsWidget().init(this.list, this.rootEl);
+    this.widget = new AlertsWidget()
+    this.widget.init(this.list, this.rootEl);
   }
 
   //If lazyLoading metadata, show the widget immediately
@@ -58,11 +59,16 @@ AuthorAlerts.prototype.setupButtons = function() {
         self.createButtons();
         buttons.init(self.list);
         self.rootEl.removeEventListener(eventToLoadOn, initialiseButtons);
+        if(self.widget && self.widget.widget) {
+          self.widget.widget.removeEventListener('focus', initialiseButtons);
+        }
+
       };
 
   if(config.lazyLoad === true && isWidget(this.rootEl)) {
     //Lazy loading metadata on hover of widget
     this.rootEl.addEventListener(eventToLoadOn, initialiseButtons, false);
+    this.widget.widget.addEventListener('focus', initialiseButtons, false);
   } else {
     initialiseButtons();
   }

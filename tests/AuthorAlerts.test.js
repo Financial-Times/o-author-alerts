@@ -138,6 +138,54 @@ describe('Lazy loading the calls to metadata', function() {
 		expect(metadataSpy).toHaveBeenCalled();
 	});
 
+	it('widget lazy loads on focus for keyboard users', function() {
+		widgetEl = document.createElement('ul');
+		widgetEl.setAttribute('data-o-author-alerts-article-id', 'test');
+		widgetEl.className = 'o-author-alerts o-author-alerts--theme';
+		document.body.appendChild(widgetEl);
+		authorAlerts = new AuthorAlerts(widgetEl);		
+
+		var metadataSpy = spyOn(metadata, 'get');
+		user.init();
+		user.id = 'test';
+		user.subscription.entities= [];
+
+		authorAlerts.init();
+		//widget should be visible
+		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).toBeTruthy();
+		//but no call to metadata spy yet
+		expect(metadataSpy).not.toHaveBeenCalled();
+		//...until we focus
+    authorAlerts.widget.widget.focus();
+    //then it should make the call
+		expect(metadataSpy).toHaveBeenCalled();
+	});
+
+	it('widget does not create duplicate buttons with lazy loading', function() {
+		widgetEl = document.createElement('ul');
+		widgetEl.setAttribute('data-o-author-alerts-user', '');
+		widgetEl.className = 'o-author-alerts o-author-alerts--theme';
+		document.body.appendChild(widgetEl);
+		authorAlerts = new AuthorAlerts(widgetEl);		
+
+		user.init();
+		user.id = 'test';
+		user.subscription.entities= [{id:'author1', name: 'First Author'}];
+
+		authorAlerts.init();
+		//widget should be visible
+		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).toBeTruthy();
+		//but no call to metadata spy yet
+
+		var evObj = document.createEvent('MouseEvents');
+    evObj.initEvent( 'mouseover', true, false );
+    authorAlerts.rootEl.dispatchEvent(evObj);
+    //then it should make the call
+		authorAlerts.widget.widget.focus();
+		expect(widgetEl.querySelectorAll('.o-author-alerts__entity').length).toBe(1);
+
+	});
+
 	it('does not lazy load if the config option set to false', function() {
 		widgetEl = document.createElement('ul');
 		widgetEl.setAttribute('data-o-author-alerts-article-id', 'test');

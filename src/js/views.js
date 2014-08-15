@@ -90,7 +90,7 @@ exports.widget = function(rootEl) {
   		widget = rootEl.querySelector('.o-author-alerts__widget'),
 			icon = widget ? widget.querySelector('i') : null;
   if(!widget) {
-    widget = document.createElement('span');
+    widget = document.createElement('button');
     setTextContent(widget, config.widgetText);
     widget.className = 'o-author-alerts__widget';
     rootEl.insertBefore(widget, popover);

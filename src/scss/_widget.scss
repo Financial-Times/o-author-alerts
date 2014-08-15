@@ -5,6 +5,7 @@
 		color: oColorsGetColorFor(link, text);
 		display: inline-block;
 		box-sizing: border-box;
+		border: none;
 		border-radius: 10px;
 		padding: 5px 10px;
 		font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
