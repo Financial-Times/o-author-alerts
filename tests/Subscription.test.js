@@ -210,7 +210,7 @@ it('successfully recieves data from update requests', function() {
 		expect(eventSpy.argsForCall[0][1].data).toBe(mockData);
 		expect(eventSpy.argsForCall[0][1].entity).toBe(mockEntity);
 		expect(eventSpy.argsForCall[0][1].action).toBe('start');
-		expect(eventSpy.argsForCall[0][2]).not.toBeDefined()
+		expect(eventSpy.argsForCall[0][2]).not.toBeDefined();
 
 	
 	});

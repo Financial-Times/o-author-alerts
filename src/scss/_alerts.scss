@@ -24,7 +24,7 @@
 	padding: 10px 5px;
 	border-bottom: 1px dotted oColorsGetColorFor(table-row, border);
 	&:last-child {
-		border-bottom: none;
+		border-bottom: 0;
 	}
 }
 

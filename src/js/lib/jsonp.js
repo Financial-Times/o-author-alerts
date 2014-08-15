@@ -15,7 +15,7 @@ exports.get = function(url, callbackName, callback) {
 exports.reset = function() {
 	unique = 0;
 	queue = [];
-}
+};
 
 function addScript(url, callbackName, callback) {
 	var script = document.createElement('script');
@@ -39,12 +39,12 @@ function addScript(url, callbackName, callback) {
 			delete window[callbackName];
 			queue.shift();
 			nextInQueue();
-		}
+		};
 	}
 }
 
 function nextInQueue() {
 	if(queue.length >= 1) {
-		addScript.apply(this, queue[0]);
+		addScript.apply(null, queue[0]);
 	}
 }

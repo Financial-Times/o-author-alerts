@@ -39,7 +39,7 @@ AuthorAlerts.prototype.setupElements = function() {
   this.createMessage('Loading data...', '');
 
   if(isWidget(this.rootEl)) {
-    this.widget = new AlertsWidget()
+    this.widget = new AlertsWidget();
     this.widget.init(this.list, this.rootEl);
   }
 

@@ -5,7 +5,6 @@ var AuthorAlerts = require('../src/js/AuthorAlerts.js');
 var buttons = require('../src/js/buttons.js');
 var jsonp = require('../src/js/lib/jsonp.js');
 var metadata = require('../src/js/lib/metadata.js');
-var config = require('../src/js/config.js');
 var user = require('../src/js/user.js');
 var eventHelper = require('../src/js/lib/eventHelper');
 
@@ -81,7 +80,6 @@ describe('Initialising authorAlerts', function() {
 	});
 
 	it('does not initialise if there are no authors', function() {
-		var entity = {id:'author1', name: 'First Author'};
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 
 		user.init();

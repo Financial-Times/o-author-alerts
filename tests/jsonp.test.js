@@ -1,4 +1,4 @@
-/*global require,describe,it,expect, jasmine*/
+/*global require,describe,it,expect, jasmine, beforeEach */
 'use strict';
 
 var jsonp = require('../src/js/lib/jsonp');
@@ -8,7 +8,7 @@ describe('jsonp.get()', function() {
 		jsonp.reset();
 	});
 
-	xit('writes a script to the head of the page', function() {
+	it('writes a script to the head of the page', function() {
 		var url ='http://www.test.com';
 		jsonp.get(url, 'callbackName');
 		var script = document.getElementsByTagName('head')[0].querySelector('script');
@@ -17,14 +17,14 @@ describe('jsonp.get()', function() {
     document.getElementsByTagName('head')[0].removeChild(script);
 	});
 
-	xit('appends a callback name to the end of the url', function() {
+	it('appends a callback name to the end of the url', function() {
 		jsonp.get('http://www.test.com', 'callbackName');
 		var script1 = document.getElementsByTagName('head')[0].querySelectorAll('script')[0];
 		expect(script1.getAttribute('src')).toEqual('http://www.test.com?callback=callbackName0');
     document.getElementsByTagName('head')[0].removeChild(script1);
 	});
 
-	xit('appends a callback name to the end of another query param', function() {
+	it('appends a callback name to the end of another query param', function() {
 		jsonp.get('http://www.test.com?other=true', 'callbackName');
 		var script1 = document.getElementsByTagName('head')[0].querySelectorAll('script')[0];
 		expect(script1.getAttribute('src')).toEqual('http://www.test.com?other=true&callback=callbackName0');
@@ -32,7 +32,7 @@ describe('jsonp.get()', function() {
 	});
 
 
-	xit('creates a callback function which deletes the script and itself', function() {
+	it('creates a callback function which deletes the script and itself', function() {
 		jsonp.get('http://www.test.com', 'testCallback');
 		expect(typeof window.testCallback0).toBe('function');
 		window.testCallback0('data');
@@ -41,7 +41,7 @@ describe('jsonp.get()', function() {
 		expect(script).not.toBeTruthy();
 	});
 
-	xit('executes a callback if there is one passed in', function() {
+	it('executes a callback if there is one passed in', function() {
 		var myCallback = jasmine.createSpy();
 		jsonp.get('http://www.test.com', 'testCallback', myCallback);
 		window.testCallback0('data');
@@ -57,10 +57,10 @@ describe('jsonp.get()', function() {
 
 		window.testCallback0();
 
-		var scripts = document.getElementsByTagName('head')[0].querySelectorAll('script');
+		scripts = document.getElementsByTagName('head')[0].querySelectorAll('script');
 		expect(scripts.length).toEqual(1);
 		expect(scripts[0].getAttribute('src')).toBe('request2?callback=testCallback1');
 
 
-	})
+	});
 });

@@ -204,7 +204,7 @@ Subscription.prototype.unsubscribeAll = function() {
 	for(i=0,n=this.entities.length; i<n; i++) {
 		this.stop(this.entities[i]);
 	}
-}
+};
 
 
 
