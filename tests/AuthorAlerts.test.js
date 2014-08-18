@@ -86,7 +86,7 @@ describe('Initialising authorAlerts', function() {
 		user.subscription.entities= [];
 		authorAlerts.init({lazyLoad: false});
 		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).not.toBeTruthy();
-		expect(authorAlerts.message.textContent).toBe('Loading data...');
+		expect(authorAlerts.rootEl.querySelector('.o-author-alerts__message').textContent).toBe('Loading data...');
 		expect(eventSpy).not.toHaveBeenCalledWith('oAuthorAlerts.show', null, rootEl);
 	});
 
@@ -103,7 +103,7 @@ describe('Initialising authorAlerts', function() {
 		eventHelper.dispatch('oAuthorAlerts.userPreferencesLoad');
 
 		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).toBeTruthy();
-		expect(btnInitSpy).toHaveBeenCalledWith(document.querySelector('.o-author-alerts__list'));
+		expect(btnInitSpy).toHaveBeenCalledWith(authorAlerts.rootEl);
 	});
 
 

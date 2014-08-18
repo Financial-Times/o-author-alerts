@@ -5,6 +5,7 @@
 var user = require('./user'),
     eventHelper = require('./lib/eventHelper'),
     config = require('./config.js'),
+    message = require('./lib/message'),
     DomDelegate = require('ftdomdelegate'),
     rootDelegate;
 
@@ -98,9 +99,12 @@ function unsubscribe(el) {
 function stopAll(ev, rootEl) {
   var buttons = rootEl.querySelectorAll('[data-o-author-alerts-state="true"]'),
       i, l;
+
+  message.create(rootEl, 'You have been unsubscribed from all authors.', '');
   for(i=0,l=buttons.length;i<l;i++) {
     toggleAlertState(buttons[i]);
   }
+
   ev.target.setAttribute('disabled', true);
 }
 

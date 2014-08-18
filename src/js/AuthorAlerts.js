@@ -4,6 +4,7 @@ var user = require('./user'),
     views = require('./views'),
     eventHelper = require('./lib/eventHelper'),
     buttons = require('./buttons'),
+    message = require('./lib/message'),
     AlertsWidget = require('./AlertsWidget'),
     metadata = require('./lib/metadata'),
     config = require('./config.js');
@@ -36,12 +37,13 @@ AuthorAlerts.prototype.destroy = function() {
 
 AuthorAlerts.prototype.setupElements = function() {
 	this.list = views.list(this.rootEl);
-  this.createMessage('Loading data...', '');
 
   if(isWidget(this.rootEl)) {
     this.widget = new AlertsWidget();
     this.widget.init(this.list, this.rootEl);
   }
+
+  message.create(this.rootEl, 'Loading data...', '');
 
   //If lazyLoading metadata, show the widget immediately
   // Note: this means that the widget will still display if no authors found
@@ -57,7 +59,7 @@ AuthorAlerts.prototype.setupButtons = function() {
       eventToLoadOn = ('onmouseover' in window) ? 'mouseover' : 'click',
       initialiseButtons = function() {
         self.createButtons();
-        buttons.init(self.list);
+        buttons.init(self.rootEl);
         self.rootEl.removeEventListener(eventToLoadOn, initialiseButtons);
         if(self.widget && self.widget.widget) {
           self.widget.widget.removeEventListener('focus', initialiseButtons);
@@ -84,24 +86,6 @@ AuthorAlerts.prototype.setupButtons = function() {
 //     this.createMessage('Preferences successfully synced to server!', 'success');
 //   }
 // };
-
-AuthorAlerts.prototype.createMessage = function(msg, type) {
-  if(!this.message) {
-    this.message = document.createElement('span');
-    this.message.className = 'o-author-alerts__message';
-    this.list.insertBefore(this.message, this.list.querySelector('.o-author-alerts__entity'));
-  }
-  this.message.innerText = msg;
-  this.rootEl.setAttribute('data-o-author-alerts-message', type);
-};
-
-AuthorAlerts.prototype.removeMessage = function(msg, type) {
-  if(this.message) {
-    this.message.parentElement.removeChild(this.message);
-    this.message = null;
-  }
-  this.rootEl.removeAttribute('data-o-author-alerts-message');
-};
 
 AuthorAlerts.init = function(rootEl, opts) {
   var components = [], 
@@ -197,11 +181,11 @@ function showComponent(rootEl) {
 }
 
 AuthorAlerts.prototype.handleEntityLoad = function() {
-  this.removeMessage();
+  message.remove(this.rootEl);
   eventHelper.dispatch('oAuthorAlerts.entitiesLoaded', null, this.rootEl);
 
   if(!this.list.querySelector('.o-author-alerts__entity')) {
-    this.createMessage('No Authors found.', '');
+    message.create(this.rootEl,'No Authors found.', '');
   } else if (!config.lazyLoad) {
     showComponent(this.rootEl);
   }
