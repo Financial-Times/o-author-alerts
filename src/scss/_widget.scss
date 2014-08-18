@@ -65,13 +65,14 @@
 	}
 
 
-	&[aria-expanded] .o-author-alerts__popover {
-		transition-duration: 0, 300ms;
-		transition-property: visibility, opacity;
-		transition-delay: 0;
-		visibility: visible;
-		opacity: 1;
+	&[aria-expanded] {
+		.o-author-alerts__popover {
+			transition-duration: 0, 300ms;
+			transition-property: visibility, opacity;
+			transition-delay: 0;
+			visibility: visible;
+			opacity: 1;
 
+		}
 	}
-
 }
