@@ -2,8 +2,7 @@
 
 var views = require('./views'),
     eventHelper = require('./lib/eventHelper'),
-    DomDelegate = require('ftdomdelegate'),
-    oDom = require('o-dom');
+    DomDelegate = require('ftdomdelegate');
 
 function AlertsWidget() {
 	this.delegate = new DomDelegate(); 
@@ -57,13 +56,20 @@ AlertsWidget.prototype.show = function() {
 
 AlertsWidget.prototype.hide = function(ev) {
 	var target = ev ? ev.target : null,
-		isInWidget = oDom.getClosestMatch(target, '[data-o-component=o-author-alerts]');
+		isInWidget = findClosestParent(target, function(el) {
+			return (el.getAttribute('data-o-component') === 'o-author-alerts');
+		});
 	if(!isInWidget || (!target && this.rootEl.hasAttribute('aria-expanded'))) {
 		this.rootEl.removeAttribute('aria-expanded');
 		 eventHelper.dispatch('oLayers.close', { el: this.popover }, document.body);
 	}
 };
 
+function findClosestParent (startElement, fn) {
+  var parent = startElement.parentElement;
+  if (!parent) return undefined;
+  return fn(parent) ? parent : findClosestParent(parent, fn);
+}
 
 
 module.exports = AlertsWidget;

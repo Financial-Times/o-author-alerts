@@ -6,7 +6,9 @@ function create(rootEl, message, type) {
   	list = rootEl.querySelector('.o-author-alerts__list');
     msg = document.createElement('span');
     msg.className = 'o-author-alerts__message';
-    list.parentElement.insertBefore(msg, list);
+    if(list) {
+    	list.parentElement.insertBefore(msg, list);
+    }
   }
   msg.innerText = message;
   rootEl.setAttribute('data-o-author-alerts-message', type);
