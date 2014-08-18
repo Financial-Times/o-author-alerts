@@ -12,12 +12,12 @@ var user = require('./user'),
 //initialise all buttons in the rootEl
 function init(rootEl) {
   rootDelegate = new DomDelegate(rootEl);
-  rootDelegate.on('click', '[data-o-author-alerts-id]', function(ev) {
-    toggleAlertState(ev.target);
+  rootDelegate.on('click', '[data-o-author-alerts-id]', function(ev, el) {
+    toggleAlertState(el);
   });
 
-  rootDelegate.on('click', '[data-o-author-alerts-all="unsubscribe"]', function(ev) {
-    stopAll(ev, rootEl);
+  rootDelegate.on('click', '[data-o-author-alerts-all="unsubscribe"]', function(ev, el) {
+    stopAll(el, rootEl);
   });
 
   setInitialStates(rootEl);
@@ -105,7 +105,7 @@ function stopAll(ev, rootEl) {
     toggleAlertState(buttons[i]);
   }
 
-  ev.target.setAttribute('disabled', true);
+  el.setAttribute('disabled', true);
 }
 
 function setTextContent(element, text) {
