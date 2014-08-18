@@ -30,7 +30,11 @@ AlertsWidget.prototype.bindEvents = function() {
 	var self = this;
 	this.delegate.on('click', '.o-author-alerts__widget', this.toggle.bind(this));
 	document.addEventListener('click', this.hide.bind(this), false);
-
+	this.delegate.on('keydown', '[aria-expanded]', function(e) {
+		if(e.which === 27) { //esc key
+			self.hide();
+		}
+	})
 
 	//Hide the current popover if any other layer is opened
 	document.body.addEventListener('oLayers.new', function(ev) {
