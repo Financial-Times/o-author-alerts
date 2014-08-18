@@ -25,6 +25,10 @@
 			cursor: pointer;
 			color: oColorsGetColorFor(link-hover, text);
 		}
+		&:focus {
+			outline: none;
+			box-shadow: inset 0 0 3px 1px oColorsGetColorFor(button-standout-standard, background);;
+		}
 	}
 
 	//NOT IMPLEMENTED YET
@@ -66,6 +70,13 @@
 
 
 	&[aria-expanded] {
+		.o-author-alerts__widget {
+			background-color: oColorsGetColorFor(button-standout-standard, background);
+			color: oColorsGetColorFor(button-standout-standard, text);
+			&:hover {
+				background-color: oColorsGetColorFor(button-standout-hover, background);
+			}
+		}
 		.o-author-alerts__popover {
 			transition-duration: 0, 300ms;
 			transition-property: visibility, opacity;
