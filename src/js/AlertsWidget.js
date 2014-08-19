@@ -61,7 +61,7 @@ AlertsWidget.prototype.show = function() {
 
 AlertsWidget.prototype.hide = function(ev) {
 	var target = ev ? ev.target : null,
-		isInWidget = target.className.indexOf('o-author-alerts') > -1 || //Checking classname to handle clicking icon which then is removed from dom
+		isInWidget = (target && target.className === 'o-author-alerts__icon--tick') ||
 			oDom.getClosestMatch(target, '[data-o-component=o-author-alerts]');
 	if(!isInWidget || (!target && this.rootEl.hasAttribute('aria-expanded'))) {
 		this.rootEl.removeAttribute('aria-expanded');
