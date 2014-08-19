@@ -34,7 +34,7 @@ AlertsWidget.prototype.bindEvents = function() {
 		if(e.which === 27) { //esc key
 			self.hide();
 		}
-	})
+	});
 
 	//Hide the current popover if any other layer is opened
 	document.body.addEventListener('oLayers.new', function(ev) {
@@ -59,7 +59,7 @@ AlertsWidget.prototype.show = function() {
   eventHelper.dispatch('oLayers.new', { el: this.popover }, document.body);
 };
 
-AlertsWidget.prototype.hide = function(ev, target) {
+AlertsWidget.prototype.hide = function(ev) {
 	var target = ev ? ev.target : null,
 		isInWidget = target.className.indexOf('o-author-alerts') > -1 || //Checking classname to handle clicking icon which then is removed from dom
 			oDom.getClosestMatch(target, '[data-o-component=o-author-alerts]');

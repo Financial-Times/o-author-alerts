@@ -96,7 +96,7 @@ function unsubscribe(el) {
 
 }
 
-function stopAll(ev, rootEl) {
+function stopAll(el, rootEl) {
   var buttons = rootEl.querySelectorAll('[data-o-author-alerts-state="true"]'),
       i, l;
 
