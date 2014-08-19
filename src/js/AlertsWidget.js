@@ -59,9 +59,10 @@ AlertsWidget.prototype.show = function() {
   eventHelper.dispatch('oLayers.new', { el: this.popover }, document.body);
 };
 
-AlertsWidget.prototype.hide = function(ev) {
+AlertsWidget.prototype.hide = function(ev, target) {
 	var target = ev ? ev.target : null,
-		isInWidget = oDom.getClosestMatch(target, '[data-o-component=o-author-alerts]');
+		isInWidget = target.className.indexOf('o-author-alerts') > -1 || //Checking classname to handle clicking icon which then is removed from dom
+			oDom.getClosestMatch(target, '[data-o-component=o-author-alerts]');
 	if(!isInWidget || (!target && this.rootEl.hasAttribute('aria-expanded'))) {
 		this.rootEl.removeAttribute('aria-expanded');
 		 eventHelper.dispatch('oLayers.close', { el: this.popover }, document.body);
