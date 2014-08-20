@@ -33,7 +33,7 @@ describe('Initialising a button', function() {
 		views.button(testEl, entity);
 		user.subscription.entities  = [entity];
 		buttons.init(testEl);
-		var button = testEl.querySelector('[data-o-author-alerts-id]');		
+		var button = testEl.querySelector('[data-o-author-alerts-id] button');		
 		expect(button.innerText).toBe('Alerting');
 	});
 
@@ -66,11 +66,11 @@ describe('Clicking the button', function() {
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 
 		buttons.init(testEl);
-		var button = testEl.querySelector('[data-o-author-alerts-id]');
+		var button = testEl.querySelector('[data-o-author-alerts-id] button');
 		button.click();
 
 		expect(startSpy).toHaveBeenCalledWith(entity, 'userId');
-		expect(button.getAttribute('data-o-author-alerts-state')).toBe('true');
+		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('true');
 		
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
 			model: 'followme', type: 'follow', value: 'First Author'
@@ -80,7 +80,7 @@ describe('Clicking the button', function() {
 		button.click();
 		
 		expect(stopSpy).toHaveBeenCalledWith(entity, 'userId');
-		expect(button.getAttribute('data-o-author-alerts-state')).toBe('false');
+		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('false');
 
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
 			model: 'followme', type: 'unfollow', value: 'First Author'

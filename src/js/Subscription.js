@@ -5,7 +5,8 @@ var jsonp = require('./lib/jsonp'),
 		BrowserStore = require('./lib/BrowserStore'),
 		storage = new BrowserStore(localStorage),
 		config = require('./config.js'),
-		MAX_ATTEMPTS = 5;
+		MAX_ATTEMPTS = 5,
+		VALID_FREQUENCIES = ['daily', 'immediate', 'weekly'];
 
 function Subscription(userId) {
 	this.userId = userId;
@@ -154,7 +155,7 @@ Subscription.prototype.clearPending = function() {
 	storage.remove('oAuthorAlertsUserCache-' + this.userId);
 };
 
-Subscription.prototype.start = function(entity) {
+Subscription.prototype.start = function(entity, frequency) {
 	var url,
 			self = this;
 
@@ -162,10 +163,16 @@ Subscription.prototype.start = function(entity) {
 		return;
 	}
 
+	if(!frequency || VALID_FREQUENCIES.indexOf(frequency) < 0) {
+		frequency = 'daily';
+	}
+	entity.frequency = frequency;
+
 	url = config.startAlertsUrl + '?userId=' +
 			this.userId + '&type=authors&name=' +
 			entity.name + '&id=' +
-			entity.id;
+			entity.id + '&frequency=' +
+			frequency;
 
 	if(this.online) {
 		jsonp.get(url, 'oAuthorAlertsStartCallback', function (data) {

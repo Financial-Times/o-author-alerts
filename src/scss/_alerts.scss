@@ -28,28 +28,6 @@
 	}
 }
 
-.o-author-alerts__widget {
-	display: none;
-}
-.o-author-alerts__message {
-	display: none;
-	font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
-	font-size: 14px;
-}
-
-//NOT IMPLEMENTED YET
-[data-o-author-alerts-message] {
-	.o-author-alerts__message {
-		display: block;
-		padding: 10px 5px;
-	}
-}
-
-[data-o-author-alerts-message='error'] {
-	.o-author-alerts__message {
-		color: oColorsGetColorFor(error, text);;
-	}
-}
 
 //Added specificity to override ft typography margins.
 .o-author-alerts h3.o-author-alerts__header {
@@ -87,3 +65,8 @@
 // 	@include oColorsFor(alerting);
 // }
 
+
+
+.o-author-alerts__select {
+	@extends %o-ft-forms__select;
+}

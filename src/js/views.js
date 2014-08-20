@@ -10,9 +10,13 @@ function setTextContent(element, text) {
   }
 }
 
-function createWrapper(tagName) {
+function createWrapper(tagName, entity) {
 	var wrapper = document.createElement(tagName);
 	wrapper.className = 'o-author-alerts__entity';
+  if(entity) {
+    wrapper.setAttribute('data-o-author-alerts-id', entity.id);
+    wrapper.setAttribute('data-o-author-alerts-name', entity.name);
+  }
 	return wrapper;
 }
 
@@ -23,13 +27,11 @@ function createNameSpan(name){
   return span;
 }
 
-function createButton(entity, text) {
+function createButton(text) {
 	var btn = document.createElement('button');
   btn.className = 'o-author-alerts__button';
-  btn.setAttribute('data-o-author-alerts-id', entity.id);
-  btn.setAttribute('data-o-author-alerts-name', entity.name);
   btn.setAttribute('title', 'Click to start alerts for this ' + config.entityType);
-  setTextContent(btn, (text ? text : config.startAlertsText));
+  setTextContent(btn, config.startAlertsText);
   return btn;
 }
 
@@ -47,11 +49,11 @@ exports.unsubscribeAll = function(list) {
 
 exports.button = function(list, entity) {
 	var tagName = list.tagName === ('UL') ? 'li' : 'div';
-	var wrapper = createWrapper(tagName);
+	var wrapper = createWrapper(tagName, entity);
   if(config.displayName) {
     wrapper.appendChild(createNameSpan(config.displayName.replace(/\%entityName\%/g, entity.name)));
   }
-	wrapper.appendChild(createButton(entity));
+	wrapper.appendChild(createButton());
 	list.appendChild(wrapper);
 	return wrapper;
 };

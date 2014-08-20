@@ -55,7 +55,37 @@ describe('Updating the model while online', function() {
 		subscription.online = true;
 		subscription.start(entity);
 		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' + 
-			'userId&type=authors&name=Arjun&id=arjunId';
+			'userId&type=authors&name=Arjun&id=arjunId&frequency=daily';
+
+		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsStartCallback', jasmine.any(Function));
+		// expect(subscription.entities.hasOwnProperty('arjunId')).toBe(true);
+	});
+
+	it('will send a request to change alert frequency of an author', function() {
+		var getSpy = spyOn(jsonp, 'get');
+		var entity = {
+			name: 'Arjun',
+			id: 'arjunId'
+		};
+		subscription.online = true;
+		subscription.start(entity, 'immediate');
+		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' + 
+			'userId&type=authors&name=Arjun&id=arjunId&frequency=immediate';
+
+		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsStartCallback', jasmine.any(Function));
+		// expect(subscription.entities.hasOwnProperty('arjunId')).toBe(true);
+	});
+
+	it('will default to daily if invalid frequency passed', function() {
+		var getSpy = spyOn(jsonp, 'get');
+		var entity = {
+			name: 'Arjun',
+			id: 'arjunId'
+		};
+		subscription.online = true;
+		subscription.start(entity, 'invalid');
+		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' + 
+			'userId&type=authors&name=Arjun&id=arjunId&frequency=daily';
 
 		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsStartCallback', jasmine.any(Function));
 		// expect(subscription.entities.hasOwnProperty('arjunId')).toBe(true);
