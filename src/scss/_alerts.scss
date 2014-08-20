@@ -44,12 +44,12 @@
 	font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 }
 
-.o-author-alerts__button {
+.o-author-alerts__controls {
 	float: right;
-	min-width: 100px;
 }
 
 @include oFtButtonsButton(o-author-alerts__button);
+@include oFtButtonsButtonGroup(o-author-alerts__button, o-author-alerts__controls);
 @include oFtButtonsButtonStandout(o-author-alerts__button);
 
 .o-author-alerts__button[data-o-author-alerts-state="true"] {
@@ -64,9 +64,3 @@
 // .o-author-alerts__button[data-o-author-alerts-state="true"] {
 // 	@include oColorsFor(alerting);
 // }
-
-
-
-.o-author-alerts__select {
-	@extends %o-ft-forms__select;
-}

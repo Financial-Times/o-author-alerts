@@ -6,7 +6,7 @@ var jsonp = require('./lib/jsonp'),
 		storage = new BrowserStore(localStorage),
 		config = require('./config.js'),
 		MAX_ATTEMPTS = 5,
-		VALID_FREQUENCIES = ['daily', 'immediate', 'weekly'];
+		VALID_FREQUENCIES = ['off', 'daily', 'immediate', 'weekly'];
 
 function Subscription(userId) {
 	this.userId = userId;
@@ -22,7 +22,7 @@ Subscription.prototype.get = function() {
 };
 
 
-Subscription.prototype.set = function(data, entity, action) {
+Subscription.prototype.set = function(data, entity, frequency) {
 	var eventToTrigger = '';
 
 	if(data.status === 'success' && data.taxonomies) {
@@ -41,7 +41,7 @@ Subscription.prototype.set = function(data, entity, action) {
 		if(entity && isRetryable(data)) {
 			//Likely to be an invalid session, so save off further requests to try later
 			this.online = false;
-			this.addToPending(entity, action);
+			this.addToPending(entity, frequency);
 		}
 	}
 
@@ -49,7 +49,7 @@ Subscription.prototype.set = function(data, entity, action) {
 	eventHelper.dispatch('oAuthorAlerts.' + eventToTrigger, {
 		data: data,
 		entity: entity,
-		action: action,
+		update: frequency,
 		userId: this.userId
 	});
 
@@ -81,15 +81,11 @@ Subscription.prototype.sync = function() {
 				this.removeFromPending(pending.entity);
 				continue;
 			}
-
-			//start/stop these pending requests
-			if(pending.action === 'start') {
-				//if its a new one, add it to the list we have gotten from the server
-				//so the display can update assuming that the user is already following them
+			//send update request
+			this.update(pending.entity, pending.update);
+			// pending.entity.frequency = pending.update;
+			if(pending.update !== 'off') {
 				newEntities.push(pending.entity);
-				this.start(pending.entity);
-			} else {
-				this.stop(pending.entity);
 			}
 		}
 	}
@@ -108,7 +104,7 @@ function anythingThatIsntDueToStop(entities, pending) {
 	for(i=0,l=entities.length; i < l; i++) {
 		subscribedEntity = entities[i]; 
 		if(pending[subscribedEntity.id]) {
-			if(pending[subscribedEntity.id].action !== 'stop') {
+			if(pending[subscribedEntity.id].update !== 'off') {
 				newEntities.push(subscribedEntity);
 			}
 		} else {
@@ -118,15 +114,15 @@ function anythingThatIsntDueToStop(entities, pending) {
 	return newEntities;
 }
 
-Subscription.prototype.addToPending = function(entity, action) {
+Subscription.prototype.addToPending = function(entity, updateFrequency) {
 	if(this.pending[entity.id] ) {
-		if(this.pending[entity.id].action !== action) {
+		if(this.pending[entity.id].update !== updateFrequency) {
 			this.removeFromPending(entity);
 		}
 	} else {
 		this.pending[entity.id] = {
 			tried: 1,
-			action: action,
+			update: updateFrequency,
 			entity: entity
 		};
 	}
@@ -155,7 +151,9 @@ Subscription.prototype.clearPending = function() {
 	storage.remove('oAuthorAlertsUserCache-' + this.userId);
 };
 
-Subscription.prototype.start = function(entity, frequency) {
+
+
+Subscription.prototype.update = function(entity, frequency) {
 	var url,
 			self = this;
 
@@ -166,7 +164,6 @@ Subscription.prototype.start = function(entity, frequency) {
 	if(!frequency || VALID_FREQUENCIES.indexOf(frequency) < 0) {
 		frequency = 'daily';
 	}
-	entity.frequency = frequency;
 
 	url = config.startAlertsUrl + '?userId=' +
 			this.userId + '&type=authors&name=' +
@@ -176,34 +173,12 @@ Subscription.prototype.start = function(entity, frequency) {
 
 	if(this.online) {
 		jsonp.get(url, 'oAuthorAlertsStartCallback', function (data) {
-			self.set( data, entity, 'start');
+			self.set( data, entity, frequency);
 		});
 	} else {
 		//don't execute jsonp call, but save it to do on another page visit
-		this.addToPending(entity, 'start');
+		this.addToPending(entity, frequency);
 	}
-};
-
-Subscription.prototype.stop = function(entity) {
-	var url,
-			self = this;
-	if(!(this.userId && entity.id && entity.name)) {
-		return;
-	} 
-	
-	url = config.stopAlertsUrl + '?userId=' + 
-			this.userId + '&type=authors&id='+
-			entity.id;
-
-	if(this.online) {
-		jsonp.get(url, 'oAuthorAlertsStopCallback', function (data) {
-			self.set( data, entity, 'stop');
-		});
-	} else {
-		//don't execute jsonp call, but save it to do on another page visit
-		this.addToPending(entity, 'stop');
-	}
-
 };
 
 Subscription.prototype.unsubscribeAll = function() {

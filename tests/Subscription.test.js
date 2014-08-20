@@ -27,14 +27,14 @@ describe('Getting the initial model', function() {
 	});
 
 	it('set() updates the model based on the data recieved', function() {
-		var data = {"status":"success", "taxonomies":[{"id":"Q0ItMDAwMDcxOA==-QXV0aG9ycw==","name":"Jack Farchy","type":"authors"}]};
+		var data = {"status":"success", "taxonomies":[{"id":"Q0ItMDAwMDcxOA==-QXV0aG9ycw==","name":"Jack Farchy","type":"authors","frequency": "immediate"}]};
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 		subscription.set(data);
 		expect(subscription.entities.length).toBe(1);
 		expect(subscription.entities[0].id).toBe(data.taxonomies[0].id);
+		expect(subscription.entities[0].frequency).toBe(data.taxonomies[0].frequency);
 		expect(eventSpy).toHaveBeenCalledWith('oAuthorAlerts.userPreferencesLoad', subscription.entities);
 	});
-
 
 	it('set() only works if the data is correct', function() {
 		var data = {"blah":[{"id":"Q0ItMDAwMDcxOA==-QXV0aG9ycw==","name":"Jack Farchy","type":"authors"}]};
@@ -53,13 +53,14 @@ describe('Updating the model while online', function() {
 			id: 'arjunId'
 		};
 		subscription.online = true;
-		subscription.start(entity);
+		subscription.update(entity, 'daily');
 		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' + 
 			'userId&type=authors&name=Arjun&id=arjunId&frequency=daily';
 
 		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsStartCallback', jasmine.any(Function));
 		// expect(subscription.entities.hasOwnProperty('arjunId')).toBe(true);
 	});
+
 
 	it('will send a request to change alert frequency of an author', function() {
 		var getSpy = spyOn(jsonp, 'get');
@@ -68,7 +69,7 @@ describe('Updating the model while online', function() {
 			id: 'arjunId'
 		};
 		subscription.online = true;
-		subscription.start(entity, 'immediate');
+		subscription.update(entity, 'immediate');
 		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' + 
 			'userId&type=authors&name=Arjun&id=arjunId&frequency=immediate';
 
@@ -76,69 +77,23 @@ describe('Updating the model while online', function() {
 		// expect(subscription.entities.hasOwnProperty('arjunId')).toBe(true);
 	});
 
-	it('will default to daily if invalid frequency passed', function() {
-		var getSpy = spyOn(jsonp, 'get');
-		var entity = {
-			name: 'Arjun',
-			id: 'arjunId'
-		};
-		subscription.online = true;
-		subscription.start(entity, 'invalid');
-		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' + 
-			'userId&type=authors&name=Arjun&id=arjunId&frequency=daily';
-
-		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsStartCallback', jasmine.any(Function));
-		// expect(subscription.entities.hasOwnProperty('arjunId')).toBe(true);
-	});
-
-	it('will send a request to unsubscribe from an author', function() {
-		var getSpy = spyOn(jsonp, 'get');
-		var entity = {
-			name: 'Arjun',
-			id: 'arjunId'
-		};
-		subscription.online = true;
-		subscription.stop(entity);
-		var expectedUrl = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
-			'userId&type=authors&id=arjunId';	
-
-	 expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsStopCallback', jasmine.any(Function));
-	});
 });
 
 describe('Updating the model while offline', function() {
 
-	it('will save a request to subscribe to an author', function() {
+	it('will save a request to update an author', function() {
 		var getSpy = spyOn(jsonp, 'get');
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'
 		};
 		subscription.online = false;
-		subscription.start(entity);
+		subscription.update(entity, 'off');
 		expect(getSpy).not.toHaveBeenCalled();
 		var pending = JSON.parse(localStorage.getItem('oAuthorAlertsUserCache-userId'));
 		expect(pending.arjunId.tried).toBe(1);
 		expect(pending.arjunId.entity.name).toBe(entity.name);
-		expect(pending.arjunId.action).toBe('start');
-	});
-
-	it('will save a request to unsubscribe to an author', function() {
-		var getSpy = spyOn(jsonp, 'get');
-		var entity = {
-			name: 'Arjun',
-			id: 'arjunId'
-		};
-
-		subscription.online = false;
-		subscription.stop(entity);
-
-		expect(getSpy).not.toHaveBeenCalled();
-		var pending = JSON.parse(localStorage.getItem('oAuthorAlertsUserCache-userId'));
-
-		expect(pending.arjunId.tried).toBe(1);
-		expect(pending.arjunId.entity.name).toBe(entity.name);
-		expect(pending.arjunId.action).toBe('stop');
+		expect(pending.arjunId.update).toBe('off');
 	});
 
 	it('cancels out requests that would be obsolete', function() {
@@ -149,10 +104,10 @@ describe('Updating the model while offline', function() {
 		};
 
 		subscription.online = false;
-		subscription.start(entity);
+		subscription.update(entity, 'daily');
 		var pending = JSON.parse(localStorage.getItem('oAuthorAlertsUserCache-userId'));
-		expect(pending.arjunId.action).toBe('start');
-		subscription.stop(entity);
+		expect(pending.arjunId.update).toBe('daily');
+		subscription.update(entity, 'off');
 		pending = JSON.parse(localStorage.getItem('oAuthorAlertsUserCache-userId'));
 		expect(pending).not.toBeTruthy();
 	});
@@ -202,7 +157,7 @@ it('successfully recieves data from update requests', function() {
 		var removeSpy = spyOn(subscription, 'removeFromPending');
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 
-		subscription.set(mockData, mockEntity, 'start');
+		subscription.set(mockData, mockEntity, 'daily');
 
 		expect(subscription.entities.length).toBe(2);
 		expect(subscription.entities[0]).toBe('a');
@@ -215,7 +170,7 @@ it('successfully recieves data from update requests', function() {
 		expect(eventSpy.argsForCall[0][0]).toBe('oAuthorAlerts.updateSave');
 		expect(eventSpy.argsForCall[0][1].data).toBe(mockData);
 		expect(eventSpy.argsForCall[0][1].entity).toBe(mockEntity);
-		expect(eventSpy.argsForCall[0][1].action).toBe('start');
+		expect(eventSpy.argsForCall[0][1].update).toBe('daily');
 		expect(eventSpy.argsForCall[0][2]).not.toBeDefined();
 
 	});
@@ -228,18 +183,18 @@ it('successfully recieves data from update requests', function() {
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 		var addSpy = spyOn(subscription, 'addToPending');
 
-		subscription.set(mockData, mockEntity, 'start');
+		subscription.set(mockData, mockEntity, 'immediate');
 
 		expect(subscription.entities).toBe(null);
 		//only set offline in certain cases if follow/unfollow request failed, not the initial one
 		expect(subscription.online).toBe(false);
-		expect(addSpy).toHaveBeenCalledWith(mockEntity, 'start');
+		expect(addSpy).toHaveBeenCalledWith(mockEntity, 'immediate');
 		expect(syncSpy).not.toHaveBeenCalled();
 
 		expect(eventSpy.argsForCall[0][0]).toBe('oAuthorAlerts.serverError');
 		expect(eventSpy.argsForCall[0][1].data).toBe(mockData);
 		expect(eventSpy.argsForCall[0][1].entity).toBe(mockEntity);
-		expect(eventSpy.argsForCall[0][1].action).toBe('start');
+		expect(eventSpy.argsForCall[0][1].update).toBe('immediate');
 		expect(eventSpy.argsForCall[0][2]).not.toBeDefined();
 
 	
@@ -252,7 +207,7 @@ it('successfully recieves data from update requests', function() {
 		subscription.online = true;
 		var addSpy = spyOn(subscription, 'addToPending');
 
-		subscription.set(mockData, mockEntity, 'start');
+		subscription.set(mockData, mockEntity, 'daily');
 
 		//only set offline in certain cases if follow/unfollow request failed, not the initial one
 		expect(subscription.online).toBe(true);
@@ -265,7 +220,7 @@ it('successfully recieves data from update requests', function() {
 		subscription.online = true;
 		var addSpy = spyOn(subscription, 'addToPending');
 
-		subscription.set(mockData, mockEntity, 'start');
+		subscription.set(mockData, mockEntity, 'off');
  	
 		//only set offline in certain cases if follow/unfollow request failed, not the initial one
 		expect(subscription.online).toBe(true);
@@ -281,30 +236,36 @@ describe('Keeping the client and server in sync', function() {
 				"tried": 1,
 				"entity": {
 					"id": "startId",
-					"name": "Leftover Author"
+					"name": "New Author"
 				},
-				"action": "start"
+				"update": "daily"
 			},
 			"stopId": {
 				"tried": 1,
 				"entity": {
 					"id": "stopId",
-					"name": "Another Author"
+					"name": "Already subscribed"
 				},
-				"action": "stop"
+				"update": "off"
 			}
 		};
 
 		localStorage.setItem('oAuthorAlertsUserCache-userId', JSON.stringify(pending));
 		subscription = new Subscription('userId');
 		subscription.entities = [];
-		var startSpy = spyOn(subscription, 'start');
-		var stopSpy = spyOn(subscription, 'stop');
+		var updateSpy = spyOn(subscription, 'update');
+
 		subscription.sync();
 
-		expect(startSpy).toHaveBeenCalledWith(pending.startId.entity);
-		expect(stopSpy).toHaveBeenCalledWith(pending.stopId.entity);
+		expect(updateSpy.argsForCall[0][0]).toEqual(pending.startId.entity);
+		expect(updateSpy.argsForCall[0][1]).toBe('daily');
+
+		expect(updateSpy.argsForCall[1][0]).toEqual(pending.stopId.entity);
+		expect(updateSpy.argsForCall[1][1]).toBe('off');
+
+		expect(subscription.entities.length).toBe(1);
 	});
+
 
 	it('Updates the list that came from the server with any pending requests', function() {
 		var pending = {
@@ -314,7 +275,7 @@ describe('Keeping the client and server in sync', function() {
 					"id": "startId",
 					"name": "New Author"
 				},
-				"action": "start"
+				"update": "daily"
 			},
 			"stopId": {
 				"tried": 1,
@@ -322,20 +283,22 @@ describe('Keeping the client and server in sync', function() {
 					"id": "stopId",
 					"name": "Already subscribed"
 				},
-				"action": "stop"
+				"update": "off"
 			}
 		};
 
 		localStorage.setItem('oAuthorAlertsUserCache-userId', JSON.stringify(pending));
 		subscription = new Subscription('userId');
 		subscription.entities = [pending.stopId.entity];
-		spyOn(subscription, 'start');
-		spyOn(subscription, 'stop');
+		var updateSpy = spyOn(subscription, 'update');
 
+		//before syncing we have Already Subscribed in our list
 		expect(subscription.entities.length).toBe(1);
 		expect(subscription.entities[0].id).toBe('stopId');
 
 		subscription.sync();
+
+		//after syncing we only have the new Author in our list
 
 		expect(subscription.entities.length).toBe(1);
 		expect(subscription.entities[0].id).toBe('startId');
@@ -349,7 +312,7 @@ describe('Keeping the client and server in sync', function() {
 					"id": "start1",
 					"name": "Give up on me"
 				},
-				"action": "start"
+				"update": "immediate"
 			},
 			"start2": {
 				"tried": 1,
@@ -357,17 +320,18 @@ describe('Keeping the client and server in sync', function() {
 					"id": "start2",
 					"name": "Keep trying me"
 				},
-				"action": "start"
+				"update": "daily"
 			}
 		};
 
 		localStorage.setItem('oAuthorAlertsUserCache-userId', JSON.stringify(pending));
 		subscription = new Subscription('userId');
 		subscription.entities = [];
-		var startSpy = spyOn(subscription, 'start');
+		var updateSpy = spyOn(subscription, 'update');
+
 		subscription.sync();
 
-		expect(startSpy).toHaveBeenCalledWith(pending.start2.entity);
+		expect(updateSpy).toHaveBeenCalledWith(pending.start2.entity, 'daily');
 		expect(subscription.entities.length).toBe(1);
 		expect(subscription.entities[0].name).toBe('Keep trying me');
 

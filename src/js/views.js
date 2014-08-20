@@ -10,14 +10,20 @@ function setTextContent(element, text) {
   }
 }
 
-function createWrapper(tagName, entity) {
-	var wrapper = document.createElement(tagName);
+function createWrapper(tagName) {
+  var wrapper = document.createElement(tagName);
 	wrapper.className = 'o-author-alerts__entity';
-  if(entity) {
-    wrapper.setAttribute('data-o-author-alerts-id', entity.id);
-    wrapper.setAttribute('data-o-author-alerts-name', entity.name);
-  }
 	return wrapper;
+}
+
+function createControls(entity) {
+  var controls = document.createElement('span');
+  controls.className = 'o-author-alerts__controls';
+  if(entity) {
+    controls.setAttribute('data-o-author-alerts-id', entity.id);
+    controls.setAttribute('data-o-author-alerts-name', entity.name);
+  }
+  return controls;
 }
 
 function createNameSpan(name){
@@ -27,11 +33,13 @@ function createNameSpan(name){
   return span;
 }
 
-function createButton(text) {
+function createButton(text, selected) {
 	var btn = document.createElement('button');
   btn.className = 'o-author-alerts__button';
+  btn.setAttribute('aria-selected', (typeof selected !== 'undefined') ? selected : false);
+  btn.setAttribute('data-o-author-alerts-toggle', text.toLowerCase());
   btn.setAttribute('title', 'Click to start alerts for this ' + config.entityType);
-  setTextContent(btn, config.startAlertsText);
+  setTextContent(btn, (text ? text : config.startAlertsText));
   return btn;
 }
 
@@ -49,11 +57,16 @@ exports.unsubscribeAll = function(list) {
 
 exports.button = function(list, entity) {
 	var tagName = list.tagName === ('UL') ? 'li' : 'div';
-	var wrapper = createWrapper(tagName, entity);
+	var wrapper = createWrapper(tagName);
+  var controls = createControls(entity);
+
   if(config.displayName) {
     wrapper.appendChild(createNameSpan(config.displayName.replace(/\%entityName\%/g, entity.name)));
   }
-	wrapper.appendChild(createButton());
+  controls.appendChild(createButton('Off', true));
+  controls.appendChild(createButton('Daily'));
+	controls.appendChild(createButton('Immediate'));
+  wrapper.appendChild(controls);
 	list.appendChild(wrapper);
 	return wrapper;
 };
