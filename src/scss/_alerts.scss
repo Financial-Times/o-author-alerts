@@ -52,7 +52,10 @@
 @include oFtButtonsButtonGroup(o-author-alerts__button, o-author-alerts__controls);
 @include oFtButtonsButtonStandout(o-author-alerts__button);
 
-.o-author-alerts__button[data-o-author-alerts-state="true"] {
+.o-author-alerts__button {
+	min-width: 100px;
+}
+[data-o-author-alerts-state="true"] .o-author-alerts__button {
 	i {
 		@include oFtIconsBaseIconStyles();
 		@extend %o-ft-icons-icon--tick;

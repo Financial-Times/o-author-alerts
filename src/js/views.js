@@ -37,9 +37,8 @@ function createButton(text, selected) {
 	var btn = document.createElement('button');
   btn.className = 'o-author-alerts__button';
   btn.setAttribute('aria-selected', (typeof selected !== 'undefined') ? selected : false);
-  btn.setAttribute('data-o-author-alerts-toggle', text.toLowerCase());
   btn.setAttribute('title', 'Click to start alerts for this ' + config.entityType);
-  setTextContent(btn, (text ? text : config.startAlertsText));
+  btn.innerHTML = (text ? text : config.startAlertsText);
   return btn;
 }
 
@@ -63,9 +62,7 @@ exports.button = function(list, entity) {
   if(config.displayName) {
     wrapper.appendChild(createNameSpan(config.displayName.replace(/\%entityName\%/g, entity.name)));
   }
-  controls.appendChild(createButton('Off', true));
-  controls.appendChild(createButton('Daily'));
-	controls.appendChild(createButton('Immediate'));
+  controls.appendChild(createButton());
   wrapper.appendChild(controls);
 	list.appendChild(wrapper);
 	return wrapper;

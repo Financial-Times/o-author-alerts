@@ -33,14 +33,13 @@ describe('Initialising a button', function() {
 		views.button(testEl, entity);
 		user.subscription.entities  = [entity];
 		buttons.init(testEl);
-		var selectedButton = testEl.querySelectorAll('[data-o-author-alerts-id] button[aria-selected="true"]');		
-		expect(selectedButton.length).toBe(1);
-		expect(selectedButton[0].innerText).toBe('Off');
+		var button = testEl.querySelector('[data-o-author-alerts-id] button');		
+		expect(button.innerText).toBe('Alerting');
 	});
 
 });
 
-xdescribe('Clicking the button', function() {
+describe('Clicking the button', function() {
 
 	beforeEach(function() {
 		spyOn(jsonp, 'get');
@@ -62,15 +61,15 @@ xdescribe('Clicking the button', function() {
 		views.button(testEl, entity);
 
 		user.subscription.entities  = [];
-		var stopSpy = spyOn(user.subscription, 'stop');
-		var startSpy = spyOn(user.subscription, 'start');
+		var updateSpy = spyOn(user.subscription, 'update');
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 
 		buttons.init(testEl);
 		var button = testEl.querySelector('[data-o-author-alerts-id] button');
 		button.click();
 
-		expect(startSpy).toHaveBeenCalledWith(entity, 'userId');
+		expect(updateSpy.argsForCall[0][0]).toEqual(entity);
+		expect(updateSpy.argsForCall[0][1]).toEqual('daily');
 		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('true');
 		
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
@@ -80,7 +79,11 @@ xdescribe('Clicking the button', function() {
 
 		button.click();
 		
-		expect(stopSpy).toHaveBeenCalledWith(entity, 'userId');
+
+		expect(updateSpy.argsForCall[1][0]).toEqual(entity);
+		expect(updateSpy.argsForCall[1][1]).toEqual('off');
+
+
 		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('false');
 
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {

@@ -290,7 +290,6 @@ describe('Keeping the client and server in sync', function() {
 		localStorage.setItem('oAuthorAlertsUserCache-userId', JSON.stringify(pending));
 		subscription = new Subscription('userId');
 		subscription.entities = [pending.stopId.entity];
-		var updateSpy = spyOn(subscription, 'update');
 
 		//before syncing we have Already Subscribed in our list
 		expect(subscription.entities.length).toBe(1);

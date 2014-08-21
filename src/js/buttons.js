@@ -13,7 +13,7 @@ var user = require('./user'),
 function init(rootEl) {
   rootDelegate = new DomDelegate(rootEl);
   rootDelegate.on('click', '[data-o-author-alerts-id] > .o-author-alerts__button', function(ev, el) {
-    toggleAlertState(el);
+    toggleAlertState(el.parentElement);
   });
 
   rootDelegate.on('click', '[data-o-author-alerts-all="unsubscribe"]', function(ev, el) {
@@ -31,18 +31,18 @@ function destroy() {
 
 
 function setInitialStates(rootEl) {
-  // var entityControls = rootEl.querySelectorAll('[data-o-author-alerts-id]'),
-  //     i, l, entity, id;
+  var entityControls = rootEl.querySelectorAll('[data-o-author-alerts-id]'),
+      i, l, entity, id;
 
-  // for(i=0,l=entityControls.length; i<l;i++) {
-  //   entity = entityControls[i];
-  //   id = entity.getAttribute('data-o-author-alerts-id');
-  //   if(isSubscribed(id, user.subscription.entities)) {
-  //     subscribe(entity);
-  //   } else {
-  //     unsubscribe(entity);
-  //   }
-  // }
+  for(i=0,l=entityControls.length; i<l;i++) {
+    entity = entityControls[i];
+    id = entity.getAttribute('data-o-author-alerts-id');
+    if(isSubscribed(id, user.subscription.entities)) {
+      subscribe(entity);
+    } else {
+      unsubscribe(entity);
+    }
+  }
 }
 
 function isSubscribed(id, subscriptionList) {
@@ -60,33 +60,42 @@ function isSubscribed(id, subscriptionList) {
   return matched;
 }
 
-function toggleAlertState(btnClicked) {
-  var controls = btnClicked.parentElement,
+function toggleAlertState(controls) {
+  var isSubscribed = (controls.getAttribute('data-o-author-alerts-state') === 'true'),
       entity = {
         'id': controls.getAttribute('data-o-author-alerts-id'),
-        'name': controls.getAttribute('data-o-author-alerts-name'),
-        'state': btnClicked.getAttribute('data-o-author-alerts-toggle') 
+        'name': controls.getAttribute('data-o-author-alerts-name')
       },
       eventName;
-  selectBtn(btnClicked);
-  user.subscription.update(entity, user.id)
-  // if(ent) {
-  //   user.subscription.stop(entity, user.id );
-  //   eventName = 'unfollow'; //Old name for tracking purposes
-  // } else {
-  //   user.subscription.start(entity, user.id);
-  //   eventName = 'follow'; //Old name for tracking purposes
-  // }
+  if(isSubscribed) {
+    user.subscription.update(entity, 'off');
+    unsubscribe(controls);
+    eventName = 'unfollow'; //Old name for tracking purposes
+  } else {
+    user.subscription.update(entity, 'daily');
+    subscribe(controls);
+    eventName = 'follow'; //Old name for tracking purposes
+  }
 
   eventHelper.dispatch('oTracking.Event', { model: 'followme', type: eventName, value: entity.name}, window);
 }
 
-function selectBtn(btnClicked) {
-  var controls = btnClicked.parentElement;
+function subscribe(controls) {
+  var name = controls.getAttribute('data-o-author-alerts-name'),
+      btn = controls.querySelector('.o-author-alerts__button');
   //note: using innerHTML in second instance since element is hidden so innerText returns ''
   controls.setAttribute('data-o-author-alerts-state', true);
-  controls.querySelector('[aria-selected="true"').setAttribute('aria-selected', false);
-  btnClicked.setAttribute('aria-selected', true);
+  btn.innerHTML = config.stopAlertsText.replace(/\%entityName\%/g, name);
+  btn.setAttribute('title', 'Click to stop alerts for this ' + config.entityType);
+
+}
+
+function unsubscribe(controls) {
+  var name = controls.getAttribute('data-o-author-alerts-name'),
+      btn = controls.querySelector('.o-author-alerts__button');
+  controls.setAttribute('data-o-author-alerts-state', false);
+  btn.innerHTML = config.startAlertsText.replace(/\%entityName\%/g, name); //Use innerHTML as config contains icon html
+  btn.setAttribute('title', 'Click to start alerts for this ' + config.entityType);
 
 }
 
