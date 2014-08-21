@@ -26,6 +26,13 @@ function createControls(entity) {
   return controls;
 }
 
+function createSelect() {
+  var select = document.createElement('select');
+  select.className = 'o-author-alerts__frequency';
+  select.innerHTML = '<option value="daily">Recieve daily email</option>';
+  select.innerHTML += '<option value="immediate">Recieve immediate emails</option>';
+  return select;
+}
 function createNameSpan(name){
  	var span = document.createElement('span');
   setTextContent(span, name);
@@ -63,6 +70,7 @@ exports.button = function(list, entity) {
     wrapper.appendChild(createNameSpan(config.displayName.replace(/\%entityName\%/g, entity.name)));
   }
   controls.appendChild(createButton());
+  controls.appendChild(createSelect());
   wrapper.appendChild(controls);
 	list.appendChild(wrapper);
 	return wrapper;
