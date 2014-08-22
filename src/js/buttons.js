@@ -15,6 +15,7 @@ function init(rootEl) {
   rootDelegate = new DomDelegate(rootEl);
   rootDelegate.on('click', '[data-o-author-alerts-id] > .o-author-alerts__button', function(ev, el) {
     toggleButtonState(el.parentElement);
+    setSaveButtonState(rootEl);
   });
 
   rootDelegate.on('click', '[data-o-author-alerts-action="unsubscribe"]', function(ev, el) {
@@ -22,11 +23,13 @@ function init(rootEl) {
   });
 
   rootDelegate.on('change', '[data-o-author-alerts-id] > .o-author-alerts__frequency', function(ev, el) {
-      rootEl.querySelector('[data-o-author-alerts-action="save"]').removeAttribute('disabled');
+    setSaveButtonState(rootEl);
   });
 
   rootDelegate.on('click', '[data-o-author-alerts-action="save"]', function(ev, el) {
     updateAllFrequencies(rootEl, el);
+    eventHelper.dispatch('oAuthorAlerts.saveFrequency', null, rootEl);
+
   });
 
 
@@ -72,6 +75,16 @@ function getSubscriptionStatus(id, subscriptionList) {
   return freq;
 }
 
+function setSaveButtonState(rootEl) {
+  if(getFrequencyUpdates(rootEl).length > 0) {
+    rootEl.querySelector('[data-o-author-alerts-action="save"]').removeAttribute('disabled');
+  } else {
+    rootEl.querySelector('[data-o-author-alerts-action="save"]').setAttribute('disabled', '');
+  }
+}
+
+//TOGGLING ON/OFF
+
 function toggleButtonState(controls) {
   var entity = {
         'id': controls.getAttribute('data-o-author-alerts-id'),
@@ -95,36 +108,6 @@ function toggleButtonState(controls) {
   eventHelper.dispatch('oTracking.Event', { model: 'followme', type: eventName, value: entity.name}, window);
 }
 
-function setFrequency(controls, newFrequency) {
-  var select = controls.querySelector('.o-author-alerts__frequency');
-  if(newFrequency === 'off') {
-    select.setAttribute('disabled', '');
-  } else {
-    select.removeAttribute('disabled');
-
-  }
-  controls.setAttribute('data-o-author-alerts-state', newFrequency);
-}
-
-function updateAllFrequencies(rootEl, saveBtn) {
-  var allControls = rootEl.querySelectorAll('.o-author-alerts__controls'),
-      i, l, controls, savedFrequency, newFrequency, entity;
-  for (i=0, l=allControls.length; i<l; i++) {
-    controls = allControls[i];
-    savedFrequency = controls.getAttribute('data-o-author-alerts-state');
-    newFrequency = controls.querySelector('.o-author-alerts__frequency').value;
-    if(savedFrequency !== 'off' && newFrequency !== savedFrequency) {
-      entity = {
-        'id': controls.getAttribute('data-o-author-alerts-id'),
-        'name': controls.getAttribute('data-o-author-alerts-name')
-      };
-      user.subscription.update(entity, newFrequency);
-      controls.setAttribute('data-o-author-alerts-state', newFrequency);
-    }
-  }
-  saveBtn.setAttribute('disabled', '');
-
-}
 function subscribe(controls) {
   var name = controls.getAttribute('data-o-author-alerts-name'),
       btn = controls.querySelector('.o-author-alerts__button');
@@ -140,6 +123,52 @@ function unsubscribe(controls) {
   controls.setAttribute('data-o-author-alerts-state', false);
   btn.innerHTML = config.startAlertsText.replace(/\%entityName\%/g, name); //Use innerHTML as config contains icon html
   btn.setAttribute('title', 'Click to start alerts for this ' + config.entityType);
+}
+
+
+//CHANGING FREQUENCY
+
+function setFrequency(controls, newFrequency) {
+  var select = controls.querySelector('.o-author-alerts__frequency');
+  if(newFrequency === 'off') {
+    select.setAttribute('disabled', '');
+  } else {
+    select.removeAttribute('disabled');
+    select.value = newFrequency;
+  }
+  controls.setAttribute('data-o-author-alerts-state', newFrequency);
+}
+
+function updateAllFrequencies(rootEl, saveBtn) {
+  var frequenciesToUpdate = getFrequencyUpdates(rootEl);
+  var controls, i, l;
+  for (i=0, l=frequenciesToUpdate.length; i<l; i++) {
+    controls = rootEl.querySelector('[data-o-author-alerts-id="' + frequenciesToUpdate[i].entity.id + '"]');
+    user.subscription.update(frequenciesToUpdate[i].entity, frequenciesToUpdate[i].newFrequency);
+    controls.setAttribute('data-o-author-alerts-state', frequenciesToUpdate[i].newFrequency);
+  }
+  saveBtn.setAttribute('disabled', '');
+
+}
+
+function getFrequencyUpdates(rootEl) {
+  var allControls = rootEl.querySelectorAll('.o-author-alerts__controls'),
+      i, l, controls, savedFrequency, newFrequency, entity,
+      frequenciesToUpdate = [];
+  for (i=0, l=allControls.length; i<l; i++) {
+    controls = allControls[i];
+    savedFrequency = controls.getAttribute('data-o-author-alerts-state');
+    newFrequency = controls.querySelector('.o-author-alerts__frequency').value;
+    if(savedFrequency !== 'off' && newFrequency !== savedFrequency) {
+      entity = {
+        'id': controls.getAttribute('data-o-author-alerts-id'),
+        'name': controls.getAttribute('data-o-author-alerts-name'),
+      };
+      frequenciesToUpdate.push({entity: entity, newFrequency: newFrequency});
+    }
+  }
+  return frequenciesToUpdate;
+
 }
 
 function stopAll(el, rootEl) {

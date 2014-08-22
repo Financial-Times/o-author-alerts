@@ -165,14 +165,14 @@ Subscription.prototype.update = function(entity, frequency) {
 		frequency = 'daily';
 	}
 
-	url = config.startAlertsUrl + '?userId=' +
-			this.userId + '&type=authors&name=' +
-			entity.name + '&id=' +
-			entity.id + '&frequency=' +
-			frequency;
+	url = (frequency === 'off' ? config.stopAlertsUrl : config.startAlertsUrl) + 
+			'?userId=' + this.userId + 
+			'&type=authors&name=' + entity.name + 
+			'&id=' + entity.id + 
+			'&frequency=' + frequency;
 
 	if(this.online) {
-		jsonp.get(url, 'oAuthorAlertsStartCallback', function (data) {
+		jsonp.get(url, 'oAuthorAlertsUpdateCallback', function (data) {
 			self.set( data, entity, frequency);
 		});
 	} else {

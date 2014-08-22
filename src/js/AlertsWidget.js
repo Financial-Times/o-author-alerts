@@ -36,6 +36,10 @@ AlertsWidget.prototype.bindEvents = function() {
 		}
 	});
 
+	this.delegate.on('oAuthorAlerts.saveFrequency', '', function(e) {
+			self.hide();
+	});
+
 	//Hide the current popover if any other layer is opened
 	document.body.addEventListener('oLayers.new', function(ev) {
 		if(ev.detail.el !== self.popover) {

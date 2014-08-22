@@ -30,8 +30,8 @@ function createSelect() {
   var select = document.createElement('select');
   select.setAttribute('disabled', '');
   select.className = 'o-author-alerts__frequency';
-  select.innerHTML = '<option value="daily">Recieve daily email</option>';
-  select.innerHTML += '<option value="immediate">Recieve immediate emails</option>';
+  select.innerHTML = '<option value="daily">Receive daily email</option>';
+  select.innerHTML += '<option value="immediate">Receive immediate emails</option>';
   return select;
 }
 function createNameSpan(name){

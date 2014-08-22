@@ -46,18 +46,18 @@ describe('Getting the initial model', function() {
 
 describe('Updating the model while online', function() {
 
-	it('will send a request to subscribe to an author', function() {
+	it('will send a request to unsubscribe to an author', function() {
 		var getSpy = spyOn(jsonp, 'get');
 		var entity = {
 			name: 'Arjun',
 			id: 'arjunId'
 		};
 		subscription.online = true;
-		subscription.update(entity, 'daily');
-		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' + 
-			'userId&type=authors&name=Arjun&id=arjunId&frequency=daily';
+		subscription.update(entity, 'off');
+		var expectedUrl = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
+			'userId&type=authors&name=Arjun&id=arjunId&frequency=off';
 
-		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsStartCallback', jasmine.any(Function));
+		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsUpdateCallback', jasmine.any(Function));
 		// expect(subscription.entities.hasOwnProperty('arjunId')).toBe(true);
 	});
 
@@ -73,7 +73,7 @@ describe('Updating the model while online', function() {
 		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' + 
 			'userId&type=authors&name=Arjun&id=arjunId&frequency=immediate';
 
-		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsStartCallback', jasmine.any(Function));
+		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsUpdateCallback', jasmine.any(Function));
 		// expect(subscription.entities.hasOwnProperty('arjunId')).toBe(true);
 	});
 
