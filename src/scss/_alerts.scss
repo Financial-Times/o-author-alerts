@@ -56,8 +56,18 @@
 	min-width: 100px; //fit in the largest copy
 }
 
-[data-o-author-alerts-state="daily"] .o-author-alerts__button,
-[data-o-author-alerts-state="immediate"] .o-author-alerts__button {
+// TODO: These should come from Origami. Keeping here just in case
+// @include oColorsSetUseCase(oAuthorAlertsPressedButton, text, white);
+// @include oColorsSetUseCase(oAuthorAlertsPressedButton, background, green);
+// @include oColorsSetUseCase(oAuthorAlertsPressedButton, border, green);
+
+// @include oColorsSetUseCase(oAuthorAlertsPressedButtonHover, text, white);
+// @include oColorsSetUseCase(oAuthorAlertsPressedButtonHover, background, green-tint1);
+// @include oColorsSetUseCase(oAuthorAlertsPressedButtonHover, border, green-tint1);
+
+
+.o-author-alerts__button[aria-pressed] {
+	// @include oColorsFor(oAuthorAlertsPressedButton);
 	i {
 		@include oFtIconsBaseIconStyles();
 		@extend %o-ft-icons-icon--tick;
@@ -66,13 +76,20 @@
 	}
 }
 
+// #{$o-hoverable-if-hover-enabled} .o-author-alerts__button[aria-pressed] {
+// 	&:not([disabled]):not([disabled]):not([aria-selected=true]):hover {
+// 		@include oColorsFor(oAuthorAlertsPressedButtonHover);
+// 	}
+// }
+
+
 @import "o-ft-forms/main";
 
 .o-author-alerts__frequency {
 	@extend %o-ft-forms__field;
 	@extend %o-ft-forms__field--select;
 	width: auto;
-	min-width: 200px; //fit in the largest copy
+	min-width: 190px; //fit in the largest copy
 	margin-left: 24px;
 	font-size: 14px; //get select to match height of button
 	padding: 3px;

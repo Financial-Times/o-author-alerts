@@ -115,6 +115,7 @@ function subscribe(controls) {
   //note: using innerHTML in second instance since element is hidden so innerText returns ''
   btn.innerHTML = config.stopAlertsText.replace(/\%entityName\%/g, name);
   btn.setAttribute('title', 'Click to stop alerts for this ' + config.entityType);
+  btn.setAttribute('aria-pressed', '');
 }
 
 function unsubscribe(controls) {
@@ -123,6 +124,7 @@ function unsubscribe(controls) {
   controls.setAttribute('data-o-author-alerts-state', false);
   btn.innerHTML = config.startAlertsText.replace(/\%entityName\%/g, name); //Use innerHTML as config contains icon html
   btn.setAttribute('title', 'Click to start alerts for this ' + config.entityType);
+  btn.removeAttribute('aria-pressed');
 }
 
 
