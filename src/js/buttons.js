@@ -76,10 +76,13 @@ function getSubscriptionStatus(id, subscriptionList) {
 }
 
 function setSaveButtonState(rootEl) {
-  if(getFrequencyUpdates(rootEl).length > 0) {
-    rootEl.querySelector('[data-o-author-alerts-action="save"]').removeAttribute('disabled');
-  } else {
-    rootEl.querySelector('[data-o-author-alerts-action="save"]').setAttribute('disabled', '');
+  var saveBtn = rootEl.querySelector('[data-o-author-alerts-action="save"]');
+  if(saveBtn) {
+    if(getFrequencyUpdates(rootEl).length > 0) {
+      saveBtn.removeAttribute('disabled');
+    } else {
+      saveBtn.setAttribute('disabled', '');
+    }
   }
 }
 
@@ -174,13 +177,15 @@ function getFrequencyUpdates(rootEl) {
 }
 
 function stopAll(el, rootEl) {
-  var subscribed = rootEl.querySelectorAll('[data-o-author-alerts-state="true"]'),
+  var all = rootEl.querySelectorAll('[data-o-author-alerts-state]'),
       i, l;
 
   message.create(rootEl, 'You have been unsubscribed from all authors.', '');
 
-  for(i=0,l=subscribed.length;i<l;i++) {
-    toggleButtonState(subscribed[i]);
+  for(i=0,l=all.length;i<l;i++) {
+    if(all[i].getAttribute('data-o-author-alerts-state') !== 'off') {
+      toggleButtonState(all[i]);
+    }
   }
 
   el.setAttribute('disabled', true);

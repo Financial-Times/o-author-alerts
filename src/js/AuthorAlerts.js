@@ -168,7 +168,9 @@ function renderButtonsForEntities(entities, list) {
   for(i=0,l=entities.length; i< l; i++) {
     views.button(list, entities[i]);
   }
-  views.standaloneButton(list, 'save', 'Save', true); //Disabled save button by default
+  if(entities.length > 0) {
+    views.standaloneButton(list, 'save', 'Save', true); //Disabled save button by default
+  }
 }
 
 function showComponent(rootEl) {
@@ -185,7 +187,7 @@ AuthorAlerts.prototype.handleEntityLoad = function() {
   message.remove(this.rootEl);
   eventHelper.dispatch('oAuthorAlerts.entitiesLoaded', null, this.rootEl);
 
-  if(!this.list.querySelector('.o-author-alerts__entity')) {
+  if(!this.list.querySelector('.o-author-alerts__controls')) {
     message.create(this.rootEl,'No Authors found.', '');
   } else if (!config.lazyLoad) {
     showComponent(this.rootEl);

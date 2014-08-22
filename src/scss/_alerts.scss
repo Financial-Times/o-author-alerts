@@ -28,7 +28,6 @@
 	}
 }
 
-
 //Added specificity to override ft typography margins.
 .o-author-alerts h3.o-author-alerts__header {
 	@extend %o-ft-typography-heading2-text;
@@ -38,6 +37,7 @@
 .o-author-alerts__name {
 	float: left;
 	margin-right: 20px;
+	max-width: 115px;
 	font-size: 13px;
 	line-height: 24px;
 	font-weight: bold;
@@ -90,7 +90,7 @@
 	@extend %o-ft-forms__field--select;
 	width: auto;
 	min-width: 190px; //fit in the largest copy
-	margin-left: 24px;
+	margin-left: 12px;
 	font-size: 14px; //get select to match height of button
 	padding: 3px;
 }

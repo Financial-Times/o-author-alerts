@@ -55,7 +55,7 @@ describe('Updating the model while online', function() {
 		subscription.online = true;
 		subscription.update(entity, 'off');
 		var expectedUrl = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
-			'userId&type=authors&name=Arjun&id=arjunId&frequency=off';
+			'userId&type=authors&name=Arjun&id=arjunId';
 
 		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsUpdateCallback', jasmine.any(Function));
 		// expect(subscription.entities.hasOwnProperty('arjunId')).toBe(true);
