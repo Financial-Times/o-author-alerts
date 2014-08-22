@@ -136,7 +136,7 @@ AuthorAlerts.prototype.createForUser = function() {
 
   //Add an unfollow all button if they are already following multiple things
   if(entities.length > 1) {
-    views.unsubscribeAll(this.list);
+    views.standaloneButton(this.list, 'unsubscribe', 'Unsubscribe All');
   }
   this.handleEntityLoad();
 };
@@ -168,6 +168,7 @@ function renderButtonsForEntities(entities, list) {
   for(i=0,l=entities.length; i< l; i++) {
     views.button(list, entities[i]);
   }
+  views.standaloneButton(list, 'save', 'Save', true); //Disabled save button by default
 }
 
 function showComponent(rootEl) {

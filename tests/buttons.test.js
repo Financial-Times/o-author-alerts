@@ -33,8 +33,18 @@ describe('Initialising a button', function() {
 		views.button(testEl, entity);
 		user.subscription.entities  = [entity];
 		buttons.init(testEl);
-		var button = testEl.querySelector('[data-o-author-alerts-id] button');		
+		var updateSpy = spyOn(user.subscription, 'update');
+		var controls = testEl.querySelector('[data-o-author-alerts-id]');
+		var button = controls.querySelector('button');
+		var select = controls.querySelector('select');		
 		expect(button.innerText).toBe('Alerting');
+
+		expect(updateSpy).not.toHaveBeenCalled();
+
+		expect(controls.getAttribute('data-o-author-alerts-state')).toEqual('daily');
+
+		expect(select.hasAttribute('disabled')).not.toBeTruthy();
+
 	});
 
 });
@@ -65,13 +75,25 @@ describe('Clicking the button', function() {
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 
 		buttons.init(testEl);
+
 		var button = testEl.querySelector('[data-o-author-alerts-id] button');
+		var select = testEl.querySelector('[data-o-author-alerts-id] select');
+
+
+		//Frequency dropdown will be disabled
+		expect(select.hasAttribute('disabled')).toBeTruthy();
+
 		button.click();
 
 		expect(updateSpy.argsForCall[0][0]).toEqual(entity);
 		expect(updateSpy.argsForCall[0][1]).toEqual('daily');
-		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('true');
+		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('daily');
 		
+
+
+		//Frequency dropdown will now be enabled
+		expect(select.hasAttribute('disabled')).not.toBeTruthy();
+
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
 			model: 'followme', type: 'follow', value: 'First Author'
 		}, window);
@@ -84,7 +106,10 @@ describe('Clicking the button', function() {
 		expect(updateSpy.argsForCall[1][1]).toEqual('off');
 
 
-		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('false');
+		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('off');
+
+		//Frequency dropdown will now be disabled again
+		expect(select.hasAttribute('disabled')).toBeTruthy();
 
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
 			model: 'followme', type: 'unfollow', value: 'First Author'
@@ -92,4 +117,5 @@ describe('Clicking the button', function() {
 
 
 	});
+	
 });

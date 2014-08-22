@@ -74,13 +74,6 @@
 
 
 	&[aria-expanded] {
-		.o-author-alerts__widget {
-			background-color: oColorsGetColorFor(button-standout-standard, background);
-			color: oColorsGetColorFor(button-standout-standard, text);
-			&:hover {
-				background-color: oColorsGetColorFor(button-standout-hover, background);
-			}
-		}
 		.o-author-alerts__popover {
 			transition-duration: 0, 300ms;
 			transition-property: visibility, opacity;

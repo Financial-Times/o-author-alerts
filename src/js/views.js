@@ -28,6 +28,7 @@ function createControls(entity) {
 
 function createSelect() {
   var select = document.createElement('select');
+  select.setAttribute('disabled', '');
   select.className = 'o-author-alerts__frequency';
   select.innerHTML = '<option value="daily">Recieve daily email</option>';
   select.innerHTML += '<option value="immediate">Recieve immediate emails</option>';
@@ -40,7 +41,7 @@ function createNameSpan(name){
   return span;
 }
 
-function createButton(text, selected) {
+function createButton(text, selected, title) {
 	var btn = document.createElement('button');
   btn.className = 'o-author-alerts__button';
   btn.setAttribute('aria-selected', (typeof selected !== 'undefined') ? selected : false);
@@ -49,13 +50,16 @@ function createButton(text, selected) {
   return btn;
 }
 
-exports.unsubscribeAll = function(list) {
+exports.standaloneButton = function(list, action, text, isDisabled) {
   var tagName = list.tagName === ('UL') ? 'li' : 'div';
   var wrapper = createWrapper(tagName);
   var btn = document.createElement('button');
   btn.className = 'o-author-alerts__button o-author-alerts__button--standout';
-  btn.setAttribute('data-o-author-alerts-all', "unsubscribe");
-  setTextContent(btn, 'Unsubscribe All');
+  btn.setAttribute('data-o-author-alerts-action', action);
+  if(isDisabled && isDisabled === true) {
+    btn.setAttribute('disabled', ''); 
+  }
+  setTextContent(btn, text);
   wrapper.appendChild(btn);
   list.appendChild(wrapper);
   return btn;

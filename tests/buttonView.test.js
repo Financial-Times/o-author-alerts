@@ -23,6 +23,7 @@ describe('Rendering a follow button', function() {
 		var button = buttonWrapper.querySelector('button');
 		expect(buttonWrapper.querySelector('.o-author-alerts__controls').getAttribute('data-o-author-alerts-id')).toBe('arjunId');
 		expect(buttonWrapper.querySelector('.o-author-alerts__controls').getAttribute('data-o-author-alerts-name')).toBe('Arjun');
+		expect(buttonWrapper.querySelector('.o-author-alerts__frequency').hasAttribute('disabled')).toBe(true);
 		expect(button.innerText).toBe('Start alerts');
 	});
 

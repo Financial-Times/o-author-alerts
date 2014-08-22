@@ -4,7 +4,6 @@ var unique = 0;
 var queue = [];
 
 exports.get = function(url, callbackName, callback) {
-	
 	queue.push(arguments);
 	if(queue.length === 1) {
 		nextInQueue();

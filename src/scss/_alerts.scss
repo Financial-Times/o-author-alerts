@@ -44,7 +44,8 @@
 	font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 }
 
-.o-author-alerts__controls {
+.o-author-alerts__controls,
+[data-o-author-alerts-action="save"] {
 	float: right;
 }
 
@@ -52,9 +53,11 @@
 @include oFtButtonsButtonStandout(o-author-alerts__button);
 
 .o-author-alerts__button {
-	min-width: 100px;
+	min-width: 100px; //fit in the largest copy
 }
-[data-o-author-alerts-state="true"] .o-author-alerts__button {
+
+[data-o-author-alerts-state="daily"] .o-author-alerts__button,
+[data-o-author-alerts-state="immediate"] .o-author-alerts__button {
 	i {
 		@include oFtIconsBaseIconStyles();
 		@extend %o-ft-icons-icon--tick;
@@ -69,8 +72,12 @@
 	@extend %o-ft-forms__field;
 	@extend %o-ft-forms__field--select;
 	width: auto;
-	margin-left: 12px;
+	min-width: 200px; //fit in the largest copy
+	margin-left: 24px;
+	font-size: 14px; //get select to match height of button
+	padding: 3px;
 }
+
 // .o-author-alerts__button[data-o-author-alerts-state="true"] {
 // 	@include oColorsFor(alerting);
 // }

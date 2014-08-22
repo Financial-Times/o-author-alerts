@@ -180,7 +180,7 @@ describe('Lazy loading the calls to metadata', function() {
     authorAlerts.rootEl.dispatchEvent(evObj);
     //then it should make the call
 		authorAlerts.widget.widget.focus();
-		expect(widgetEl.querySelectorAll('.o-author-alerts__entity').length).toBe(1);
+		expect(widgetEl.querySelectorAll('.o-author-alerts__controls').length).toBe(1);
 
 	});
 

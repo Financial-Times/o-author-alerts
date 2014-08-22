@@ -181,6 +181,7 @@ Subscription.prototype.update = function(entity, frequency) {
 	}
 };
 
+
 Subscription.prototype.unsubscribeAll = function() {
 	var i, n;
 	for(i=0,n=this.entities.length; i<n; i++) {
