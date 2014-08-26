@@ -66,7 +66,7 @@
 // @include oColorsSetUseCase(oAuthorAlertsPressedButtonHover, border, green-tint1);
 
 
-.o-author-alerts__button[aria-pressed] {
+.o-author-alerts__button[aria-pressed="true"] {
 	// @include oColorsFor(oAuthorAlertsPressedButton);
 	i {
 		@include oFtIconsBaseIconStyles();
@@ -76,7 +76,7 @@
 	}
 }
 
-// #{$o-hoverable-if-hover-enabled} .o-author-alerts__button[aria-pressed] {
+// #{$o-hoverable-if-hover-enabled} .o-author-alerts__button[aria-pressed=""] {
 // 	&:not([disabled]):not([disabled]):not([aria-selected=true]):hover {
 // 		@include oColorsFor(oAuthorAlertsPressedButtonHover);
 // 	}

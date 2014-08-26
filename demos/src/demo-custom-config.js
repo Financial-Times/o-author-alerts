@@ -8,7 +8,7 @@
 			stopFollowingText: "Unfollow",
 			widgetText: 'Your Alerts',
 			popoverHeadingText: 'Authors',
-			displayName: 'Emails for %entityName%'
+			displayName: '%entityName%'
 		});
 	});
 	
