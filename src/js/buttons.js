@@ -18,7 +18,7 @@ function init(rootEl) {
   // Primary alert toggle
   rootDelegate.on('click', '[data-o-author-alerts-id] > .o-author-alerts__button', function(ev, el) {
     toggleButtonState(el.parentElement);
-    setSaveButtonState(rootEl);
+    setSaveButtonState(rootEl, true);
   });
 
   // Changes in frequency should enable/disable save button as appropriate
@@ -87,10 +87,10 @@ function getSubscriptionStatus(id, subscriptionList) {
 
 /* Handle whether the save button is enabled or not */
 
-function setSaveButtonState(rootEl) {
+function setSaveButtonState(rootEl, forceEnable) {
   var saveBtn = rootEl.querySelector('[data-o-author-alerts-action="save"]');
   if(saveBtn) {
-    if(getFrequencyUpdates(rootEl).length > 0) {
+    if(forceEnable || getFrequencyUpdates(rootEl).length > 0) {
       saveBtn.removeAttribute('disabled');
     } else {
       saveBtn.setAttribute('disabled', '');
