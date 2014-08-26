@@ -110,12 +110,10 @@ function toggleButtonState(controls) {
   if(currentState === 'off') {
     user.subscription.update(entity, 'daily');
     subscribe(controls);
-    setFrequency(controls, 'daily');
     eventName = 'follow'; //Old name for tracking purposes
   } else {
     user.subscription.update(entity, 'off');
     unsubscribe(controls);
-    setFrequency(controls, 'off');
     eventName = 'unfollow'; //Old name for tracking purposes
   }
 
@@ -132,6 +130,7 @@ function subscribe(controls) {
   btn.innerHTML = config.stopAlertsText.replace(/\%entityName\%/g, name);
   btn.setAttribute('title', 'Click to stop alerts for this ' + config.entityType);
   btn.setAttribute('aria-pressed', 'true');
+  setFrequency(controls, 'daily');
 }
 
 /* Handle UI when not subscribed to an author) */
@@ -142,6 +141,7 @@ function unsubscribe(controls) {
   btn.innerHTML = config.startAlertsText.replace(/\%entityName\%/g, name); //Use innerHTML as config contains icon html
   btn.setAttribute('title', 'Click to start alerts for this ' + config.entityType);
   btn.setAttribute('aria-pressed', 'false');
+  setFrequency(controls, 'off');
 }
 
 
@@ -210,9 +210,11 @@ function stopAll(el, rootEl) {
 
   message.create(rootEl, 'You have been unsubscribed from all authors.', '');
 
+  user.subscription.update({id: 'ALL', name: 'ALL'}, 'off');
+
   for(i=0,l=all.length;i<l;i++) {
     if(all[i].getAttribute('data-o-author-alerts-state') !== 'off') {
-      toggleButtonState(all[i]);
+      unsubscribe(all[i]);
     }
   }
 

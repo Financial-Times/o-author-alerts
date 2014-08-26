@@ -161,19 +161,17 @@ Subscription.prototype.update = function(entity, frequency) {
 		return;
 	}
 
+	//Default frequency is daily
 	if(!frequency || VALID_FREQUENCIES.indexOf(frequency) < 0) {
 		frequency = 'daily';
 	}
 
-	url = (frequency === 'off' ? config.stopAlertsUrl : config.startAlertsUrl) + 
-			'?userId=' + this.userId + 
-			'&type=authors&name=' + entity.name + 
-			'&id=' + entity.id;
-
-	if(frequency !== 'off') {
-		url = url + '&frequency=' + frequency;
+	url = resolveUrl(entity, frequency, this.userId);
+	
+	//If user is unsubscribing all, then all pending requests become irrelevant
+	if(entity.id === 'ALL') {
+		this.clearPending();
 	}
-			
 
 	if(this.online) {
 		jsonp.get(url, 'oAuthorAlertsUpdateCallback', function (data) {
@@ -185,14 +183,24 @@ Subscription.prototype.update = function(entity, frequency) {
 	}
 };
 
+function resolveUrl(entity, frequency, userId) {
+	var url = '';
+	if(entity.id === 'ALL') {
+		url = config.stopAllUrl + 
+			'?userId=' + userId + 
+			'&type=authors';
+	} else {
+		url = (frequency === 'off' ? config.stopAlertsUrl : config.startAlertsUrl) + 
+			'?userId=' + userId + 
+			'&type=authors&name=' + entity.name + 
+			'&id=' + entity.id;
 
-Subscription.prototype.unsubscribeAll = function() {
-	var i, n;
-	for(i=0,n=this.entities.length; i<n; i++) {
-		this.stop(this.entities[i]);
+		if(frequency !== 'off') {
+			url = url + '&frequency=' + frequency;
+		}
 	}
-};
-
+	return url;
+}
 
 
 module.exports = Subscription;
