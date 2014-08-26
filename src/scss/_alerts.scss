@@ -52,7 +52,7 @@
 @include oFtButtonsButton(o-author-alerts__button);
 @include oFtButtonsButtonStandout(o-author-alerts__button);
 
-.o-author-alerts__button {
+.o-author-alerts__controls .o-author-alerts__button {
 	min-width: 100px; //fit in the largest copy
 }
 

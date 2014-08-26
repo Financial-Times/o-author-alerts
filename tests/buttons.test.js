@@ -69,6 +69,7 @@ describe('Clicking the button', function() {
 	it('toggles between states', function() {
 		var entity = {id: 'author1', name: 'First Author'};
 		views.button(testEl, entity);
+    views.standaloneButton(testEl, 'save', 'Save', true); //Disabled save button by default
 
 		user.subscription.entities  = [];
 		var updateSpy = spyOn(user.subscription, 'update');
@@ -76,37 +77,40 @@ describe('Clicking the button', function() {
 
 		buttons.init(testEl);
 
-		var button = testEl.querySelector('[data-o-author-alerts-id] button');
+		var button = testEl.querySelector('.o-author-alerts__controls button');
 		var select = testEl.querySelector('[data-o-author-alerts-id] select');
+		var save = testEl.querySelector('[data-o-author-alerts-action="save"]');
 
 
 		//Frequency dropdown will be disabled
 		expect(select.hasAttribute('disabled')).toBeTruthy();
+		expect(save.disabled).toBeTruthy();
 
 		button.click();
-
-		expect(updateSpy.argsForCall[0][0]).toEqual(entity);
-		expect(updateSpy.argsForCall[0][1]).toEqual('daily');
-		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('daily');
-		
+		expect(save.disabled).not.toBeTruthy();
+		expect(updateSpy).not.toHaveBeenCalled(); //update wont go through immediately
+		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('off'); //saved state remains as off
 
 
 		//Frequency dropdown will now be enabled
 		expect(select.hasAttribute('disabled')).not.toBeTruthy();
 
+		save.click();
+		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('daily'); //saved state updates
+
+		expect(updateSpy).toHaveBeenCalledWith(entity, 'daily'); //update goes through
+
+
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
 			model: 'followme', type: 'follow', value: 'First Author'
 		}, window);
 
-
 		button.click();
-		
+				expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('daily');
 
-		expect(updateSpy.argsForCall[1][0]).toEqual(entity);
-		expect(updateSpy.argsForCall[1][1]).toEqual('off');
+		save.click();
+		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('off'); //saved state updates
 
-
-		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('off');
 
 		//Frequency dropdown will now be disabled again
 		expect(select.hasAttribute('disabled')).toBeTruthy();
@@ -114,6 +118,7 @@ describe('Clicking the button', function() {
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
 			model: 'followme', type: 'unfollow', value: 'First Author'
 		}, window);
+
 
 
 	});
