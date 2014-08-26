@@ -65,6 +65,8 @@ function setInitialStates(rootEl) {
       subscribe(controls);
     }
     setFrequency(controls, currentState);
+    controls.setAttribute('data-o-author-alerts-state', currentState);
+
   }
 }
 
@@ -104,17 +106,18 @@ function toggleButtonState(controls) {
         'id': controls.getAttribute('data-o-author-alerts-id'),
         'name': controls.getAttribute('data-o-author-alerts-name')
       },
-      currentState = controls.getAttribute('data-o-author-alerts-state'),
-      eventName = (currentState === 'off') ? 'follow' : 'unfollow';
+      isPressed =(controls.querySelector('.o-author-alerts__button').getAttribute('aria-pressed') === 'true'),
+      eventName;
 
-  if(currentState === 'off') {
-    user.subscription.update(entity, 'daily');
-    subscribe(controls);
-    eventName = 'follow'; //Old name for tracking purposes
-  } else {
-    user.subscription.update(entity, 'off');
+  if(isPressed) {
+    // user.subscription.update(entity, 'daily');
     unsubscribe(controls);
     eventName = 'unfollow'; //Old name for tracking purposes
+  } else {
+    // user.subscription.update(entity, 'off');
+
+    subscribe(controls);
+    eventName = 'follow'; //Old name for tracking purposes
   }
 
   eventHelper.dispatch('oTracking.Event', { model: 'followme', type: eventName, value: entity.name}, window);
@@ -137,7 +140,6 @@ function subscribe(controls) {
 function unsubscribe(controls) {
   var name = controls.getAttribute('data-o-author-alerts-name'),
       btn = controls.querySelector('.o-author-alerts__button');
-  controls.setAttribute('data-o-author-alerts-state', false);
   btn.innerHTML = config.startAlertsText.replace(/\%entityName\%/g, name); //Use innerHTML as config contains icon html
   btn.setAttribute('title', 'Click to start alerts for this ' + config.entityType);
   btn.setAttribute('aria-pressed', 'false');
@@ -154,7 +156,6 @@ function setFrequency(controls, newFrequency) {
     select.removeAttribute('disabled');
     select.value = newFrequency;
   }
-  controls.setAttribute('data-o-author-alerts-state', newFrequency);
 }
 
 /* Submit changes to frequencies to the server */
@@ -178,8 +179,13 @@ function getFrequencyUpdates(rootEl) {
   for (i=0, l=allControls.length; i<l; i++) {
     controls = allControls[i];
     savedFrequency = controls.getAttribute('data-o-author-alerts-state');
-    newFrequency = controls.querySelector('.o-author-alerts__frequency').value;
-    if(savedFrequency !== 'off' && newFrequency !== savedFrequency) {
+    if(controls.querySelector('.o-author-alerts__frequency').disabled === true) {
+      newFrequency = 'off';
+    } else {
+      newFrequency = controls.querySelector('.o-author-alerts__frequency').value;
+    }
+
+    if(newFrequency !== savedFrequency) {
       entity = {
         'id': controls.getAttribute('data-o-author-alerts-id'),
         'name': controls.getAttribute('data-o-author-alerts-name'),
