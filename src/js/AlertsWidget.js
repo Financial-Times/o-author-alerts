@@ -69,7 +69,8 @@ AlertsWidget.prototype.hide = function(ev) {
 			oDom.getClosestMatch(target, '[data-o-component=o-author-alerts]');
 	if(!isInWidget || (!target && this.rootEl.hasAttribute('aria-expanded'))) {
 		this.rootEl.removeAttribute('aria-expanded');
-		 eventHelper.dispatch('oLayers.close', { el: this.popover }, document.body);
+		eventHelper.dispatch('oLayers.close', { el: this.popover }, document.body);
+		eventHelper.dispatch('oAuthorAlerts.widgetClose', null, this.rootEl);
 	}
 };
 

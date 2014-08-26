@@ -7,33 +7,40 @@ var user = require('./user'),
     config = require('./config.js'),
     message = require('./lib/message'),
     DomDelegate = require('ftdomdelegate'),
-    rootDelegate,
-    frequencyUpdates = {};
+    rootDelegate;
 
 //initialise all buttons in the rootEl
 function init(rootEl) {
   rootDelegate = new DomDelegate(rootEl);
+
+  setInitialStates(rootEl);
+
+  // Primary alert toggle
   rootDelegate.on('click', '[data-o-author-alerts-id] > .o-author-alerts__button', function(ev, el) {
     toggleButtonState(el.parentElement);
     setSaveButtonState(rootEl);
   });
 
-  rootDelegate.on('click', '[data-o-author-alerts-action="unsubscribe"]', function(ev, el) {
-    stopAll(el, rootEl);
-  });
-
+  // Changes in frequency should enable/disable save button as appropriate
   rootDelegate.on('change', '[data-o-author-alerts-id] > .o-author-alerts__frequency', function(ev, el) {
     setSaveButtonState(rootEl);
   });
 
+  // Save button click should submit changes to frequency
   rootDelegate.on('click', '[data-o-author-alerts-action="save"]', function(ev, el) {
-    updateAllFrequencies(rootEl, el);
+    saveFrequencyUpdates(rootEl, el);
     eventHelper.dispatch('oAuthorAlerts.saveFrequency', null, rootEl);
-
   });
 
+  // When the widget is closed, set the UI back to it's initial state
+  // rootEl.addEventListener('oAuthorAlerts.widgetClose', function() {
+  //   dismissUnsavedChanges(rootEl);
+  // });
 
-  setInitialStates(rootEl);
+  // Unsubscribe button
+  rootDelegate.on('click', '[data-o-author-alerts-action="unsubscribe"]', function(ev, el) {
+    stopAll(el, rootEl);
+  });
 }
 
 function destroy() {
@@ -41,6 +48,8 @@ function destroy() {
     rootDelegate.off();
   }
 }
+
+/* Set the initial UI of the view based on model data */
 
 function setInitialStates(rootEl) {
   var entityControls = rootEl.querySelectorAll('[data-o-author-alerts-id]'),
@@ -59,6 +68,7 @@ function setInitialStates(rootEl) {
   }
 }
 
+/* Checks the entity's alerting state against data stored against the user */
 
 function getSubscriptionStatus(id, subscriptionList) {
   var freq = 'off',
@@ -75,6 +85,8 @@ function getSubscriptionStatus(id, subscriptionList) {
   return freq;
 }
 
+/* Handle whether the save button is enabled or not */
+
 function setSaveButtonState(rootEl) {
   var saveBtn = rootEl.querySelector('[data-o-author-alerts-action="save"]');
   if(saveBtn) {
@@ -86,8 +98,7 @@ function setSaveButtonState(rootEl) {
   }
 }
 
-//TOGGLING ON/OFF
-
+/* Handle Primary button clicks - toggling between alerting state) */
 function toggleButtonState(controls) {
   var entity = {
         'id': controls.getAttribute('data-o-author-alerts-id'),
@@ -111,6 +122,8 @@ function toggleButtonState(controls) {
   eventHelper.dispatch('oTracking.Event', { model: 'followme', type: eventName, value: entity.name}, window);
 }
 
+
+/* Handle UI when subscribed to an author) */
 function subscribe(controls) {
   var name = controls.getAttribute('data-o-author-alerts-name'),
       btn = controls.querySelector('.o-author-alerts__button');
@@ -118,21 +131,21 @@ function subscribe(controls) {
   //note: using innerHTML in second instance since element is hidden so innerText returns ''
   btn.innerHTML = config.stopAlertsText.replace(/\%entityName\%/g, name);
   btn.setAttribute('title', 'Click to stop alerts for this ' + config.entityType);
-  btn.setAttribute('aria-pressed', '');
+  btn.setAttribute('aria-pressed', 'true');
 }
 
+/* Handle UI when not subscribed to an author) */
 function unsubscribe(controls) {
   var name = controls.getAttribute('data-o-author-alerts-name'),
       btn = controls.querySelector('.o-author-alerts__button');
   controls.setAttribute('data-o-author-alerts-state', false);
   btn.innerHTML = config.startAlertsText.replace(/\%entityName\%/g, name); //Use innerHTML as config contains icon html
   btn.setAttribute('title', 'Click to start alerts for this ' + config.entityType);
-  btn.removeAttribute('aria-pressed');
+  btn.setAttribute('aria-pressed', 'false');
 }
 
 
-//CHANGING FREQUENCY
-
+/* Handle external changes to frequency (i.e. from primary button clicks or dismissing widget) */
 function setFrequency(controls, newFrequency) {
   var select = controls.querySelector('.o-author-alerts__frequency');
   if(newFrequency === 'off') {
@@ -144,7 +157,8 @@ function setFrequency(controls, newFrequency) {
   controls.setAttribute('data-o-author-alerts-state', newFrequency);
 }
 
-function updateAllFrequencies(rootEl, saveBtn) {
+/* Submit changes to frequencies to the server */
+function saveFrequencyUpdates(rootEl, saveBtn) {
   var frequenciesToUpdate = getFrequencyUpdates(rootEl);
   var controls, i, l;
   for (i=0, l=frequenciesToUpdate.length; i<l; i++) {
@@ -156,6 +170,7 @@ function updateAllFrequencies(rootEl, saveBtn) {
 
 }
 
+/* Return a list of all entities that have frequency updates pending, and the new frequency to update to*/
 function getFrequencyUpdates(rootEl) {
   var allControls = rootEl.querySelectorAll('.o-author-alerts__controls'),
       i, l, controls, savedFrequency, newFrequency, entity,
@@ -176,6 +191,19 @@ function getFrequencyUpdates(rootEl) {
 
 }
 
+
+// /* Sets all controls back to original saved state */
+// function dismissUnsavedChanges(rootEl) {
+//   var unsavedFrequencies = getFrequencyUpdates(rootEl);
+//   var controls, i, l;
+//   for (i=0, l=unsavedFrequencies.length; i<l; i++) {
+//     controls = rootEl.querySelector('[data-o-author-alerts-id="' + unsavedFrequencies[i].entity.id + '"]');
+//     setFrequency(controls, controls.getAttribute('data-o-author-alerts-state'));
+//   }
+//   rootEl.querySelector('[data-o-author-alerts-action="save"]').setAttribute('disabled', '');
+// }
+
+/* Unsubscribe All button TODO: use new endpoint */
 function stopAll(el, rootEl) {
   var all = rootEl.querySelectorAll('[data-o-author-alerts-state]'),
       i, l;
