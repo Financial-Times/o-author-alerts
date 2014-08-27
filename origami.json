@@ -5,6 +5,11 @@
   "support": "arjun.gadhia@ft.com",
   "supportStatus": "experimental",
   "browserFeatures": {
+    "required": [
+      "customevent",
+      "addeventlistener",
+      "queryselector"
+    ],
     "optional": [
       "localstorage"
     ]
