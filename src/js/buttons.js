@@ -110,17 +110,11 @@ function toggleButtonState(controls) {
       eventName;
 
   if(isPressed) {
-    // user.subscription.update(entity, 'daily');
     unsubscribe(controls);
-    eventName = 'unfollow'; //Old name for tracking purposes
   } else {
-    // user.subscription.update(entity, 'off');
-
     subscribe(controls);
-    eventName = 'follow'; //Old name for tracking purposes
   }
 
-  eventHelper.dispatch('oTracking.Event', { model: 'followme', type: eventName, value: entity.name}, window);
 }
 
 
@@ -161,11 +155,14 @@ function setFrequency(controls, newFrequency) {
 /* Submit changes to frequencies to the server */
 function saveFrequencyUpdates(rootEl, saveBtn) {
   var frequenciesToUpdate = getFrequencyUpdates(rootEl);
-  var controls, i, l;
+  var controls, i, l, eventName;
   for (i=0, l=frequenciesToUpdate.length; i<l; i++) {
     controls = rootEl.querySelector('[data-o-author-alerts-id="' + frequenciesToUpdate[i].entity.id + '"]');
     user.subscription.update(frequenciesToUpdate[i].entity, frequenciesToUpdate[i].newFrequency);
     controls.setAttribute('data-o-author-alerts-state', frequenciesToUpdate[i].newFrequency);
+    //Send tracking event on Save
+    eventName = (frequenciesToUpdate[i].newFrequency == 'off') ? 'unfollow' : 'follow';
+    eventHelper.dispatch('oTracking.Event', { model: 'followme', type: eventName, value: frequenciesToUpdate[i].entity.name}, window);
   }
   saveBtn.setAttribute('disabled', '');
 
