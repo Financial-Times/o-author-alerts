@@ -12,7 +12,17 @@ var defaults = {
 	stopAlertsText: "Alerting<i class=\"o-author-alerts__icon--tick\"></i>",
 	widgetText: "Author alerts",
 	popoverHeadingText: null,
-	displayName: "%entityName%"
+	displayName: "%entityName%",
+	frequencies: [
+		{
+			key: "daily",
+			text: "Daily email"
+		},
+		{
+			key: "immediate",
+			text: "Immediate email"
+		}
+	]
 };
 
 

@@ -27,11 +27,14 @@ function createControls(entity) {
 }
 
 function createSelect() {
-  var select = document.createElement('select');
+  var select = document.createElement('select'),
+      i,l;
   select.setAttribute('disabled', '');
   select.className = 'o-author-alerts__frequency';
-  select.innerHTML = '<option value="daily">Receive daily email</option>';
-  select.innerHTML += '<option value="immediate">Receive immediate emails</option>';
+  for(i=0,l=config.frequencies.length;i<l;i++) {
+    select.innerHTML += '<option value="' + config.frequencies[i].key +'">' + 
+      config.frequencies[i].text + '</option>';
+  }
   return select;
 }
 function createNameSpan(name){

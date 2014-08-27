@@ -102,21 +102,13 @@ function setSaveButtonState(rootEl, forceEnable) {
 
 /* Handle Primary button clicks - toggling between alerting state) */
 function toggleButtonState(controls) {
-  var entity = {
-        'id': controls.getAttribute('data-o-author-alerts-id'),
-        'name': controls.getAttribute('data-o-author-alerts-name')
-      },
-      isPressed =(controls.querySelector('.o-author-alerts__button').getAttribute('aria-pressed') === 'true'),
-      eventName;
-
+  var isPressed =(controls.querySelector('.o-author-alerts__button').getAttribute('aria-pressed') === 'true');
   if(isPressed) {
     unsubscribe(controls);
   } else {
     subscribe(controls);
   }
-
 }
-
 
 /* Handle UI when subscribed to an author) */
 function subscribe(controls) {
@@ -161,7 +153,7 @@ function saveFrequencyUpdates(rootEl, saveBtn) {
     user.subscription.update(frequenciesToUpdate[i].entity, frequenciesToUpdate[i].newFrequency);
     controls.setAttribute('data-o-author-alerts-state', frequenciesToUpdate[i].newFrequency);
     //Send tracking event on Save
-    eventName = (frequenciesToUpdate[i].newFrequency == 'off') ? 'unfollow' : 'follow';
+    eventName = (frequenciesToUpdate[i].newFrequency === 'off') ? 'unfollow' : 'follow';
     eventHelper.dispatch('oTracking.Event', { model: 'followme', type: eventName, value: frequenciesToUpdate[i].entity.name}, window);
   }
   saveBtn.setAttribute('disabled', '');
