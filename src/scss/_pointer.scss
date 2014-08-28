@@ -11,8 +11,8 @@
   $z-index: 1;
   @if $bordered {
     $psuedo: after;
-    $offset: (-$size + 1px);
-    $border-size: ($size - 1px);
+    $offset: (-$size + 2px);
+    $border-size: ($size - 2px);
     $z-index: 2;
   }
 

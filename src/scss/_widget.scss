@@ -47,24 +47,28 @@
 		}	
 	}
 
+	@include oColorsSetUseCase(o-author-alerts-overlay, background, white);
+	@include oColorsSetUseCase(o-author-alerts-overlay, text, black);
+	@include oColorsSetUseCase(o-author-alerts-overlay, border, pink-tint5);
+
+
 	.o-author-alerts__popover {
 		visibility: hidden;
 		opacity: 0;
 		transition-duration: 300ms, 0;
 		transition-property: opacity, visibility;
 		transition-delay: 0, 300ms;
-		@include pointer-bordered(top, oColorsGetColorFor(modal, background), oColorsGetColorFor(modal, border), 8px, 60px);
-		background-color: oColorsGetColorFor(modal, background);
-		color: oColorsGetColorFor(modal, text);
-		border: 1px solid;
-		border-color: oColorsGetColorFor(modal, border);
-		border-radius: 8px;
+		@include pointer-bordered(top, oColorsGetColorFor(o-author-alerts-overlay, background), oColorsGetColorFor(o-author-alerts-overlay, border), 12px, 60px);
+		background-color: oColorsGetColorFor(o-author-alerts-overlay, background);
+		color: oColorsGetColorFor(o-author-alerts-overlay, text);
+		border: 2px solid oColorsGetColorFor(o-author-alerts-overlay, border);
+		border-radius: 5px;
 		max-width: 100%;
 		box-sizing: border-box;
 		position: absolute;
 		top: auto;
 		left: auto;
-		padding: 5px 15px;
+		padding: 10px 20px;
 		margin-top: 8px;
 		@media (screen and max-width: 400px) {
 			padding: 5px 10px;
