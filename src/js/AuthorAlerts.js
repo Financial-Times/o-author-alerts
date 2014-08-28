@@ -135,7 +135,7 @@ AuthorAlerts.prototype.createForUser = function() {
   renderButtonsForEntities(entities, this.list);
 
   //Add an unfollow all button if they are already following multiple things
-  if(entities.length > 1) {
+  if(entities.length > 0) {
     views.standaloneButton(this.list, 'unsubscribe', 'Unsubscribe All');
   }
   this.handleEntityLoad();
