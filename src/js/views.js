@@ -28,12 +28,14 @@ function createControls(entity) {
 
 function createSelect() {
   var select = document.createElement('select'),
-      i,l;
-  select.setAttribute('disabled', '');
+      i,l, option;
+  select.disabled = true;
   select.className = 'o-author-alerts__frequency';
   for(i=0,l=config.frequencies.length;i<l;i++) {
-    select.innerHTML += '<option value="' + config.frequencies[i].key +'">' + 
-      config.frequencies[i].text + '</option>';
+    option = document.createElement('option');
+    option.value = config.frequencies[i].key;
+    setTextContent(option, config.frequencies[i].text);
+    select.appendChild(option);
   }
   return select;
 }
@@ -80,7 +82,7 @@ exports.button = function(list, entity) {
   controls.appendChild(createSelect());
   wrapper.appendChild(controls);
 	list.appendChild(wrapper);
-	return wrapper;
+	return wrapper;va
 };
 
 exports.list = function(rootEl) {
@@ -101,10 +103,6 @@ exports.popover = function(rootEl) {
   if(!popover) {
   	popover = document.createElement('div');
   	popover.className = 'o-author-alerts__popover';
-    popover.setAttribute('will-change', '');
-    if(config.popoverHeadingText) {
-    	popover.innerHTML = '<h3 class="o-author-alerts__header">' + config.popoverHeadingText + '</h3>';
-    }
   	rootEl.insertBefore(popover, list);
   	popover.appendChild(list);
   }

@@ -137,9 +137,9 @@ function unsubscribe(controls) {
 function setFrequency(controls, newFrequency) {
   var select = controls.querySelector('.o-author-alerts__frequency');
   if(newFrequency === 'off') {
-    select.setAttribute('disabled', '');
+    select.disabled = true;
   } else {
-    select.removeAttribute('disabled');
+    select.disabled = false;
     select.value = newFrequency;
   }
 }
@@ -156,7 +156,7 @@ function saveFrequencyUpdates(rootEl, saveBtn) {
     eventName = (frequenciesToUpdate[i].newFrequency === 'off') ? 'unfollow' : 'follow';
     eventHelper.dispatch('oTracking.Event', { model: 'followme', type: eventName, value: frequenciesToUpdate[i].entity.name}, window);
   }
-  saveBtn.setAttribute('disabled', '');
+  saveBtn.disabled = true;
 
 }
 
