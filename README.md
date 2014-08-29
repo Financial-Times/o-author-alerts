@@ -22,10 +22,10 @@ You can optionally pass in some configuration to the Javascript, as follows:
 	var oAuthorAlerts = require('o-author-alerts');
 	oAuthorAlerts.init(rootEl, {
 		lazyLoad: false, // the default behaviour for the widget is to only load metadata on hover/click. Set to false to fetch data on page load.
-		startAlertingText: "Follow %entityName%", //default: 'Start'
-		stopAlertingText: "Unfollow %entityName%", //default: 'Stop'
+		startAlertingText: "Follow %entityName%", //default: 'Start Alerts'
+		stopAlertingText: "Unfollow %entityName%", //default: 'Alerting '
 		widgetText: 'Your Alerts', //default: 'Author Alerts'
-		popoverHeadingText: 'You are following:' //default: 'Get alerts for:',
+		popoverHeadingText: 'You are following:' //default: null,
 		displayName: "Get email for %entityName%" //default: '%entityName%'. Set to false to hide the name.
 	});
 
@@ -67,7 +67,7 @@ By default, the Alerts component applies minimal styles to the list and header. 
 
 The Alerts component fires the following events:
 
-* `oAuthorAlerts.userPreferencesLoaded` - triggered on `document.body`
+* `oAuthorAlerts.userPreferencesLoad` - triggered on `document.body`
 	* Fired when the user preferences have been successfully loaded
 	* sends a list of entities being alerted as the event detail.
 
@@ -75,7 +75,10 @@ The Alerts component fires the following events:
 	* Fired if the alerts widget/list is made visible on the page (i.e. if all backend calls 
 		were successful, and there is at least one entity to display.)
 
-* `oAuthorAlerts.updateSaved` - triggered on `document.body`
+* `oAuthorAlerts.saveChanges` - triggered on the root element
+	* Fired when the save button is clicked (irregardless of whether it was successful or not)
+
+* `oAuthorAlerts.updateSave` - triggered on `document.body`
 	* Fired when a request to start/stop has been successfully saved to the server
 	* _event.detail_ 
 	

@@ -45,8 +45,8 @@ describe('Initialising authorAlerts', function() {
 
 	it('sets up the user', function() {
 		var userSpy = spyOn(user, 'init');
-		spyOn(authorAlerts, 'setupElements');
-		spyOn(authorAlerts, 'setupButtons');
+		spyOn(authorAlerts, 'createView');
+		spyOn(authorAlerts, 'setupAuthorButtons');
 		authorAlerts.init({lazyLoad: false});
 		expect(userSpy).toHaveBeenCalled();
 

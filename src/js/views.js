@@ -55,6 +55,7 @@ function createButton(text, selected, title) {
   return btn;
 }
 
+// Used for unsubscribe all button and Save button
 exports.standaloneButton = function(list, action, text, isDisabled) {
   var tagName = list.tagName === ('UL') ? 'li' : 'div';
   var wrapper = createWrapper(tagName);
@@ -70,6 +71,7 @@ exports.standaloneButton = function(list, action, text, isDisabled) {
   return btn;
 };
 
+// Used for the author toggle button
 exports.button = function(list, entity) {
 	var tagName = list.tagName === ('UL') ? 'li' : 'div';
 	var wrapper = createWrapper(tagName);
@@ -82,7 +84,7 @@ exports.button = function(list, entity) {
   controls.appendChild(createSelect());
   wrapper.appendChild(controls);
 	list.appendChild(wrapper);
-	return wrapper;va
+	return wrapper;
 };
 
 exports.list = function(rootEl) {

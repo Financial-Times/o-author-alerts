@@ -3,14 +3,17 @@
 var oCookies = require('o-cookies');
 var Subscription = require('./Subscription');
 
+/* Singleton User object */
 function User() {
 
 }
 
 User.prototype.init = function() {
+	// If it hasn't already been initialized...
 	if(!(this.id && this.subscription)) {
 		this.id = oCookies.getParam('FT_User', 'ERIGHTSID');
 		this.subscription = new Subscription(this.id);
+		
 		if(this.id) {
 			this.subscription.get();
 		}

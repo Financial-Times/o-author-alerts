@@ -9,7 +9,7 @@ var user = require('./user'),
     DomDelegate = require('ftdomdelegate'),
     rootDelegate;
 
-//initialise all buttons in the rootEl
+/* Initialise all buttons in the rootEl */
 function init(rootEl) {
   rootDelegate = new DomDelegate(rootEl);
 
@@ -29,7 +29,7 @@ function init(rootEl) {
   // Save button click should submit changes to frequency
   rootDelegate.on('click', '[data-o-author-alerts-action="save"]', function(ev, el) {
     saveFrequencyUpdates(rootEl, el);
-    eventHelper.dispatch('oAuthorAlerts.saveFrequency', null, rootEl);
+    eventHelper.dispatch('oAuthorAlerts.saveChanges', null, rootEl);
   });
 
   // When the widget is closed, set the UI back to it's initial state
@@ -129,7 +129,7 @@ function unsubscribe(controls) {
   btn.innerHTML = config.startAlertsText.replace(/\%entityName\%/g, name); //Use innerHTML as config contains icon html
   btn.setAttribute('title', 'Click to start alerts for this ' + config.entityType);
   btn.setAttribute('aria-pressed', 'false');
-  setFrequency(controls, 'off');
+  setFrequency(controls, 'off'); // Reset the frequency toggle
 }
 
 
