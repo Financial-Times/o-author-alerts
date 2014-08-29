@@ -54,7 +54,7 @@
 @include oFtButtonsButtonStandout(o-author-alerts__button);
 
 .o-author-alerts__controls .o-author-alerts__button {
-	width: 105px; //fix the width to stop it changing size between the two states
+	width: 107px; //fix the width to stop it changing size between the two states
 	//Should use min-width, but IE9 has an issue where the button randomly moves
 }
 
