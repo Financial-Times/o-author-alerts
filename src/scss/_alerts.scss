@@ -47,27 +47,18 @@
 .o-author-alerts__controls,
 [data-o-author-alerts-action] {
 	float: right;
+	text-align: right;
 }
 
 @include oFtButtonsButton(o-author-alerts__button);
 @include oFtButtonsButtonStandout(o-author-alerts__button);
 
 .o-author-alerts__controls .o-author-alerts__button {
-	min-width: 100px; //fit in the largest copy
+	width: 105px; //fix the width to stop it changing size between the two states
+	//Should use min-width, but IE9 has an issue where the button randomly moves
 }
 
-// TODO: These should come from Origami. Keeping here just in case
-// @include oColorsSetUseCase(oAuthorAlertsPressedButton, text, white);
-// @include oColorsSetUseCase(oAuthorAlertsPressedButton, background, green);
-// @include oColorsSetUseCase(oAuthorAlertsPressedButton, border, green);
-
-// @include oColorsSetUseCase(oAuthorAlertsPressedButtonHover, text, white);
-// @include oColorsSetUseCase(oAuthorAlertsPressedButtonHover, background, green-tint1);
-// @include oColorsSetUseCase(oAuthorAlertsPressedButtonHover, border, green-tint1);
-
-
 .o-author-alerts__button[aria-pressed="true"] {
-	// @include oColorsFor(oAuthorAlertsPressedButton);
 	i {
 		@include oFtIconsBaseIconStyles();
 		@extend %o-ft-icons-icon--tick;
@@ -76,20 +67,13 @@
 	}
 }
 
-// #{$o-hoverable-if-hover-enabled} .o-author-alerts__button[aria-pressed=""] {
-// 	&:not([disabled]):not([disabled]):not([aria-selected=true]):hover {
-// 		@include oColorsFor(oAuthorAlertsPressedButtonHover);
-// 	}
-// }
-
-
 @import "o-ft-forms/main";
 
 .o-author-alerts__frequency {
 	@extend %o-ft-forms__field;
 	@extend %o-ft-forms__field--select;
 	width: auto;
-	min-width: 140px; //fit in the largest copy
+	width: 140px; //fit in the largest copy. Should use min-width, but IE9 has an issue where the button randomly moves
 	margin-left: 12px;
 	font-size: 14px; //get select to match height of button
 	padding: 3px;
