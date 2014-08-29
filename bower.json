@@ -9,8 +9,7 @@
     "o-ft-forms": "~0.8.1",
     "o-layers": "^0.1.0",
     "ftdomdelegate": "~1.0.0",
-    "o-ft-typography": "~1.12.1",
-    "o-dom": "~0.3.0"
+    "o-ft-typography": "~1.12.1"
   },
   "main": [
     "main.scss",

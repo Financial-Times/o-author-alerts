@@ -72,7 +72,6 @@
 .o-author-alerts__frequency {
 	@extend %o-ft-forms__field;
 	@extend %o-ft-forms__field--select;
-	width: auto;
 	width: 140px; //fit in the largest copy. Should use min-width, but IE9 has an issue where the button randomly moves
 	margin-left: 12px;
 	font-size: 14px; //get select to match height of button

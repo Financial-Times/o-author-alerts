@@ -2,8 +2,7 @@
 
 var views = require('./views'),
     eventHelper = require('./lib/eventHelper'),
-    DomDelegate = require('ftdomdelegate'),
-    oDom = require('o-dom');
+    DomDelegate = require('ftdomdelegate');
 
 function AlertsWidget() {
 	this.delegate = new DomDelegate(); 
@@ -70,8 +69,8 @@ AlertsWidget.prototype = {
 
 	hide: function(ev, fireCloseEvent) {
 		var target = ev ? ev.target : null,
-			isInWidget = (target && target.className === 'o-author-alerts__icon--tick') ||
-				oDom.getClosestMatch(target, '[data-o-component=o-author-alerts]');
+			isInWidget = target && (target.className === 'o-author-alerts__icon--tick' ||
+				this.rootEl.contains(target));
 
 		if(typeof fireCloseEvent === 'undefined') {
 			fireCloseEvent = true; //fire the close event by default

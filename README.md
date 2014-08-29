@@ -1,6 +1,9 @@
 o-author-alerts
 ========
 
+** Warning: The server side functionality for this is yet to be implemented - so saving Immediate alerts will cause 
+duplicate entries in your Author Alert preferences! **
+
 A widget providing the UI and functionality to subscribe to Author Alerts on FT.com
 
 ##Construction
