@@ -7,7 +7,9 @@ var user = require('./user'),
     config = require('./config.js'),
     message = require('./lib/message'),
     DomDelegate = require('ftdomdelegate'),
-    rootDelegate;
+    rootDelegate,
+
+    DEFAULT_FREQUENCY = 'daily';
 
 /* Initialise all buttons in the rootEl */
 function init(rootEl) {
@@ -33,9 +35,9 @@ function init(rootEl) {
   });
 
   // When the widget is closed, set the UI back to it's initial state
-  // rootEl.addEventListener('oAuthorAlerts.widgetClose', function() {
-  //   dismissUnsavedChanges(rootEl);
-  // });
+  rootEl.addEventListener('oAuthorAlerts.widgetClose', function() {
+    dismissUnsavedChanges(rootEl);
+  });
 
   // Unsubscribe button
   rootDelegate.on('click', '[data-o-author-alerts-action="unsubscribe"]', function(ev, el) {
@@ -79,7 +81,7 @@ function getSubscriptionStatus(id, subscriptionList) {
 
   for(i=0,l=subscriptionList.length;i<l;i++) {
     if(subscriptionList[i].id === id) {
-      freq = subscriptionList[i].frequency || 'daily';
+      freq = subscriptionList[i].frequency || DEFAULT_FREQUENCY;
       break;
     }
   }
@@ -102,7 +104,7 @@ function setSaveButtonState(rootEl) {
 
 /* Handle Primary button clicks - toggling between alerting state) */
 function toggleButtonState(controls) {
-  var isPressed =(controls.querySelector('.o-author-alerts__button').getAttribute('aria-pressed') === 'true');
+  var isPressed = (controls.querySelector('.o-author-alerts__button').getAttribute('aria-pressed') === 'true');
   if(isPressed) {
     unsubscribe(controls);
   } else {
@@ -119,7 +121,7 @@ function subscribe(controls) {
   btn.innerHTML = config.stopAlertsText.replace(/\%entityName\%/g, name);
   btn.setAttribute('title', 'Click to stop alerts for this ' + config.entityType);
   btn.setAttribute('aria-pressed', 'true');
-  setFrequency(controls, 'daily');
+  setFrequency(controls, DEFAULT_FREQUENCY);
 }
 
 /* Handle UI when not subscribed to an author) */
@@ -138,6 +140,7 @@ function setFrequency(controls, newFrequency) {
   var select = controls.querySelector('.o-author-alerts__frequency');
   if(newFrequency === 'off') {
     select.disabled = true;
+    select.value = DEFAULT_FREQUENCY;
   } else {
     select.disabled = false;
     select.value = newFrequency;
@@ -187,18 +190,27 @@ function getFrequencyUpdates(rootEl) {
 }
 
 
-// /* Sets all controls back to original saved state */
-// function dismissUnsavedChanges(rootEl) {
-//   var unsavedFrequencies = getFrequencyUpdates(rootEl);
-//   var controls, i, l;
-//   for (i=0, l=unsavedFrequencies.length; i<l; i++) {
-//     controls = rootEl.querySelector('[data-o-author-alerts-id="' + unsavedFrequencies[i].entity.id + '"]');
-//     setFrequency(controls, controls.getAttribute('data-o-author-alerts-state'));
-//   }
-//   rootEl.querySelector('[data-o-author-alerts-action="save"]').setAttribute('disabled', '');
-// }
+/* Sets all controls back to original saved state */
+function dismissUnsavedChanges(rootEl) {
+  var unsavedFrequencies = getFrequencyUpdates(rootEl);
+  var controls, i, l, isPressed, savedState;
+  for (i=0, l=unsavedFrequencies.length; i<l; i++) {
+    controls = rootEl.querySelector('[data-o-author-alerts-id="' + unsavedFrequencies[i].entity.id + '"]');
+    savedState = controls.getAttribute('data-o-author-alerts-state');
+    isPressed = (controls.querySelector('.o-author-alerts__button').getAttribute('aria-pressed') === 'true');
 
-/* Unsubscribe All button TODO: use new endpoint */
+    if(isPressed && savedState === 'off') {
+      unsubscribe(controls);
+    } else if(!isPressed && savedState !== 'off') {
+      subscribe(controls);
+    }
+    setFrequency(controls, savedState);
+  }
+
+  rootEl.querySelector('[data-o-author-alerts-action="save"]').setAttribute('disabled', '');
+}
+
+/* Unsubscribe All button*/
 function stopAll(el, rootEl) {
   var all = rootEl.querySelectorAll('[data-o-author-alerts-state]'),
       i, l;
@@ -209,7 +221,7 @@ function stopAll(el, rootEl) {
 
   for(i=0,l=all.length;i<l;i++) {
     if(all[i].getAttribute('data-o-author-alerts-state') !== 'off') {
-      unsubscribe(all[i]);
+      unsubscribe(all[i]); //set the button states as if they were unsubscribed
     }
   }
 

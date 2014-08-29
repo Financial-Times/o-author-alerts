@@ -167,7 +167,7 @@ AuthorAlerts.prototype = {
   }
 
 
-}
+};
 
 function isWidget(rootEl) {
   return rootEl.className.indexOf('o-author-alerts--theme') >= 0;

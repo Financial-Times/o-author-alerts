@@ -169,7 +169,7 @@ Subscription.prototype = {
 	clearPending: function() {
 		storage.remove('oAuthorAlertsUserCache-' + this.userId);
 	}
-}
+};
 
 
 

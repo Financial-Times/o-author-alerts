@@ -43,7 +43,7 @@ AlertsWidget.prototype = {
 		
 		// Hide when clicked on the save button
 		this.delegate.on('oAuthorAlerts.saveChanges', '', function(e) {
-				self.hide();
+				self.hide(null, false); //dont fire close event!
 		});
 
 		//Hide the current popover if any other layer is opened
@@ -68,17 +68,23 @@ AlertsWidget.prototype = {
 	  eventHelper.dispatch('oLayers.new', { el: this.popover }, document.body);
 	},
 
-	hide: function(ev) {
+	hide: function(ev, fireCloseEvent) {
 		var target = ev ? ev.target : null,
 			isInWidget = (target && target.className === 'o-author-alerts__icon--tick') ||
 				oDom.getClosestMatch(target, '[data-o-component=o-author-alerts]');
+
+		if(typeof fireCloseEvent === 'undefined') {
+			fireCloseEvent = true; //fire the close event by default
+		}
 		if(!isInWidget || (!target && this.rootEl.hasAttribute('aria-expanded'))) {
 			this.rootEl.removeAttribute('aria-expanded');
-			eventHelper.dispatch('oLayers.close', { el: this.popover }, document.body);
-			eventHelper.dispatch('oAuthorAlerts.widgetClose', null, this.rootEl);
+			if(fireCloseEvent) {
+				eventHelper.dispatch('oLayers.close', { el: this.popover }, document.body);
+				eventHelper.dispatch('oAuthorAlerts.widgetClose', null, this.rootEl);
+			}
 		}
 	}
-}
+};
 
 
 module.exports = AlertsWidget;
