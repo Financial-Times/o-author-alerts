@@ -4,8 +4,8 @@
 		},
 		"demos": [
 			{
-				"name": "ArticleList",
-				"template": "demos/src/article_list.mustache",
+				"name": "ArticleWidget",
+				"template": "demos/src/article_widget.mustache",
 				"js": "demos/src/demos.js",
 				"sass": "demos/src/demos.scss"
 			},

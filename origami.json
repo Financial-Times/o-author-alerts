@@ -6,7 +6,6 @@
   "supportStatus": "experimental",
   "browserFeatures": {
     "required": [
-      "customevent",
       "addeventlistener",
       "queryselector"
     ],
@@ -20,12 +19,6 @@
       "path": "/demos/ArticleWidget.html",
       "description": "Authors for an article, rendered with the widget theme and elements already in the DOM",
       "expanded": true
-    },
-    {
-      "title": "Article - List View",
-    	"path": "/demos/ArticleList.html",
-      "description": "Authors for an article, rendered with minimal styles",
-      "expanded": false
     },
     {
       "title": "User following",
