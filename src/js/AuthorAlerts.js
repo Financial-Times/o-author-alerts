@@ -11,7 +11,7 @@ var user = require('./user'),
 
 
 function AuthorAlerts(rootEl) {
-	this.rootEl = rootEl;
+  this.rootEl = rootEl;
   this.widget = null;
   this.list = null;
 }
@@ -28,7 +28,7 @@ AuthorAlerts.prototype = {
     this.createView();
 
     //Wait for the user's subscription data to be loaded
-    // This ensures that the component shows the correct toggle states 
+    // This ensures that the component shows the correct toggle states
     if(user.subscription && user.subscription.entities) {
       this.setupAuthorButtons();
     } else {
@@ -68,15 +68,15 @@ AuthorAlerts.prototype = {
 
   },
 
-  /* 
+  /*
     Creates the controls for all the authors (based on data attributes provided)
     Optionally lazy loads the creation of these controls - to avoid multiple initial calls to fetch metadata
   */
   setupAuthorButtons: function() {
     var self = this,
 
-        eventToLoadOn = ('onmouseover' in window) ? 'mouseover' : 'click', 
-        
+        eventToLoadOn = ('onmouseover' in window) ? 'mouseover' : 'click',
+
         initialiseButtons = function() {
 
           self.createButtons();
@@ -86,7 +86,7 @@ AuthorAlerts.prototype = {
           self.rootEl.removeEventListener(eventToLoadOn, initialiseButtons); //Only need this event to occur once
 
           if(self.widget && self.widget.widget) {
-            self.widget.widget.removeEventListener('focus', initialiseButtons); 
+            self.widget.widget.removeEventListener('focus', initialiseButtons);
           }
 
         };
@@ -95,7 +95,7 @@ AuthorAlerts.prototype = {
       //Lazy loading metadata on hover of widget
       // Can only lazy load widget view, since the controls are hidden in the overlay
       this.rootEl.addEventListener(eventToLoadOn, initialiseButtons, false);
-      this.widget.widget.addEventListener('focus', initialiseButtons, false); 
+      this.widget.widget.addEventListener('focus', initialiseButtons, false);
     } else {
       initialiseButtons();
     }
@@ -123,7 +123,7 @@ AuthorAlerts.prototype = {
 
     //Add an unfollow all button if they are already following something
     if(entities.length > 0) {
-      views.standaloneButton(this.list, 'unsubscribe', 'Unsubscribe All');
+      views.standaloneButton(this.list, 'unsubscribe', 'Submit');
     }
     this.handleEntityLoad();
   },
@@ -142,13 +142,13 @@ AuthorAlerts.prototype = {
 
   createForEntities: function() {
       var entities = JSON.parse(this.rootEl.getAttribute('data-o-author-alerts-entities'));
-        
+
       renderButtonsForEntities(entities, this.list);
       this.handleEntityLoad();
   },
 
   /* This is called when we know we have created the controls for all the authors
-    
+
   */
   handleEntityLoad: function() {
 
@@ -179,7 +179,7 @@ function renderButtonsForEntities(entities, list) {
     views.button(list, entities[i]);
   }
   if(entities.length > 0) {
-    views.standaloneButton(list, 'save', 'Save', true); //Disabled save button by default
+    views.standaloneButton(list, 'save', 'Submit', true); //Disabled save button by default
   }
 }
 
@@ -194,14 +194,14 @@ function showComponent(rootEl) {
 }
 
 
-/* 
+/*
   Initialise all author alerts components within a container
-  Optionally pass in configuration overrides 
+  Optionally pass in configuration overrides
  */
 AuthorAlerts.init = function(rootEl, opts) {
-  var components = [], 
-      fEls, 
-      c, l, 
+  var components = [],
+      fEls,
+      c, l,
       component;
 
   rootEl = rootEl || document.body;
