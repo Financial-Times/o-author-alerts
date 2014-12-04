@@ -119,7 +119,7 @@ AuthorAlerts.prototype = {
   createForUser: function() {
     var entities = user && user.subscription ? user.subscription.entities : [];
 
-    renderButtonsForEntities(entities, this.list);
+    renderButtonsForEntities(entities, this.list, 'unsubscribe');
 
     //Add an unfollow all button if they are already following something
     if(entities.length > 0) {
@@ -173,13 +173,17 @@ function isWidget(rootEl) {
   return rootEl.className.indexOf('o-author-alerts--theme') >= 0;
 }
 
-function renderButtonsForEntities(entities, list) {
+function renderButtonsForEntities(entities, list, unsub) {
   var i, l;
   for(i=0,l=entities.length; i< l; i++) {
     views.button(list, entities[i]);
   }
   if(entities.length > 0) {
-    views.standaloneButton(list, 'save', 'Submit', true); //Disabled save button by default
+  	if (unsub && unsub === 'unsubscribe') {
+	    views.standaloneButton(list, 'save', 'Submit', false); //Enable save button by default for unsubscribe
+  	} else {
+	    views.standaloneButton(list, 'save', 'Save', true); //Disabled save button by default
+  	}
   }
 }
 
