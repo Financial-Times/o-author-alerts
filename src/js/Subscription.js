@@ -9,12 +9,12 @@ var jsonp = require('./lib/jsonp'),
 		VALID_FREQUENCIES = ['off', 'daily', 'immediate', 'weekly'];
 
 
-/* 
-	Subscription model attached to a user 
+/*
+	Subscription model attached to a user
 
 	Handles fetching and updating the initial personalisation data.
 
-	Also syncs to local storage when there is a failure in communication (e.g. Invalid session) 
+	Also syncs to local storage when there is a failure in communication (e.g. Invalid session)
 */
 function Subscription(userId) {
 	this.userId = userId;
@@ -38,7 +38,7 @@ Subscription.prototype = {
 
 		if(data.status === 'success' && data.taxonomies) {
 			eventToTrigger = 'updateSave';
-			this.online = true; 
+			this.online = true;
 			this.entities = data.taxonomies;
 
 			if(entity) { // Update call
@@ -81,7 +81,7 @@ Subscription.prototype = {
 		}
 
 		url = resolveUrl(entity, frequency, this.userId);
-		
+
 		//If user is unsubscribing all, then all pending requests become irrelevant
 		if(entity.id === 'ALL') {
 			this.clearPending();
@@ -97,9 +97,9 @@ Subscription.prototype = {
 		}
 	},
 
-	/* 
+	/*
 
-	Keep the list that we got back from the server in sync with any leftover requests from previous visits. 
+	Keep the list that we got back from the server in sync with any leftover requests from previous visits.
 	This ensures that the view that a user see's is in line with what they think they have done,
 	whilst we proceed to retry their request in the background.
 	*/
@@ -175,7 +175,7 @@ Subscription.prototype = {
 
 function isRetryable(data) {
   //these alerts occur if the user trys to stop alerts for something it has already stopped
-  //i.e. in a different tab. In this case, no need to retry 
+  //i.e. in a different tab. In this case, no need to retry
   if(data.message && (data.message === 'user is not following this id' ||
     data.message === 'user has no following list')) {
     return false;
@@ -183,14 +183,14 @@ function isRetryable(data) {
   return true;
 }
 
-// 
+//
 function anythingThatIsntDueToStop(entities, pending) {
 	var newEntities = [],
 			subscribedEntity,
 			i, l;
 
 	for(i=0,l=entities.length; i < l; i++) {
-		subscribedEntity = entities[i]; 
+		subscribedEntity = entities[i];
 		if(pending[subscribedEntity.id]) {
 			if(pending[subscribedEntity.id].update !== 'off') {
 				newEntities.push(subscribedEntity);
@@ -206,17 +206,18 @@ function anythingThatIsntDueToStop(entities, pending) {
 function resolveUrl(entity, frequency, userId) {
 	var url = '';
 	if(entity.id === 'ALL') {
-		url = config.stopAllUrl + 
-			'?userId=' + userId + 
+		url = config.stopAllUrl +
+			'?userId=' + userId +
 			'&type=authors';
 	} else {
-		url = (frequency === 'off' ? config.stopAlertsUrl : config.startAlertsUrl) + 
-			'?userId=' + userId + 
-			'&type=authors&name=' + entity.name + 
+		url = (frequency === 'off' ? config.stopAlertsUrl : config.startAlertsUrl) +
+			'?userId=' + userId +
+			'&type=authors&name=' + entity.name +
 			'&id=' + entity.id;
 
 		if(frequency !== 'off') {
-			url = url + '&frequency=' + frequency;
+			// url = url + '&frequency=' + frequency;
+			url = url + '&immediate=true';
 		}
 	}
 	return url;

@@ -54,7 +54,7 @@ describe('Updating the model while online', function() {
 		};
 		subscription.online = true;
 		subscription.update(entity, 'off');
-		var expectedUrl = 'http://personalisation.ft.com/follow/stopFollowing?userId=' + 
+		var expectedUrl = 'http://personalisation.ft.com/follow/stopFollowing?userId=' +
 			'userId&type=authors&name=Arjun&id=arjunId';
 
 		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsUpdateCallback', jasmine.any(Function));
@@ -70,8 +70,8 @@ describe('Updating the model while online', function() {
 		};
 		subscription.online = true;
 		subscription.update(entity, 'immediate');
-		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' + 
-			'userId&type=authors&name=Arjun&id=arjunId&frequency=immediate';
+		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' +
+			'userId&type=authors&name=Arjun&id=arjunId&immediate=true';
 
 		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsUpdateCallback', jasmine.any(Function));
 		// expect(subscription.entities.hasOwnProperty('arjunId')).toBe(true);
@@ -140,7 +140,7 @@ describe('Handles response from the server', function() {
 		expect(subscription.online).toBe(true);
 		expect(syncSpy).not.toHaveBeenCalled();
 		expect(eventSpy).not.toHaveBeenCalledWith('oAuthorAlerts.userPreferencesLoad', subscription.entities);
-		
+
 		expect(eventSpy.argsForCall[0][0]).toBe('oAuthorAlerts.serverError');
 		expect(eventSpy.argsForCall[0][1].data).toBe(mockData);
 		expect(eventSpy.argsForCall[0][1].entity).toBe(undefined);
@@ -197,7 +197,7 @@ it('successfully recieves data from update requests', function() {
 		expect(eventSpy.argsForCall[0][1].update).toBe('immediate');
 		expect(eventSpy.argsForCall[0][2]).not.toBeDefined();
 
-	
+
 	});
 
 
@@ -221,7 +221,7 @@ it('successfully recieves data from update requests', function() {
 		var addSpy = spyOn(subscription, 'addToPending');
 
 		subscription.set(mockData, mockEntity, 'off');
- 	
+
 		//only set offline in certain cases if follow/unfollow request failed, not the initial one
 		expect(subscription.online).toBe(true);
 		expect(addSpy).not.toHaveBeenCalled();
@@ -292,7 +292,7 @@ describe('Keeping the client and server in sync', function() {
 		subscription.entities = [pending.stopId.entity];
 
 		spyOn(subscription, 'update');
-		
+
 		//before syncing we have Already Subscribed in our list
 		expect(subscription.entities.length).toBe(1);
 		expect(subscription.entities[0].id).toBe('stopId');
