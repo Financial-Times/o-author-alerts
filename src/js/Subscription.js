@@ -219,6 +219,17 @@ function resolveUrl(entity, frequency, userId) {
 			// url = url + '&frequency=' + frequency;
 			url = url + '&immediate=true';
 		}
+
+
+		if(frequency !== 'off') {
+			var immediate = 'false';
+
+			if (frequency === 'immediate') {
+				immediate = 'true';
+			}
+
+			url = url + '&immediate=' + immediate;
+		}
 	}
 	return url;
 }
