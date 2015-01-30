@@ -207,7 +207,9 @@ function dismissUnsavedChanges(rootEl) {
     setFrequency(controls, savedState);
   }
 
-  rootEl.querySelector('[data-o-author-alerts-action="save"]').setAttribute('disabled', '');
+  if (rootEl.querySelector('[data-o-author-alerts-action="save"]')) {
+	rootEl.querySelector('[data-o-author-alerts-action="save"]').setAttribute('disabled', '');
+  }
 }
 
 /* Unsubscribe All button*/
