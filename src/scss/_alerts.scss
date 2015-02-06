@@ -50,12 +50,17 @@
 	text-align: right;
 }
 
-@include oFtButtonsButton(o-author-alerts__button);
-@include oFtButtonsButtonStandout(o-author-alerts__button);
-
 .o-author-alerts__controls .o-author-alerts__button {
 	width: 107px; //fix the width to stop it changing size between the two states
 	//Should use min-width, but IE9 has an issue where the button randomly moves
+}
+
+.o-author-alerts__button {
+	@include oFtButtons();
+}
+
+.o-author-alers__button--standout {
+	@include oFtButtonsTheme(standout);
 }
 
 .o-author-alerts__button[aria-pressed="true"] {
