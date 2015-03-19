@@ -71,7 +71,7 @@ describe('Updating the model while online', function() {
 		subscription.online = true;
 		subscription.update(entity, 'immediate');
 		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' +
-			'userId&type=authors&name=Arjun&id=arjunId&immediate=true';
+			'userId&type=authors&name=Arjun&id=arjunId&frequency=immediate';
 
 		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsUpdateCallback', jasmine.any(Function));
 		// expect(subscription.entities.hasOwnProperty('arjunId')).toBe(true);
