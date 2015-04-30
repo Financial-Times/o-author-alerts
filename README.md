@@ -44,8 +44,9 @@ You can optionally pass in some configuration to the Javascript, as follows:
 ```scss
 // your-app.scss
 
-// Override the default font
+// Override the default font in both o-forms and o-author-alerts
 $o-author-alerts-button-font: BentonSans, sans-serif;
+$o-forms-font-family: BentonSans, sans-serif;
 
 // Then, import the module
 @import 'o-author-alerts/main';
