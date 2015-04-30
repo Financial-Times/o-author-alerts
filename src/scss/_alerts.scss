@@ -52,6 +52,7 @@
 
 .o-author-alerts__button {
 	@include oButtons();
+	vertical-align: top;
 	font-family: $o-author-alerts-button-font;
 }
 
@@ -72,8 +73,7 @@
 	@include oFormsCommonField;
 	@include oFormsSelect;
 	@include oFormsCommonSmall;
+	vertical-align: top;
 	width: 140px; //fit in the largest copy. Should use min-width, but IE9 has an issue where the button randomly moves
-	margin-left: 12px;
-	font-size: 14px; //get select to match height of button
-	padding: 3px;
+	margin-left: 10px;
 }
