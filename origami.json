@@ -2,7 +2,7 @@
   "description": "Alerts widget used for Author Alerts",
   "origamiType": "module",
   "origamiVersion": 1,
-  "support": "arjun.gadhia@ft.com",
+  "support": "origami.support@ft.com",
   "supportStatus": "experimental",
   "browserFeatures": {
     "required": [

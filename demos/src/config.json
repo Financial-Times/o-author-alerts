@@ -1,25 +1,29 @@
 {
 	"options": {
-			"data": "demos/src/data.json"
-		},
-		"demos": [
-			{
-				"name": "ArticleWidget",
-				"template": "demos/src/article_widget.mustache",
-				"js": "demos/src/demos.js",
-				"sass": "demos/src/demos.scss"
-			},
-			{
-				"name": "user",
-				"template": "demos/src/user.mustache",
-				"js": "demos/src/demo-custom-config.js",
-				"sass": "demos/src/demos.scss"
-			},
-			{
-				"name": "Author",
-				"template": "demos/src/author.mustache",
-				"js": "demos/src/demo-single-author.js",
-				"sass": "demos/src/demos.scss"
-			}
+		"data": "demos/src/data.json",
+		"dependencies": [
+			"o-fonts@^1.5.0",
+			"o-ft-icons@^2.3.6"
 		]
+	},
+	"demos": [
+		{
+			"name": "ArticleWidget",
+			"template": "demos/src/article_widget.mustache",
+			"js": "demos/src/demos.js",
+			"sass": "demos/src/demos.scss"
+		},
+		{
+			"name": "user",
+			"template": "demos/src/user.mustache",
+			"js": "demos/src/demo-custom-config.js",
+			"sass": "demos/src/demos.scss"
+		},
+		{
+			"name": "Author",
+			"template": "demos/src/author.mustache",
+			"js": "demos/src/demo-single-author.js",
+			"sass": "demos/src/demos.scss"
+		}
+	]
 }
