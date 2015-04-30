@@ -18,8 +18,8 @@
 		line-height: 13px;
 
 		i {
-			@include oFtIconsBaseIconStyles();
 			@extend %o-ft-icons-icon--arrow-down;
+			@include oFtIconsBaseIconStyles();
 			margin-left: 8px;
 			line-height: 13px;
 			font-size: 13px;
@@ -31,7 +31,7 @@
 		}
 		&:focus {
 			outline: none;
-			box-shadow: inset 0 0 3px 1px oColorsGetColorFor(button-standout-standard, background);;
+			box-shadow: inset 0 0 3px 1px oColorsGetColorFor(button-standout-standard, background);
 		}
 	}
 
@@ -47,18 +47,13 @@
 		}
 	}
 
-	@include oColorsSetUseCase(o-author-alerts-overlay, background, white);
-	@include oColorsSetUseCase(o-author-alerts-overlay, text, black);
-	@include oColorsSetUseCase(o-author-alerts-overlay, border, pink-tint5);
-
-
 	.o-author-alerts__popover {
+		@include pointer-bordered(top, oColorsGetColorFor(o-author-alerts-overlay, background), oColorsGetColorFor(o-author-alerts-overlay, border), 12px, 60px);
 		visibility: hidden;
 		opacity: 0;
 		transition-duration: 300ms, 0;
 		transition-property: opacity, visibility;
 		transition-delay: 0, 300ms;
-		@include pointer-bordered(top, oColorsGetColorFor(o-author-alerts-overlay, background), oColorsGetColorFor(o-author-alerts-overlay, border), 12px, 60px);
 		background-color: oColorsGetColorFor(o-author-alerts-overlay, background);
 		color: oColorsGetColorFor(o-author-alerts-overlay, text);
 		border: 2px solid oColorsGetColorFor(o-author-alerts-overlay, border);

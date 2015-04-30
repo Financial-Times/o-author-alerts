@@ -10,8 +10,6 @@ var user = require('../src/js/user.js');
 var testEl;
 
 
-
-
 describe('Initialising a button', function() {
 
 	beforeEach(function() {
@@ -36,7 +34,7 @@ describe('Initialising a button', function() {
 		var updateSpy = spyOn(user.subscription, 'update');
 		var controls = testEl.querySelector('[data-o-author-alerts-id]');
 		var button = controls.querySelector('button');
-		var select = controls.querySelector('select');		
+		var select = controls.querySelector('select');
 		expect(button.innerText).toBe('Alerting');
 
 		expect(updateSpy).not.toHaveBeenCalled();
@@ -69,7 +67,7 @@ describe('Clicking the button', function() {
 	it('toggles between states', function() {
 		var entity = {id: 'author1', name: 'First Author'};
 		views.button(testEl, entity);
-    views.standaloneButton(testEl, 'save', 'Save', true); //Disabled save button by default
+		views.standaloneButton(testEl, 'save', 'Save', true); //Disabled save button by default
 
 		user.subscription.entities  = [];
 		var updateSpy = spyOn(user.subscription, 'update');
@@ -100,7 +98,6 @@ describe('Clicking the button', function() {
 
 		expect(updateSpy).toHaveBeenCalledWith(entity, 'daily'); //update goes through
 
-
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
 			model: 'followme', type: 'follow', value: 'First Author'
 		}, window);
@@ -122,5 +119,5 @@ describe('Clicking the button', function() {
 
 
 	});
-	
+
 });

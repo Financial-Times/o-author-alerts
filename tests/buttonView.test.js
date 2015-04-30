@@ -32,7 +32,7 @@ describe('Rendering a follow button', function() {
 			name: 'Arjun',
 			id: 'arjunId'
 		};
-		
+
 		var returned = views.button(container,entity);
 		expect(returned.className).toBe('o-author-alerts__entity');
 	});

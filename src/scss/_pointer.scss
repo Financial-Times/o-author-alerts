@@ -48,8 +48,7 @@
 		$opposite-direction: map-get($direction-map, $direction);
 		@if $opposite-direction != null {
 			$opposite-directions: append($opposite-directions, #{$opposite-direction});
-		}
-		@else {
+		} @else {
 			@warn "No opposite direction can be found for `#{$direction}`.";
 		}
 	}

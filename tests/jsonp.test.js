@@ -14,21 +14,21 @@ describe('jsonp.get()', function() {
 		var script = document.getElementsByTagName('head')[0].querySelector('script');
 		expect(script).toBeTruthy();
 		expect(script.getAttribute('src')).toContain(url);
-    document.getElementsByTagName('head')[0].removeChild(script);
+		document.getElementsByTagName('head')[0].removeChild(script);
 	});
 
 	it('appends a callback name to the end of the url', function() {
 		jsonp.get('http://www.test.com', 'callbackName');
 		var script1 = document.getElementsByTagName('head')[0].querySelectorAll('script')[0];
 		expect(script1.getAttribute('src')).toEqual('http://www.test.com?callback=callbackName0');
-    document.getElementsByTagName('head')[0].removeChild(script1);
+		document.getElementsByTagName('head')[0].removeChild(script1);
 	});
 
 	it('appends a callback name to the end of another query param', function() {
 		jsonp.get('http://www.test.com?other=true', 'callbackName');
 		var script1 = document.getElementsByTagName('head')[0].querySelectorAll('script')[0];
 		expect(script1.getAttribute('src')).toEqual('http://www.test.com?other=true&callback=callbackName0');
-	  document.getElementsByTagName('head')[0].removeChild(script1);
+		document.getElementsByTagName('head')[0].removeChild(script1);
 	});
 
 

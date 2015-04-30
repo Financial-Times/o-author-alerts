@@ -8,7 +8,9 @@ var metadata = require('../src/js/lib/metadata.js');
 var user = require('../src/js/user.js');
 var eventHelper = require('../src/js/lib/eventHelper');
 
-var authorAlerts, rootEl, widgetEl;
+var authorAlerts;
+var rootEl;
+var widgetEl;
 
 describe ('CreateAllin', function() {
 	beforeEach(function() {
@@ -94,7 +96,7 @@ describe('Initialising authorAlerts', function() {
 	it('waits for event if the user preferences are not available', function() {
 		var entity = {id:'author1', name: 'First Author'};
 		var btnInitSpy = spyOn(buttons, 'init');
-		
+
 
 		authorAlerts.init({lazyLoad: false});
 		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).not.toBeTruthy();
@@ -116,7 +118,7 @@ describe('Lazy loading the calls to metadata', function() {
 		widgetEl.setAttribute('data-o-author-alerts-article-id', 'test');
 		widgetEl.className = 'o-author-alerts o-author-alerts--theme';
 		document.body.appendChild(widgetEl);
-		authorAlerts = new AuthorAlerts(widgetEl);		
+		authorAlerts = new AuthorAlerts(widgetEl);
 
 		var metadataSpy = spyOn(metadata, 'get');
 		user.init();
@@ -130,9 +132,9 @@ describe('Lazy loading the calls to metadata', function() {
 		expect(metadataSpy).not.toHaveBeenCalled();
 		//...until we mouseover
 		var evObj = document.createEvent('MouseEvents');
-    evObj.initEvent( 'mouseover', true, false );
-    authorAlerts.rootEl.dispatchEvent(evObj);
-    //then it should make the call
+		evObj.initEvent( 'mouseover', true, false );
+		authorAlerts.rootEl.dispatchEvent(evObj);
+		//then it should make the call
 		expect(metadataSpy).toHaveBeenCalled();
 	});
 
@@ -141,7 +143,7 @@ describe('Lazy loading the calls to metadata', function() {
 		widgetEl.setAttribute('data-o-author-alerts-article-id', 'test');
 		widgetEl.className = 'o-author-alerts o-author-alerts--theme';
 		document.body.appendChild(widgetEl);
-		authorAlerts = new AuthorAlerts(widgetEl);		
+		authorAlerts = new AuthorAlerts(widgetEl);
 
 		var metadataSpy = spyOn(metadata, 'get');
 		user.init();
@@ -154,8 +156,8 @@ describe('Lazy loading the calls to metadata', function() {
 		//but no call to metadata spy yet
 		expect(metadataSpy).not.toHaveBeenCalled();
 		//...until we focus
-    authorAlerts.widget.widget.focus();
-    //then it should make the call
+		authorAlerts.widget.widget.focus();
+		//then it should make the call
 		expect(metadataSpy).toHaveBeenCalled();
 	});
 
@@ -164,7 +166,7 @@ describe('Lazy loading the calls to metadata', function() {
 		widgetEl.setAttribute('data-o-author-alerts-user', '');
 		widgetEl.className = 'o-author-alerts o-author-alerts--theme';
 		document.body.appendChild(widgetEl);
-		authorAlerts = new AuthorAlerts(widgetEl);		
+		authorAlerts = new AuthorAlerts(widgetEl);
 
 		user.init();
 		user.id = 'test';
@@ -176,9 +178,9 @@ describe('Lazy loading the calls to metadata', function() {
 		//but no call to metadata spy yet
 
 		var evObj = document.createEvent('MouseEvents');
-    evObj.initEvent( 'mouseover', true, false );
-    authorAlerts.rootEl.dispatchEvent(evObj);
-    //then it should make the call
+		evObj.initEvent( 'mouseover', true, false );
+		authorAlerts.rootEl.dispatchEvent(evObj);
+		//then it should make the call
 		authorAlerts.widget.widget.focus();
 		expect(widgetEl.querySelectorAll('.o-author-alerts__controls').length).toBe(1);
 
@@ -189,7 +191,7 @@ describe('Lazy loading the calls to metadata', function() {
 		widgetEl.setAttribute('data-o-author-alerts-article-id', 'test');
 		widgetEl.className = 'o-author-alerts o-author-alerts--theme';
 		document.body.appendChild(widgetEl);
-		authorAlerts = new AuthorAlerts(widgetEl);		
+		authorAlerts = new AuthorAlerts(widgetEl);
 
 		var metadataSpy = spyOn(metadata, 'get');
 		user.init();
@@ -208,14 +210,14 @@ describe('Lazy loading the calls to metadata', function() {
 		widgetEl.setAttribute('data-o-author-alerts-article-id', 'test');
 		widgetEl.className = 'o-author-alerts'; //no theme class => not a widget
 		document.body.appendChild(widgetEl);
-		authorAlerts = new AuthorAlerts(widgetEl);		
+		authorAlerts = new AuthorAlerts(widgetEl);
 
 		var metadataSpy = spyOn(metadata, 'get');
 		user.init();
 		user.id = 'test';
 		user.subscription.entities= [];
 
-		
+
 		authorAlerts.init();
 		//widget should be visible
 		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).toBeTruthy();

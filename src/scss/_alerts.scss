@@ -8,7 +8,7 @@
 }
 
 //Added specificity to override ft typography margins.
-.o-author-alerts ul.o-author-alerts__list {
+.o-author-alerts .o-author-alerts__list {
 	margin: 0;
 	padding: 0;
 }
@@ -25,7 +25,7 @@
 }
 
 //Added specificity to override ft typography margins.
-.o-author-alerts h3.o-author-alerts__header {
+.o-author-alerts .o-author-alerts__header.o-author-alerts__header {
 	@include oFtTypographyHeading2Text;
 	margin: 10px 0;
 }
@@ -61,8 +61,8 @@
 
 .o-author-alerts__button[aria-pressed="true"] {
 	i {
-		@include oFtIconsBaseIconStyles();
 		@extend %o-ft-icons-icon--tick;
+		@include oFtIconsBaseIconStyles();
 		margin-left: 8px;
 		line-height: 20px; //stop button from changing heights between states
 	}

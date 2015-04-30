@@ -1,12 +1,12 @@
 'use strict';
 
-var jsonp = require('./lib/jsonp'),
-		eventHelper = require('./lib/eventHelper'),
-		BrowserStore = require('./lib/BrowserStore'),
-		storage = new BrowserStore(localStorage),
-		config = require('./config.js'),
-		MAX_ATTEMPTS = 5,
-		VALID_FREQUENCIES = ['off', 'daily', 'immediate', 'weekly'];
+var jsonp = require('./lib/jsonp');
+var eventHelper = require('./lib/eventHelper');
+var BrowserStore = require('./lib/BrowserStore');
+var storage = new BrowserStore(localStorage);
+var config = require('./config.js');
+var MAX_ATTEMPTS = 5;
+var VALID_FREQUENCIES = ['off', 'daily', 'immediate', 'weekly'];
 
 
 /*
@@ -36,12 +36,12 @@ Subscription.prototype = {
 	set: function(data, entity, frequency) {
 		var eventToTrigger = '';
 
-		if(data.status === 'success' && data.taxonomies) {
+		if (data.status === 'success' && data.taxonomies) {
 			eventToTrigger = 'updateSave';
 			this.online = true;
 			this.entities = data.taxonomies;
 
-			if(entity) { // Update call
+			if (entity) { // Update call
 				this.removeFromPending(entity);
 			} else { // Initial call to get user preferences
 				this.sync();
@@ -49,7 +49,7 @@ Subscription.prototype = {
 			}
 		} else {
 			eventToTrigger = 'serverError';
-			if(entity && isRetryable(data)) {
+			if (entity && isRetryable(data)) {
 				//Likely to be an invalid session, so save off further requests to try later
 				this.online = false;
 				this.addToPending(entity, frequency);
@@ -68,26 +68,26 @@ Subscription.prototype = {
 
 	/* Update the user preferences for a given entity, and frequency to update to*/
 	update: function(entity, frequency) {
-		var url,
-				self = this;
+		var url;
+		var self = this;
 
-		if(!(this.userId && entity.id && entity.name)){
+		if (!(this.userId && entity.id && entity.name)){
 			return;
 		}
 
 		//Default frequency is daily
-		if(!frequency || VALID_FREQUENCIES.indexOf(frequency) < 0) {
+		if (!frequency || VALID_FREQUENCIES.indexOf(frequency) < 0) {
 			frequency = 'daily';
 		}
 
 		url = resolveUrl(entity, frequency, this.userId);
 
 		//If user is unsubscribing all, then all pending requests become irrelevant
-		if(entity.id === 'ALL') {
+		if (entity.id === 'ALL') {
 			this.clearPending();
 		}
 
-		if(this.online) {
+		if (this.online) {
 			jsonp.get(url, 'oAuthorAlertsUpdateCallback', function (data) {
 				self.set( data, entity, frequency);
 			});
@@ -104,24 +104,24 @@ Subscription.prototype = {
 	whilst we proceed to retry their request in the background.
 	*/
 	sync: function() {
-		var newEntities = [],
-				id,
-				pending;
+		var newEntities = [];
+		var id;
+		var pending;
 
 		//Go through pending requests from previous page visits
-		for(id in this.pending) {
-			if(this.pending.hasOwnProperty(id)) {
+		for (id in this.pending) {
+			if (this.pending.hasOwnProperty(id)) {
 				pending = this.pending[id];
 				pending.tried += 1;
 				//Give up on any that have maxed out attempts
-				if(pending.tried > MAX_ATTEMPTS) {
+				if (pending.tried > MAX_ATTEMPTS) {
 					this.removeFromPending(pending.entity);
 					continue;
 				}
 				//send update request
 				this.update(pending.entity, pending.update);
 				// pending.entity.frequency = pending.update;
-				if(pending.update !== 'off') {
+				if (pending.update !== 'off') {
 					newEntities.push(pending.entity);
 				}
 			}
@@ -135,8 +135,8 @@ Subscription.prototype = {
 
 	// If we think we are cannot connect to server, add update calls to localStorage
 	addToPending: function(entity, updateFrequency) {
-		if(this.pending[entity.id] ) {
-			if(this.pending[entity.id].update !== updateFrequency) {
+		if (this.pending[entity.id] ) {
+			if (this.pending[entity.id].update !== updateFrequency) {
 				this.removeFromPending(entity);
 			}
 		} else {
@@ -151,14 +151,14 @@ Subscription.prototype = {
 	},
 
 	removeFromPending: function(entity) {
-		if(this.pending[entity.id]) {
+		if (this.pending[entity.id]) {
 			delete this.pending[entity.id];
 		}
 		this.savePending();
 	},
 
 	savePending: function() {
-		if(this.pending && Object.keys(this.pending).length) {
+		if (this.pending && Object.keys(this.pending).length) {
 			storage.put('oAuthorAlertsUserCache-'+this.userId, JSON.stringify(this.pending));
 		} else {
 			//get rid of the key from localstorage
@@ -174,25 +174,26 @@ Subscription.prototype = {
 
 
 function isRetryable(data) {
-  //these alerts occur if the user trys to stop alerts for something it has already stopped
-  //i.e. in a different tab. In this case, no need to retry
-  if(data.message && (data.message === 'user is not following this id' ||
-    data.message === 'user has no following list')) {
-    return false;
-  }
-  return true;
+	//these alerts occur if the user trys to stop alerts for something it has already stopped
+	//i.e. in a different tab. In this case, no need to retry
+	if (data.message && (data.message === 'user is not following this id' ||
+		data.message === 'user has no following list')) {
+		return false;
+	}
+	return true;
 }
 
 //
 function anythingThatIsntDueToStop(entities, pending) {
-	var newEntities = [],
-			subscribedEntity,
-			i, l;
+	var newEntities = [];
+	var subscribedEntity;
+	var i;
+	var l;
 
-	for(i=0,l=entities.length; i < l; i++) {
+	for (i=0,l=entities.length; i < l; i++) {
 		subscribedEntity = entities[i];
-		if(pending[subscribedEntity.id]) {
-			if(pending[subscribedEntity.id].update !== 'off') {
+		if (pending[subscribedEntity.id]) {
+			if (pending[subscribedEntity.id].update !== 'off') {
 				newEntities.push(subscribedEntity);
 			}
 		} else {
@@ -205,7 +206,7 @@ function anythingThatIsntDueToStop(entities, pending) {
 // Return the correct URL to use based on the action they are taking.
 function resolveUrl(entity, frequency, userId) {
 	var url = '';
-	if(entity.id === 'ALL') {
+	if (entity.id === 'ALL') {
 		url = config.stopAllUrl +
 			'?userId=' + userId +
 			'&type=authors';
@@ -215,7 +216,7 @@ function resolveUrl(entity, frequency, userId) {
 			'&type=authors&name=' + entity.name +
 			'&id=' + entity.id;
 
-		if(frequency !== 'off') {
+		if (frequency !== 'off') {
 			url = url + '&frequency=' + frequency;
 		}
 	}
