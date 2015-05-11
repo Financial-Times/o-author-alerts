@@ -1,36 +1,33 @@
 {
-  "description": "Alerts widget used for Author Alerts",
-  "origamiType": "module",
-  "origamiVersion": 1,
-  "support": "arjun.gadhia@ft.com",
-  "supportStatus": "experimental",
-  "browserFeatures": {
-    "required": [
-      "addeventlistener",
-      "queryselector"
-    ],
-    "optional": [
-      "localstorage"
+    "description": "Alerts widget used for Author Alerts",
+    "origamiType": "module",
+    "origamiVersion": 1,
+    "support": "origami.support@ft.com",
+    "supportStatus": "experimental",
+    "browserFeatures": {
+        "required": [
+            "addeventlistener",
+            "queryselector"
+        ],
+        "optional": [
+            "localstorage"
+        ]
+    },
+    "demos": [
+        {
+            "path": "/demos/ArticleWidget.html",
+            "expanded": true,
+            "description": ""
+        },
+        {
+            "path": "/demos/user.html",
+            "expanded": true,
+            "description": ""
+        },
+        {
+            "path": "/demos/author.html",
+            "expanded": true,
+            "description": ""
+        }
     ]
-  },
-  "demos": [
-    {
-      "title": "Article - Widget View",
-      "path": "/demos/ArticleWidget.html",
-      "description": "Authors for an article, rendered with the widget theme and elements already in the DOM",
-      "expanded": true
-    },
-    {
-      "title": "User following",
-      "path": "/demos/user.html",
-      "description": "Authors for a logged in user, rendered with widget theme and default elements created by JS",
-      "expanded": false
-    },
-    {
-      "title": "Standalone button",
-      "path": "/demos/author.html",
-      "description": "Standalone button for an author",
-      "expanded": false
-    }
-  ]
 }

@@ -1,11 +1,11 @@
 'use strict';
 
-var views = require('./views'),
-    eventHelper = require('./lib/eventHelper'),
-    DomDelegate = require('ftdomdelegate');
+var views = require('./views');
+var eventHelper = require('./lib/eventHelper');
+var DomDelegate = require('ftdomdelegate');
 
 function AlertsWidget() {
-	this.delegate = new DomDelegate(); 
+	this.delegate = new DomDelegate();
 }
 
 AlertsWidget.prototype = {
@@ -39,7 +39,7 @@ AlertsWidget.prototype = {
 				self.hide();
 			}
 		});
-		
+
 		// Hide when clicked on the save button
 		this.delegate.on('oAuthorAlerts.saveChanges', '', function(e) {
 				self.hide(null, false); //dont fire close event!
@@ -63,8 +63,8 @@ AlertsWidget.prototype = {
 
 	show: function() {
 		this.rootEl.setAttribute('aria-expanded', '');
-	  eventHelper.dispatch('oTracking.Event', { model: 'eventonpage', type: 'hover', data: 'followAuthor'}, window);
-	  eventHelper.dispatch('oLayers.new', { el: this.popover }, document.body);
+		eventHelper.dispatch('oTracking.Event', { model: 'eventonpage', type: 'hover', data: 'followAuthor'}, window);
+		eventHelper.dispatch('oLayers.new', { el: this.popover }, document.body);
 	},
 
 	hide: function(ev, fireCloseEvent) {

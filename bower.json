@@ -2,14 +2,14 @@
   "name": "o-author-alerts",
   "dependencies": {
     "o-cookies": "^1.1.0",
-    "o-colors": ">=2.3.18 <4",
+    "o-colors": ">=2.5 <4",
     "o-fonts": "^1.4.1",
-    "o-ft-buttons": "^1.5.2",
+    "o-buttons": "^1.5.2",
     "o-ft-icons": "^2.2.2",
-    "o-ft-forms": "^0.8.1",
     "o-layers": ">=0.1.0 <2",
     "ftdomdelegate": "^1.0.0",
-    "o-ft-typography": "^1.12.1"
+    "o-forms": "~1.0.1",
+    "o-typography": "^1.12.1"
   },
   "main": [
     "main.scss",

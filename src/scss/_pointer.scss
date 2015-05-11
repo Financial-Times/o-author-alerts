@@ -1,60 +1,62 @@
 @mixin pointer($direction, $color, $size: 10px, $bordered: false, $position: 50%) {
 
-  $middle-axis: top;
-  @if $direction == top or $direction == bottom {
-    $middle-axis: left;
-  }
+	$middle-axis: top;
 
-  $psuedo: before;
-  $offset: -$size;
-  $border-size: $size;
-  $z-index: 1;
-  @if $bordered {
-    $psuedo: after;
-    $offset: (-$size + 2px);
-    $border-size: ($size - 2px);
-    $z-index: 2;
-  }
+	@if $direction == top or $direction == bottom {
+		$middle-axis: left;
+	}
 
-  &:#{$psuedo} {
-    content: "";
-    position: absolute;
-    #{opposite-direction($direction)}: 100%;
-    #{$middle-axis}: $position;
-    margin-#{$middle-axis}: $offset;
-    width: 0;
-    height: 0;
-    border: $border-size solid transparent;
-    border-#{opposite-direction($direction)}-color: $color;
-    border-#{$direction}-width: 0;
-    z-index: $z-index;
-  }
+	$psuedo: before;
+	$offset: -$size;
+	$border-size: $size;
+	$z-index: 1;
+
+	@if $bordered {
+		$psuedo: after;
+		$offset: (-$size + 2px);
+		$border-size: ($size - 2px);
+		$z-index: 2;
+	}
+
+	&:#{$psuedo} {
+		content: "";
+		position: absolute;
+		#{opposite-direction($direction)}: 100%;
+		#{$middle-axis}: $position;
+		margin-#{$middle-axis}: $offset;
+		width: 0;
+		height: 0;
+		border: $border-size solid transparent;
+		border-#{opposite-direction($direction)}-color: $color;
+		border-#{$direction}-width: 0;
+		z-index: $z-index;
+	}
 }
 
 @function opposite-direction($directions) {
-      $opposite-directions: ();
-      $direction-map: (
-    'top': 'bottom',
-    'right': 'left',
-    'bottom': 'top',
-    'left': 'right',
-    'ltr': 'rtl',
-    'rtl': 'ltr'
-  );
- 
-  @each $direction in $directions {
-    $opposite-direction: map-get($direction-map, $direction);
-        @if $opposite-direction != null { 
-      $opposite-directions: append($opposite-directions, #{$opposite-direction});
-    }
-    @else {
-      @warn "No opposite direction can be found for `#{$direction}`.";
-    }
-  }
- 
-  @return $opposite-directions;
+	$opposite-directions: ();
+	$direction-map: (
+		'top': 'bottom',
+		'right': 'left',
+		'bottom': 'top',
+		'left': 'right',
+		'ltr': 'rtl',
+		'rtl': 'ltr'
+	);
+
+	@each $direction in $directions {
+		$opposite-direction: map-get($direction-map, $direction);
+		@if $opposite-direction != null {
+			$opposite-directions: append($opposite-directions, #{$opposite-direction});
+		} @else {
+			@warn "No opposite direction can be found for `#{$direction}`.";
+		}
+	}
+
+	@return $opposite-directions;
 }
+
 @mixin pointer-bordered($direction, $color, $border-color, $size: 10px, $position: 50%) {
-  @include pointer($direction, $border-color, $size, false, $position);
-  @include pointer($direction, $color, $size, true, $position);
+	@include pointer($direction, $border-color, $size, false, $position);
+	@include pointer($direction, $color, $size, true, $position);
 }

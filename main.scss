@@ -1,8 +1,10 @@
-@import "o-ft-buttons/main";
+@import "o-buttons/main";
 @import "o-colors/main";
-@import "o-fonts/main";
-@import "o-ft-typography/main";
+@import "o-forms/main";
+@import "o-typography/main";
 @import "o-ft-icons/main";
+
+@import "src/scss/color-use-cases";
 @import "src/scss/variables";
 @import "src/scss/pointer";
 @import "src/scss/message";

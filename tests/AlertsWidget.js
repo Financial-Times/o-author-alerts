@@ -5,12 +5,12 @@ var AlertsWidget = require('../src/js/AlertsWidget.js');
 var eventHelper = require('../src/js/lib/eventHelper.js');
 
 
-var rootEl, list;
+var rootEl;
+var list;
 
 describe('The widget object', function() {
 
 	beforeEach(function() {
-
 		rootEl = document.createElement('div');
 		rootEl.setAttribute('data-o-author-alerts-user', '');
 		rootEl.className = 'o-author-alerts';
@@ -64,7 +64,7 @@ describe('The widget object', function() {
 	});
 
 	it('shows and hides (with a delay)', function(done) {
-    jasmine.Clock.useMock();
+		jasmine.Clock.useMock();
 		var widget = new AlertsWidget();
 		var eventSpy = spyOn(eventHelper, 'dispatch');
 		widget.init(list, rootEl);
@@ -77,6 +77,5 @@ describe('The widget object', function() {
 		widget.hide();
 		expect(rootEl.hasAttribute('aria-expanded')).not.toBeTruthy();
 
-
 	});
-	});
+});

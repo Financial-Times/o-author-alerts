@@ -1,9 +1,9 @@
-@import '../../main.scss';
+@import '../../main';
 @import 'o-colors/main';
 
-html, body {
-	min-height: 200px;
-}
+html,
 body {
+	min-height: 250px;
+	font-family: BentonSans, sans-serif;
 	background-color: oColorsGetColorFor(page, background);
 }

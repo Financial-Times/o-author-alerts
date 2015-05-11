@@ -7,15 +7,10 @@
 	display: inline-block;
 }
 
-@include oFontsInclude(BentonSans, normal);
-@include oFtIconsFontFace();
-@include oFtTypographyIncludeFont(heading);
-
 //Added specificity to override ft typography margins.
-.o-author-alerts ul.o-author-alerts__list {
+.o-author-alerts .o-author-alerts__list {
 	margin: 0;
 	padding: 0;
-	font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 }
 
 .o-author-alerts__entity {
@@ -23,14 +18,15 @@
 	overflow: auto;
 	padding: 10px 5px;
 	border-bottom: 1px dotted oColorsGetColorFor(table-row, border);
+
 	&:last-child {
 		border-bottom: 0;
 	}
 }
 
 //Added specificity to override ft typography margins.
-.o-author-alerts h3.o-author-alerts__header {
-	@extend %o-ft-typography-heading2-text;
+.o-author-alerts .o-author-alerts__header.o-author-alerts__header {
+	@include oFtTypographyHeading2Text;
 	margin: 10px 0;
 }
 
@@ -41,7 +37,6 @@
 	font-size: 13px;
 	line-height: 24px;
 	font-weight: bold;
-	font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 }
 
 .o-author-alerts__controls,
@@ -56,29 +51,29 @@
 }
 
 .o-author-alerts__button {
-	@include oFtButtons();
+	@include oButtons();
+	vertical-align: top;
+	font-family: $o-author-alerts-button-font;
 }
 
 .o-author-alers__button--standout {
-	@include oFtButtonsTheme(standout);
+	@include oButtonsTheme(standout);
 }
 
 .o-author-alerts__button[aria-pressed="true"] {
 	i {
-		@include oFtIconsBaseIconStyles();
 		@extend %o-ft-icons-icon--tick;
+		@include oFtIconsBaseIconStyles();
 		margin-left: 8px;
 		line-height: 20px; //stop button from changing heights between states
 	}
 }
 
-@import "o-ft-forms/main";
-
 .o-author-alerts__frequency {
-	@extend %o-ft-forms__field;
-	@extend %o-ft-forms__field--select;
+	@include oFormsCommonField;
+	@include oFormsSelect;
+	@include oFormsCommonSmall;
+	vertical-align: top;
 	width: 140px; //fit in the largest copy. Should use min-width, but IE9 has an issue where the button randomly moves
-	margin-left: 12px;
-	font-size: 14px; //get select to match height of button
-	padding: 3px;
+	margin-left: 10px;
 }

@@ -1,25 +1,25 @@
-
 .o-author-alerts__widget {
 	display: none;
 }
 
 .o-author-alerts--theme {
 	.o-author-alerts__widget {
-		background-color: #fff;
-		color: oColorsGetColorFor(link, text);
 		display: inline-block;
 		box-sizing: border-box;
 		border: 0;
 		border-radius: 10px;
 		padding: 5px 10px;
 		margin: 0;
-		font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
+		background-color: #ffffff;
+		color: oColorsGetColorFor(link, text);
+		font-family: $o-author-alerts-button-font;
 		text-decoration: none;
 		font-size: 13px;
 		line-height: 13px;
+
 		i {
-			@include oFtIconsBaseIconStyles();
 			@extend %o-ft-icons-icon--arrow-down;
+			@include oFtIconsBaseIconStyles();
 			margin-left: 8px;
 			line-height: 13px;
 			font-size: 13px;
@@ -31,7 +31,7 @@
 		}
 		&:focus {
 			outline: none;
-			box-shadow: inset 0 0 3px 1px oColorsGetColorFor(button-standout-standard, background);;
+			box-shadow: inset 0 0 3px 1px oColorsGetColorFor(button-standout-standard, background);
 		}
 	}
 
@@ -39,26 +39,21 @@
 	&[data-o-author-alerts-message='error'] {
 		.o-author-alerts__widget {
 			background-color: oColorsGetColorFor(status-error, background);
-		}	
+		}
 	}
 	&[data-o-author-alerts-message='success'] {
 		.o-author-alerts__widget {
 			background-color: oColorsGetColorFor(status-ok, background);
-		}	
+		}
 	}
 
-	@include oColorsSetUseCase(o-author-alerts-overlay, background, white);
-	@include oColorsSetUseCase(o-author-alerts-overlay, text, black);
-	@include oColorsSetUseCase(o-author-alerts-overlay, border, pink-tint5);
-
-
 	.o-author-alerts__popover {
+		@include pointer-bordered(top, oColorsGetColorFor(o-author-alerts-overlay, background), oColorsGetColorFor(o-author-alerts-overlay, border), 12px, 60px);
 		visibility: hidden;
 		opacity: 0;
 		transition-duration: 300ms, 0;
 		transition-property: opacity, visibility;
 		transition-delay: 0, 300ms;
-		@include pointer-bordered(top, oColorsGetColorFor(o-author-alerts-overlay, background), oColorsGetColorFor(o-author-alerts-overlay, border), 12px, 60px);
 		background-color: oColorsGetColorFor(o-author-alerts-overlay, background);
 		color: oColorsGetColorFor(o-author-alerts-overlay, text);
 		border: 2px solid oColorsGetColorFor(o-author-alerts-overlay, border);
@@ -70,9 +65,11 @@
 		left: auto;
 		padding: 10px 20px;
 		margin-top: 8px;
-		@media (screen and max-width: 400px) {
+
+		@media (max-width: 400px) {
 			padding: 5px 10px;
 		}
+
 	}
 
 
@@ -84,7 +81,6 @@
 			visibility: visible;
 			opacity: 1;
 			z-index: 2; //appear above ads in RHR blah
-
 		}
 	}
 }

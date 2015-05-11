@@ -34,8 +34,8 @@ function Config() {
 Config.prototype.set = function(opts) {
 	var key;
 	opts = opts || {};
-	for(key in defaults) {
-		if(defaults.hasOwnProperty(key)) {
+	for (key in defaults) {
+		if (defaults.hasOwnProperty(key)) {
 			this[key] = (opts[key] !== undefined) ? opts[key] : (this[key] ? this[key] : defaults[key]);
 		}
 	}

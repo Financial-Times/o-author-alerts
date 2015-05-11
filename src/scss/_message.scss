@@ -1,6 +1,5 @@
 .o-author-alerts__message {
 	display: none;
-	font-family: oFontsGetFontFamilyWithFallbacks(BentonSans);
 	font-size: 14px;
 }
 
@@ -13,6 +12,6 @@
 
 [data-o-author-alerts-message='error'] {
 	.o-author-alerts__message {
-		color: oColorsGetColorFor(error, text);;
+		color: oColorsGetColorFor(error, text);
 	}
 }
