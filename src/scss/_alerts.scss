@@ -65,7 +65,7 @@
 		@extend %o-ft-icons-icon--tick;
 		@include oFtIconsBaseIconStyles();
 		margin-left: 8px;
-		line-height: 20px; //stop button from changing heights between states
+		line-height: 1; // prevent button height from changing between states
 	}
 }
 
