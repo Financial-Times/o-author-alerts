@@ -31,19 +31,19 @@
 		}
 		&:focus {
 			outline: none;
-			box-shadow: inset 0 0 3px 1px oColorsGetColorFor(button-standout-standard, background);
+			box-shadow: inset 0 0 3px 1px oColorsGetColorFor(o-buttons-standout-normal, background);
 		}
 	}
 
-	//NOT IMPLEMENTED YET
+	// NOT IMPLEMENTED YET
 	&[data-o-author-alerts-message='error'] {
 		.o-author-alerts__widget {
-			background-color: oColorsGetColorFor(status-error, background);
+			background-color: oColorsGetColorFor(o-author-alerts-error, background);
 		}
 	}
 	&[data-o-author-alerts-message='success'] {
 		.o-author-alerts__widget {
-			background-color: oColorsGetColorFor(status-ok, background);
+			background-color: oColorsGetColorFor(o-author-alerts-success, background);
 		}
 	}
 

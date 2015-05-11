@@ -1,3 +1,7 @@
 @include oColorsSetUseCase(o-author-alerts-overlay, background, 'white');
 @include oColorsSetUseCase(o-author-alerts-overlay, text, 'black');
 @include oColorsSetUseCase(o-author-alerts-overlay, border, 'pink-tint5');
+@include oColorsSetUseCase(o-author-alerts-entity, border, 'pink-tint3');
+@include oColorsSetUseCase(o-author-alerts-error, background, 'red');
+@include oColorsSetUseCase(o-author-alerts-error, text, 'red');
+@include oColorsSetUseCase(o-author-alerts-success, background, 'green');

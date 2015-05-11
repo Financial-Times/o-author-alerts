@@ -12,6 +12,6 @@
 
 [data-o-author-alerts-message='error'] {
 	.o-author-alerts__message {
-		color: oColorsGetColorFor(error, text);
+		color: oColorsGetColorFor(o-author-alerts-error, text);
 	}
 }
