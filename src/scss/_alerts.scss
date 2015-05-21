@@ -56,7 +56,7 @@
 	font-family: $o-author-alerts-button-font;
 }
 
-.o-author-alers__button--standout {
+.o-author-alerts__button--standout {
 	@include oButtonsTheme(standout);
 }
 
