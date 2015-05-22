@@ -10,7 +10,7 @@ function create(rootEl, message, type) {
     	list.parentElement.insertBefore(msg, list);
     }
   }
-  msg.innerText = message;
+  msg.appendChild(document.createTextNode(message));
   rootEl.setAttribute('data-o-author-alerts-message', type);
 }
 
