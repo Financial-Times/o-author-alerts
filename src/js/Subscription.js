@@ -1,6 +1,6 @@
 'use strict';
 
-var jsonp = require('./lib/jsonp');
+var jsonp = require('./lib/jsonp/jsonp');
 var eventHelper = require('./lib/eventHelper');
 var BrowserStore = require('./lib/BrowserStore');
 var storage = new BrowserStore(localStorage);
@@ -28,15 +28,30 @@ Subscription.prototype = {
 
 	/* Fetch the initial list of authors that a user is following */
 	get: function() {
-		var url = config.getFollowingUrl + '?userId=' + this.userId;
-		jsonp.get(url, 'oAuthorAlertsGetCallback', this.set.bind(this));
+		var self = this;
+
+		jsonp({
+				url: config.getFollowingUrl,
+				data: {
+					userId: self.userId
+				}
+			},
+			function (err, data) {
+				if (err) {
+					self.set();
+					return;
+				}
+
+				self.set(data);
+			}
+		);
 	},
 
 	/* Handle response from the personalisation server, for updates and fetches*/
 	set: function(data, entity, frequency) {
 		var eventToTrigger = '';
 
-		if (data.status === 'success' && data.taxonomies) {
+		if (data && data.status === 'success' && data.taxonomies) {
 			eventToTrigger = 'updateSave';
 			this.online = true;
 			this.entities = data.taxonomies;
@@ -88,7 +103,14 @@ Subscription.prototype = {
 		}
 
 		if (this.online) {
-			jsonp.get(url, 'oAuthorAlertsUpdateCallback', function (data) {
+			jsonp({
+				url: url
+			}, function (err, data) {
+				if (err) {
+					self.set();
+					return;
+				}
+
 				self.set( data, entity, frequency);
 			});
 		} else {

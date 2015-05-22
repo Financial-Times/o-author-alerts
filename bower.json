@@ -7,7 +7,7 @@
     "o-buttons": "^2.0.3",
     "o-ft-icons": "^2.2.2",
     "o-layers": ">=0.1.0 <2",
-    "ftdomdelegate": "^1.0.0",
+    "ftdomdelegate": "^2.0.0",
     "o-forms": "~1.0.1",
     "o-typography": "^1.12.1"
   },

@@ -132,7 +132,7 @@ AuthorAlerts.prototype = {
 		var self = this;
 		var articleId = this.rootEl.getAttribute('data-o-author-alerts-article-id');
 
-		metadata.get(articleId, function(entities) {
+		metadata.get(articleId, function(err, entities) {
 			renderButtonsForEntities(entities.authors, self.list);
 			self.handleEntityLoad();
 			// Reset the button states now they have been created asynchronously
