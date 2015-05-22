@@ -2,6 +2,8 @@
 @import "o-colors/main";
 @import "o-forms/main";
 @import "o-typography/main";
+
+$o-ft-icons-is-silent: false;
 @import "o-ft-icons/main";
 
 @import "src/scss/color-use-cases";
