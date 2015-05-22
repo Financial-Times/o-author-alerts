@@ -1,10 +1,10 @@
 'use strict';
 
 var defaults = {
-	getFollowingUrl: "http://personalisation.ft.com/follow/getFollowingIds",
-	startAlertsUrl: "http://personalisation.ft.com/follow/update",
-	stopAlertsUrl: "http://personalisation.ft.com/follow/stopFollowing",
-	stopAllUrl: "http://personalisation.ft.com/follow/stopFollowingAll",
+	getFollowingUrl: "http://test.personalisation.ft.com/follow/getFollowingIds",
+	startAlertsUrl: "http://test.personalisation.ft.com/follow/update",
+	stopAlertsUrl: "http://test.personalisation.ft.com/follow/stopFollowing",
+	stopAllUrl: "http://test.personalisation.ft.com/follow/stopFollowingAll",
 	metadataUrl: "http://metadata-cache.webservices.ft.com/v1/getAuthors/",
 	lazyLoad: true,
 	entityType: "Author",
