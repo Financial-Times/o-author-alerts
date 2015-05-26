@@ -19,10 +19,7 @@ function AuthorAlerts(rootEl) {
 
 AuthorAlerts.prototype = {
 
-	init: function(opts) {
-
-		config.set(opts);
-
+	init: function() {
 		user.init(); //Ensures that a user is initialized
 
 		this.createView();
@@ -63,7 +60,7 @@ AuthorAlerts.prototype = {
 
 		//If lazyLoading metadata, show the widget immediately
 		// Note: this means that the widget will still display if no authors found
-		if(config.lazyLoad) {
+		if(config.get().lazyLoad) {
 			showComponent(this.rootEl);
 		}
 
@@ -91,7 +88,7 @@ AuthorAlerts.prototype = {
 
 		};
 
-		if(config.lazyLoad === true && isWidget(this.rootEl)) {
+		if(config.get().lazyLoad === true && isWidget(this.rootEl)) {
 			//Lazy loading metadata on hover of widget
 			// Can only lazy load widget view, since the controls are hidden in the overlay
 			this.rootEl.addEventListener(eventToLoadOn, initialiseButtons, false);
@@ -158,7 +155,7 @@ AuthorAlerts.prototype = {
 
 		if(!this.list.querySelector('.o-author-alerts__controls')) {
 			message.create(this.rootEl,'No Authors found.', '');
-		} else if (!config.lazyLoad) {
+		} else if (!config.get().lazyLoad) {
 			// If we are not lazy loading, only show the component at this stage.
 			// This stops the component being displayed if there are no authors to display
 			showComponent(this.rootEl);
@@ -202,7 +199,7 @@ function showComponent(rootEl) {
 	Initialise all author alerts components within a container
 	Optionally pass in configuration overrides
  */
-AuthorAlerts.init = function(rootEl, opts) {
+AuthorAlerts.init = function(rootEl) {
 	var components = [];
 	var fEls;
 	var c;
@@ -218,7 +215,7 @@ AuthorAlerts.init = function(rootEl, opts) {
 		for (c = 0, l = fEls.length; c < l; c++) {
 			if (!fEls[c].hasAttribute('data-o-author-alerts--js')) {
 				component = new AuthorAlerts(fEls[c]);
-				component.init(opts);
+				component.init();
 				components.push(component);
 			}
 		}

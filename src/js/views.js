@@ -33,10 +33,10 @@ function createSelect() {
 	var option;
 	select.disabled = true;
 	select.className = 'o-author-alerts__frequency';
-	for (i=0,l=config.frequencies.length;i<l;i++) {
+	for (i=0,l=config.get().frequencies.length;i<l;i++) {
 		option = document.createElement('option');
-		option.value = config.frequencies[i].key;
-		setTextContent(option, config.frequencies[i].text);
+		option.value = config.get().frequencies[i].key;
+		setTextContent(option, config.get().frequencies[i].text);
 		select.appendChild(option);
 	}
 	return select;
@@ -52,8 +52,8 @@ function createButton(text, selected, title) {
 	var btn = document.createElement('button');
 	btn.className = 'o-author-alerts__button';
 	btn.setAttribute('aria-selected', (typeof selected !== 'undefined') ? selected : false);
-	btn.setAttribute('title', 'Click to start alerts for this ' + config.entityType);
-	btn.innerHTML = (text ? text : config.startAlertsText);
+	btn.setAttribute('title', 'Click to start alerts for this ' + config.get().entityType);
+	btn.innerHTML = (text ? text : config.get().startAlertsText);
 	return btn;
 }
 
@@ -79,8 +79,8 @@ exports.button = function(list, entity) {
 	var wrapper = createWrapper(tagName);
 	var controls = createControls(entity);
 
-	if (config.displayName) {
-		wrapper.appendChild(createNameSpan(config.displayName.replace(/\%entityName\%/g, entity.name)));
+	if (config.get().displayName) {
+		wrapper.appendChild(createNameSpan(config.get().displayName.replace(/\%entityName\%/g, entity.name)));
 	}
 	controls.appendChild(createButton());
 	controls.appendChild(createSelect());
@@ -121,7 +121,7 @@ exports.widget = function(rootEl) {
 
 	if (!widget) {
 		widget = document.createElement('button');
-		setTextContent(widget, config.widgetText);
+		setTextContent(widget, config.get().widgetText);
 		widget.className = 'o-author-alerts__widget';
 		rootEl.insertBefore(widget, popover);
 	}

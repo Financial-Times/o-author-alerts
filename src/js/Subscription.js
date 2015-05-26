@@ -31,7 +31,7 @@ Subscription.prototype = {
 		var self = this;
 
 		jsonp({
-				url: config.getFollowingUrl,
+				url: config.get().getFollowingUrl,
 				data: {
 					userId: self.userId
 				}
@@ -229,11 +229,11 @@ function anythingThatIsntDueToStop(entities, pending) {
 function resolveUrl(entity, frequency, userId) {
 	var url = '';
 	if (entity.id === 'ALL') {
-		url = config.stopAllUrl +
+		url = config.get().stopAllUrl +
 			'?userId=' + userId +
 			'&type=authors';
 	} else {
-		url = (frequency === 'off' ? config.stopAlertsUrl : config.startAlertsUrl) +
+		url = (frequency === 'off' ? config.get().stopAlertsUrl : config.get().startAlertsUrl) +
 			'?userId=' + userId +
 			'&type=authors&name=' + entity.name +
 			'&id=' + entity.id;

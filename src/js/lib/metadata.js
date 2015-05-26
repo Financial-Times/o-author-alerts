@@ -5,7 +5,7 @@ var jsonp = require('./jsonp/jsonp'),
 
 
 exports.get = function(articleId, callback) {
-	var url = config.metadataUrl + articleId;
+	var url = config.get().metadataUrl + articleId;
 	jsonp({
 		url: url
 	}, callback);
