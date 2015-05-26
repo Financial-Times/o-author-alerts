@@ -21,21 +21,81 @@ Alternatively, you can use the `init` method, as follows:
 where `rootEl` defaults to `document.body` if not specified.
 
 ####Configuration
-You can optionally pass in some configuration to the Javascript, as follows:
+You can optionally change some of the configuration. The object that you specify will be deep merged with the default configuration, overwriting values for the same fields.
+
+##### Imperatively
+The configuration can be changed be using the `setConfig` static method.
 
 ```js
-	var oAuthorAlerts = require('o-author-alerts');
-	oAuthorAlerts.init(rootEl, {
-		lazyLoad: false, // the default behaviour for the widget is to only load metadata on hover/click. Set to false to fetch data on page load.
+oAuthorAlerts.setConfig({
+	lazyLoad: false, // the default behaviour for the widget is to only load metadata on hover/click. Set to false to fetch data on page load.
+	startAlertingText: "Follow %entityName%", //default: 'Start Alerts'
+	stopAlertingText: "Unfollow %entityName%", //default: 'Alerting '
+	widgetText: 'Your Alerts', //default: 'Author Alerts'
+	popoverHeadingText: 'You are following:' //default: null,
+	displayName: "Get email for %entityName%" //default: '%entityName%'. Set to false to hide the name.
+});
+```
+
+* `%entityName%` will be replaced with the name of the entity in the above examples.
+
+*As on the event `o.DOMContentLoaded` the widgets declared in the DOM are automatically initialized, it is preferred to call this function **before** the `o.DOMContentLoaded` event is triggered.*
+
+##### Declaratively
+In order to change the configuration, you can add a script tag in your page source with the format in the example below:
+
+```html
+<script data-o-author-alerts-config type="application/json">
+    {
+        lazyLoad: false, // the default behaviour for the widget is to only load metadata on hover/click. Set to false to fetch data on page load.
 		startAlertingText: "Follow %entityName%", //default: 'Start Alerts'
 		stopAlertingText: "Unfollow %entityName%", //default: 'Alerting '
 		widgetText: 'Your Alerts', //default: 'Author Alerts'
 		popoverHeadingText: 'You are following:' //default: null,
 		displayName: "Get email for %entityName%" //default: '%entityName%'. Set to false to hide the name.
-	});
+    }
+</script>
 ```
 
-* `%entityName%` will be replaced with the name of the entity in the above examples.
+##### Default configuration
+
+```json
+{
+	"getFollowingUrl": "http://personalisation.ft.com/follow/getFollowingIds",
+	"startAlertsUrl": "http://personalisation.ft.com/follow/update",
+	"stopAlertsUrl": "http://personalisation.ft.com/follow/stopFollowing",
+	"stopAllUrl": "http://personalisation.ft.com/follow/stopFollowingAll",
+	"metadataUrl": "http://metadata-cache.webservices.ft.com/v1/getAuthors/",
+	"lazyLoad": true, // the default behaviour for the widget is to only load metadata on hover/click. Set to false to fetch data on page load.
+	"entityType": "Author",
+	"startAlertsText": "Start alerts",
+	"stopAlertsText": "Alerting<i class=\"o-author-alerts__icon--tick\"></i>",
+	"widgetText": "Author alerts",
+	"popoverHeadingText": null,
+	"displayName": "%entityName%",
+	"frequencies": [
+		{
+			"key": "daily",
+			"text": "Daily email"
+		},
+		{
+			"key": "immediate",
+			"text": "Immediate email"
+		}
+	]
+}
+```
+
+##### Test configuration
+
+```json
+{
+	"getFollowingUrl": "http://test.personalisation.ft.com/follow/getFollowingIds",
+	"startAlertsUrl": "http://test.personalisation.ft.com/follow/update",
+	"stopAlertsUrl": "http://test.personalisation.ft.com/follow/stopFollowing",
+	"stopAllUrl": "http://test.personalisation.ft.com/follow/stopFollowingAll"
+}
+```
 
 ####Font family
 
