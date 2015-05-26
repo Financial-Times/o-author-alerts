@@ -19,8 +19,10 @@ function AuthorAlerts(rootEl) {
 
 AuthorAlerts.prototype = {
 
-	init: function() {
+	init: function(opts) {
 		user.init(); //Ensures that a user is initialized
+
+		config.set(opts);
 
 		this.createView();
 
@@ -199,7 +201,7 @@ function showComponent(rootEl) {
 	Initialise all author alerts components within a container
 	Optionally pass in configuration overrides
  */
-AuthorAlerts.init = function(rootEl) {
+AuthorAlerts.init = function(rootEl, opts) {
 	var components = [];
 	var fEls;
 	var c;
@@ -215,7 +217,7 @@ AuthorAlerts.init = function(rootEl) {
 		for (c = 0, l = fEls.length; c < l; c++) {
 			if (!fEls[c].hasAttribute('data-o-author-alerts--js')) {
 				component = new AuthorAlerts(fEls[c]);
-				component.init();
+				component.init(opts);
 				components.push(component);
 			}
 		}
