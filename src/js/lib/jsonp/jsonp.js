@@ -66,12 +66,17 @@ function jsonp (options, callback) {
 
 	callbackName = callbackBase + callbackIndex++;
 
+	var urlDataSeparator = '?';
+	if (options.url.indexOf('?') !== -1) {
+		urlDataSeparator = '&';
+	}
+
 	if (options.data) {
-		options.url += '?' + param(options.data);
+		options.url += urlDataSeparator + param(options.data);
 
 		options.url += '&callback=' + callbackName;
 	} else {
-		options.url += '?callback=' + callbackName;
+		options.url += urlDataSeparator + 'callback=' + callbackName;
 	}
 
 	options.url += '&_=' + new Date().getTime();
