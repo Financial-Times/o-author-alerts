@@ -80,7 +80,7 @@
 			transition-delay: 0;
 			visibility: visible;
 			opacity: 1;
-			z-index: 2; //appear above ads in RHR blah
+			z-index: 10; //match o-overlay default z-index
 		}
 	}
 }
