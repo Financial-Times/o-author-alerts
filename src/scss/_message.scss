@@ -1,16 +1,18 @@
-.o-author-alerts__message {
-	display: none;
-	font-size: 14px;
+.o-author-alerts {
+	.o-author-alerts__message {
+		display: none;
+		font-size: 14px;
+	}
 }
 
-[data-o-author-alerts-message] {
+.o-author-alerts[data-o-author-alerts-message] {
 	.o-author-alerts__message {
 		display: block;
 		padding: 10px 5px;
 	}
 }
 
-[data-o-author-alerts-message='error'] {
+.o-author-alerts[data-o-author-alerts-message='error'] {
 	.o-author-alerts__message {
 		color: oColorsGetColorFor(o-author-alerts-error, text);
 	}

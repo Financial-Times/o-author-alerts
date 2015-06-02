@@ -1,79 +1,80 @@
-.o-author-alerts {
-	display: none;
-	line-height: 1em;
-}
-
 [data-o-author-alerts--js].o-author-alerts {
 	display: inline-block;
 }
 
-//Added specificity to override ft typography margins.
-.o-author-alerts .o-author-alerts__list {
-	margin: 0;
-	padding: 0;
-}
+.o-author-alerts {
+	display: none;
+	line-height: 1em;
 
-.o-author-alerts__entity {
-	list-style: none;
-	overflow: auto;
-	padding: 10px 5px;
-	border-bottom: 1px dotted oColorsGetColorFor(o-author-alerts-entity, border);
-
-	&:last-child {
-		border-bottom: 0;
+	//Added specificity to override ft typography margins.
+	.o-author-alerts__list {
+		margin: 0;
+		padding: 0;
 	}
-}
 
-//Added specificity to override ft typography margins.
-.o-author-alerts .o-author-alerts__header.o-author-alerts__header {
-	@include oFtTypographyHeading2Text;
-	margin: 10px 0;
-}
+	.o-author-alerts__entity {
+		list-style: none;
+		overflow: auto;
+		padding: 10px 5px;
+		border-bottom: 1px dotted oColorsGetColorFor(o-author-alerts-entity, border);
 
-.o-author-alerts__name {
-	float: left;
-	margin-right: 20px;
-	max-width: 150px; //limit author name to a reasonable size
-	font-size: 13px;
-	line-height: 24px;
-	font-weight: bold;
-}
-
-.o-author-alerts__controls,
-[data-o-author-alerts-action] {
-	float: right;
-	text-align: right;
-}
-
-.o-author-alerts__controls .o-author-alerts__button {
-	width: 107px; //fix the width to stop it changing size between the two states
-	//Should use min-width, but IE9 has an issue where the button randomly moves
-}
-
-.o-author-alerts__button {
-	@include oButtons();
-	vertical-align: top;
-	font-family: $o-author-alerts-button-font;
-}
-
-.o-author-alerts__button--standout {
-	@include oButtonsTheme(standout);
-}
-
-.o-author-alerts__button[aria-pressed="true"] {
-	i {
-		@extend %o-ft-icons-icon--tick;
-		@include oFtIconsBaseIconStyles();
-		margin-left: 8px;
-		line-height: 1; // prevent button height from changing between states
+		&:last-child {
+			border-bottom: 0;
+		}
 	}
-}
 
-.o-author-alerts__frequency {
-	@include oFormsCommonField;
-	@include oFormsSelect;
-	@include oFormsCommonSmall;
-	vertical-align: top;
-	width: 140px; //fit in the largest copy. Should use min-width, but IE9 has an issue where the button randomly moves
-	margin-left: 10px;
+	//Added specificity to override ft typography margins.
+	.o-author-alerts__header.o-author-alerts__header {
+		@include oFtTypographyHeading2Text;
+		margin: 10px 0;
+	}
+
+	.o-author-alerts__name {
+		float: left;
+		margin-right: 20px;
+		max-width: 150px; //limit author name to a reasonable size
+		font-size: 13px;
+		line-height: 24px;
+		font-weight: bold;
+	}
+
+	.o-author-alerts__controls,
+	[data-o-author-alerts-action] {
+		float: right;
+		text-align: right;
+	}
+
+	.o-author-alerts__controls .o-author-alerts__button {
+		width: 107px; //fix the width to stop it changing size between the two states
+		//Should use min-width, but IE9 has an issue where the button randomly moves
+	}
+
+	.o-author-alerts__button {
+		@include oButtons();
+		vertical-align: top;
+		font-family: $o-author-alerts-button-font;
+	}
+
+	.o-author-alerts__button--standout {
+		@include oButtonsTheme(standout);
+	}
+
+	.o-author-alerts__button[aria-pressed="true"] {
+		i {
+			@extend %o-ft-icons-icon--tick;
+			@include oFtIconsBaseIconStyles();
+			margin-left: 8px;
+			line-height: 1; // prevent button height from changing between states
+		}
+	}
+
+	.o-author-alerts__frequency {
+		@include oFormsCommonField;
+		@include oFormsSelect;
+		@include oFormsCommonSmall;
+		vertical-align: top;
+		width: 140px; //fit in the largest copy. Should use min-width, but IE9 has an issue where the button randomly moves
+		margin-left: 10px;
+	}
+
 }

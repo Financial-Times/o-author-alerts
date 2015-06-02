@@ -1,8 +1,10 @@
-.o-author-alerts__widget {
-	display: none;
+.o-author-alerts {
+	.o-author-alerts__widget {
+		display: none;
+	}
 }
 
-.o-author-alerts--theme {
+.o-author-alerts.o-author-alerts--theme {
 	.o-author-alerts__widget {
 		display: inline-block;
 		box-sizing: border-box;
