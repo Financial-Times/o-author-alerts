@@ -6,6 +6,7 @@
 	"metadataUrl": "http://metadata-cache.webservices.ft.com/v1/getAuthors/",
 	"lazyLoad": true,
 	"entityType": "Author",
+	"handleLoadErrorText": "No alerts available.",
 	"startAlertsText": "Start alerts",
 	"stopAlertsText": "Alerting<i class=\"o-author-alerts__icon--tick\"></i>",
 	"widgetText": "Author alerts",
