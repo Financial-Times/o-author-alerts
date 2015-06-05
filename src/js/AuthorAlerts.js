@@ -156,7 +156,7 @@ AuthorAlerts.prototype = {
 		eventHelper.dispatch('oAuthorAlerts.entitiesLoaded', null, this.rootEl);
 
 		if(!this.list.querySelector('.o-author-alerts__controls')) {
-			message.create(this.rootEl,'No Authors found.', '');
+			message.create(this.rootEl, config.get().handleLoadErrorText, '');
 		} else if (!config.get().lazyLoad) {
 			// If we are not lazy loading, only show the component at this stage.
 			// This stops the component being displayed if there are no authors to display
@@ -164,8 +164,6 @@ AuthorAlerts.prototype = {
 		}
 
 	}
-
-
 };
 
 function isWidget(rootEl) {
