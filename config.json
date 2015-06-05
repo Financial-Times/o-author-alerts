@@ -10,6 +10,10 @@
 	"stopAlertsText": "Alerting<i class=\"o-author-alerts__icon--tick\"></i>",
 	"widgetText": "Author alerts",
 	"popoverHeadingText": null,
+	"loadingText": "Loading data...",
+	"stopAlertsHoverText": "Click to stop alerts for this %entityType%",
+	"startAlertsHoverText": "Click to start alerts for this %entityType%",
+	"unsubscribeAllText": "You have been unsubscribed from all authors.",
 	"displayName": "%entityName%",
 	"frequencies": [
 		{

@@ -52,7 +52,7 @@ function createButton(text, selected, title) {
 	var btn = document.createElement('button');
 	btn.className = 'o-author-alerts__button';
 	btn.setAttribute('aria-selected', (typeof selected !== 'undefined') ? selected : false);
-	btn.setAttribute('title', 'Click to start alerts for this ' + config.get().entityType);
+	btn.setAttribute('title', config.get().startAlertsHoverText.replace(/\%entityType\%/g, config.get().entityType));
 	btn.innerHTML = (text ? text : config.get().startAlertsText);
 	return btn;
 }
