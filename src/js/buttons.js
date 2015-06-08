@@ -124,7 +124,7 @@ function subscribe(controls) {
 
 	//note: using innerHTML in second instance since element is hidden so innerText returns ''
 	btn.innerHTML = config.get().stopAlertsText.replace(/\%entityName\%/g, name);
-	btn.setAttribute('title', 'Click to stop alerts for this ' + config.get().entityType);
+	btn.setAttribute('title', config.get().stopAlertsHoverText.replace(/\%entityType\%/g, config.get().entityType));
 	btn.setAttribute('aria-pressed', 'true');
 	setFrequency(controls, DEFAULT_FREQUENCY);
 }
@@ -135,7 +135,7 @@ function unsubscribe(controls) {
 	var btn = controls.querySelector('.o-author-alerts__button');
 
 	btn.innerHTML = config.get().startAlertsText.replace(/\%entityName\%/g, name); //Use innerHTML as config contains icon html
-	btn.setAttribute('title', 'Click to start alerts for this ' + config.get().entityType);
+	btn.setAttribute('title', config.get().startAlertsHoverText.replace(/\%entityType\%/g, config.get().entityType));
 	btn.setAttribute('aria-pressed', 'false');
 	setFrequency(controls, 'off'); // Reset the frequency toggle
 }
@@ -239,7 +239,7 @@ function stopAll(el, rootEl) {
 	var i;
 	var l;
 
-	message.create(rootEl, 'You have been unsubscribed from all authors.', '');
+	message.create(rootEl, config.get().unsubscribeAllText, '');
 
 	user.subscription.update({id: 'ALL', name: 'ALL'}, 'off');
 

@@ -58,7 +58,7 @@ AuthorAlerts.prototype = {
 			this.widget.init(this.rootEl);
 		}
 
-		message.create(this.rootEl, 'Loading data...', '');
+		message.create(this.rootEl, config.get().loadingText, '');
 
 		//If lazyLoading metadata, show the widget immediately
 		// Note: this means that the widget will still display if no authors found
