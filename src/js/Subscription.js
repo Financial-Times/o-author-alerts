@@ -48,7 +48,7 @@ Subscription.prototype = {
 	},
 
 	/* Handle response from the personalisation server, for updates and fetches*/
-	set: function(data, entity, frequency) {
+	set: function(data, entities) {
 		var eventToTrigger = '';
 
 		if (data && data.status === 'success' && data.taxonomies) {
@@ -56,26 +56,38 @@ Subscription.prototype = {
 			this.online = true;
 			this.entities = data.taxonomies;
 
-			if (entity) { // Update call
-				this.removeFromPending(entity);
-			} else { // Initial call to get user preferences
+			var sync = false;
+			for (item in entities) {
+				if (entities.hasOwnProperty(item)) {
+					if (item.entity) { // Update call
+						this.removeFromPending(item.entity);
+					} else { // Initial call to get user preferences
+						sync = true;
+					}
+				}
+			}
+
+			if (sync) {
 				this.sync();
 				eventHelper.dispatch('oAuthorAlerts.userPreferencesLoad', this.entities);
 			}
 		} else {
 			eventToTrigger = 'serverError';
-			if (entity && isRetryable(data)) {
-				//Likely to be an invalid session, so save off further requests to try later
-				this.online = false;
-				this.addToPending(entity, frequency);
+			for (item in entities) {
+				if (entities.hasOwnProperty(item)) {
+					if (item.entity && isRetryable(data)) {
+						//Likely to be an invalid session, so save off further requests to try later
+						this.online = false;
+						this.addToPending(entity, frequency);
+					}
+				}
 			}
 		}
 
 		//TODO: use this tho display error messages within the module
 		eventHelper.dispatch('oAuthorAlerts.' + eventToTrigger, {
 			data: data,
-			entity: entity,
-			update: frequency,
+			entities: entities,
 			userId: this.userId
 		});
 
@@ -111,11 +123,59 @@ Subscription.prototype = {
 					return;
 				}
 
-				self.set( data, entity, frequency);
+				self.set(data, [{
+					entity: entity,
+					frequency: frequency
+				}]);
 			});
 		} else {
 			//don't execute jsonp call, but save it to do on another page visit
 			this.addToPending(entity, frequency);
+		}
+	},
+
+	updateBulk: function (entities) {
+		if (!this.userId) {
+			return;
+		}
+
+		var url = config.get().updateBulk + '?userId=' + this.userId + '&type=authors';
+
+		if (entities && entities instanceof Array) {
+			for (item in entities) {
+				if (entities.hasOwnProperty(item)) {
+					if (item.entity.id && item.entity.name) {
+						if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
+							item.frequency = 'daily';
+						}
+
+						url += '&' +
+								(item.frequency === 'off' ? 'unfollow' : 'follow') +
+								'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
+					}
+				}
+			}
+		}
+
+		if (this.online) {
+			jsonp({
+				url: url
+			}, function (err, data) {
+				if (err) {
+					self.set();
+					return;
+				}
+
+				self.set(data, entities);
+			});
+		} else {
+			//don't execute jsonp call, but save it to do on another page visit
+
+			for (item in entities) {
+				if (entities.hasOwnProperty(item)) {
+					this.addToPending(item.entity, item.frequency);
+				}
+			}
 		}
 	},
 
@@ -227,6 +287,25 @@ function anythingThatIsntDueToStop(entities, pending) {
 
 // Return the correct URL to use based on the action they are taking.
 function resolveUrl(entity, frequency, userId) {
+	var url = '';
+	if (entity.id === 'ALL') {
+		url = config.get().stopAllUrl +
+			'?userId=' + userId +
+			'&type=authors';
+	} else {
+		url = (frequency === 'off' ? config.get().stopAlertsUrl : config.get().startAlertsUrl) +
+			'?userId=' + userId +
+			'&type=authors&name=' + entity.name +
+			'&id=' + entity.id;
+
+		if (frequency !== 'off') {
+			url = url + '&frequency=' + frequency;
+		}
+	}
+	return url;
+}
+
+function resolveBulkUrl (data) {
 	var url = '';
 	if (entity.id === 'ALL') {
 		url = config.get().stopAllUrl +
