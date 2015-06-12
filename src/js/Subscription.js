@@ -79,13 +79,15 @@ Subscription.prototype = {
 			}
 		} else {
 			eventToTrigger = 'serverError';
-			for (i = 0; i < entities.length; i++) {
-				item = entities[i];
+			if (entities) {
+				for (i = 0; i < entities.length; i++) {
+					item = entities[i];
 
-				if (item.entity && isRetryable(data)) {
-					//Likely to be an invalid session, so save off further requests to try later
-					this.online = false;
-					this.addToPending(entity, frequency);
+					if (item.entity && isRetryable(data)) {
+						//Likely to be an invalid session, so save off further requests to try later
+						this.online = false;
+						this.addToPending(item.entity, item.frequency);
+					}
 				}
 			}
 		}
@@ -125,7 +127,10 @@ Subscription.prototype = {
 				url: url
 			}, function (err, data) {
 				if (err) {
-					self.set();
+					self.set(null, [{
+						entity: entity,
+						frequency: frequency
+					}]);
 					return;
 				}
 
@@ -141,6 +146,8 @@ Subscription.prototype = {
 	},
 
 	updateBulk: function (entities) {
+		var self = this;
+
 		if (!this.userId) {
 			return;
 		}
@@ -170,7 +177,7 @@ Subscription.prototype = {
 				url: url
 			}, function (err, data) {
 				if (err) {
-					self.set();
+					self.set(null, entities);
 					return;
 				}
 
@@ -197,6 +204,7 @@ Subscription.prototype = {
 		var newEntities = [];
 		var id;
 		var pending;
+		var updates = [];
 
 		//Go through pending requests from previous page visits
 		for (id in this.pending) {
@@ -209,12 +217,18 @@ Subscription.prototype = {
 					continue;
 				}
 				//send update request
-				this.update(pending.entity, pending.update);
+				updates.push({
+					entity: pending.entity,
+					frequency: pending.update
+				});
 				// pending.entity.frequency = pending.update;
 				if (pending.update !== 'off') {
 					newEntities.push(pending.entity);
 				}
 			}
+		}
+		if (updates && updates.length) {
+			this.updateBulk(updates);
 		}
 		//ensure that the list we work with (of entities taht are being followed)
 		// a) Includes he properly synced entities from the server
@@ -266,7 +280,7 @@ Subscription.prototype = {
 function isRetryable(data) {
 	//these alerts occur if the user trys to stop alerts for something it has already stopped
 	//i.e. in a different tab. In this case, no need to retry
-	if (data.message && (data.message === 'user is not following this id' ||
+	if (data && data.message && (data.message === 'user is not following this id' ||
 		data.message === 'user has no following list')) {
 		return false;
 	}
