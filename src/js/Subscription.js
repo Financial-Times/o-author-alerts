@@ -313,24 +313,5 @@ function resolveUrl(entity, frequency, userId) {
 	return url;
 }
 
-function resolveBulkUrl (data) {
-	var url = '';
-	if (entity.id === 'ALL') {
-		url = config.get().stopAllUrl +
-			'?userId=' + userId +
-			'&type=authors';
-	} else {
-		url = (frequency === 'off' ? config.get().stopAlertsUrl : config.get().startAlertsUrl) +
-			'?userId=' + userId +
-			'&type=authors&name=' + entity.name +
-			'&id=' + entity.id;
-
-		if (frequency !== 'off') {
-			url = url + '&frequency=' + frequency;
-		}
-	}
-	return url;
-}
-
 
 module.exports = Subscription;
