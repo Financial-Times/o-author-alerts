@@ -176,7 +176,7 @@ function saveFrequencyUpdates(rootEl, saveBtn) {
 		eventHelper.dispatch('oTracking.Event', { model: 'followme', type: eventName, value: frequenciesToUpdate[i].entity.name}, window);
 	}
 
-	user.subscription.update(updates);
+	user.subscription.updateBulk(updates);
 	saveBtn.disabled = true;
 
 }

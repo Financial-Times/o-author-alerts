@@ -50,6 +50,8 @@ Subscription.prototype = {
 	/* Handle response from the personalisation server, for updates and fetches*/
 	set: function(data, entities) {
 		var eventToTrigger = '';
+		var item;
+		var i;
 
 		if (data && data.status === 'success' && data.taxonomies) {
 			eventToTrigger = 'updateSave';
@@ -57,14 +59,18 @@ Subscription.prototype = {
 			this.entities = data.taxonomies;
 
 			var sync = false;
-			for (item in entities) {
-				if (entities.hasOwnProperty(item)) {
+			if (entities) {
+				for (i = 0; i < entities.length; i++) {
+					item = entities[i];
+
 					if (item.entity) { // Update call
 						this.removeFromPending(item.entity);
 					} else { // Initial call to get user preferences
 						sync = true;
 					}
 				}
+			} else {
+				sync = true;
 			}
 
 			if (sync) {
@@ -73,13 +79,13 @@ Subscription.prototype = {
 			}
 		} else {
 			eventToTrigger = 'serverError';
-			for (item in entities) {
-				if (entities.hasOwnProperty(item)) {
-					if (item.entity && isRetryable(data)) {
-						//Likely to be an invalid session, so save off further requests to try later
-						this.online = false;
-						this.addToPending(entity, frequency);
-					}
+			for (i = 0; i < entities.length; i++) {
+				item = entities[i];
+
+				if (item.entity && isRetryable(data)) {
+					//Likely to be an invalid session, so save off further requests to try later
+					this.online = false;
+					this.addToPending(entity, frequency);
 				}
 			}
 		}
@@ -139,20 +145,22 @@ Subscription.prototype = {
 			return;
 		}
 
+		var item;
+		var i;
 		var url = config.get().updateBulk + '?userId=' + this.userId + '&type=authors';
 
 		if (entities && entities instanceof Array) {
-			for (item in entities) {
-				if (entities.hasOwnProperty(item)) {
-					if (item.entity.id && item.entity.name) {
-						if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
-							item.frequency = 'daily';
-						}
+			for (i = 0; i < entities.length; i++) {
+				item = entities[i];
 
-						url += '&' +
-								(item.frequency === 'off' ? 'unfollow' : 'follow') +
-								'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
+				if (item.entity.id && item.entity.name) {
+					if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
+						item.frequency = 'daily';
 					}
+
+					url += '&' +
+							(item.frequency === 'off' ? 'unfollow' : 'follow') +
+							'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
 				}
 			}
 		}
@@ -171,10 +179,10 @@ Subscription.prototype = {
 		} else {
 			//don't execute jsonp call, but save it to do on another page visit
 
-			for (item in entities) {
-				if (entities.hasOwnProperty(item)) {
-					this.addToPending(item.entity, item.frequency);
-				}
+			for (i = 0; i < entities.length; i++) {
+				item = entities[i];
+
+				this.addToPending(item.entity, item.frequency);
 			}
 		}
 	},
