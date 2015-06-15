@@ -186,7 +186,7 @@ Subscription.prototype = {
 				var arr = chunkArrays[index];
 				var item;
 
-				if (this.online) {
+				if (self.online) {
 					jsonp({
 						url: url
 					}, function (err, data) {
@@ -205,7 +205,7 @@ Subscription.prototype = {
 					for (i = 0; i < arr.length; i++) {
 						item = arr[i];
 
-						this.addToPending(item.entity, item.frequency);
+						self.addToPending(item.entity, item.frequency);
 					}
 				}
 			}
