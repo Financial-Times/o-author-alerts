@@ -172,26 +172,45 @@ Subscription.prototype = {
 			}
 		}
 
-		if (this.online) {
-			jsonp({
-				url: url
-			}, function (err, data) {
-				if (err) {
-					self.set(null, entities);
-					return;
-				}
 
-				self.set(data, entities);
-			});
-		} else {
-			//don't execute jsonp call, but save it to do on another page visit
+		var chunk = 10;
+		var chunkArrays = [];
 
-			for (i = 0; i < entities.length; i++) {
-				item = entities[i];
-
-				this.addToPending(item.entity, item.frequency);
-			}
+		for (i = 0; i < entities.length; i += chunk) {
+			chunkArrays.push(entities.slice(i, i + chunk));
 		}
+
+
+		var execute = function (index) {
+			if (index < chunkArrays.length) {
+				var arr = chunkArrays[index];
+				var item;
+
+				if (this.online) {
+					jsonp({
+						url: url
+					}, function (err, data) {
+						if (err) {
+							self.set(null, arr);
+							execute(index + 1);
+							return;
+						}
+
+						self.set(data, arr);
+						execute(index + 1);
+					});
+				} else {
+					//don't execute jsonp call, but save it to do on another page visit
+
+					for (i = 0; i < arr.length; i++) {
+						item = arr[i];
+
+						this.addToPending(item.entity, item.frequency);
+					}
+				}
+			}
+		};
+		execute(0);
 	},
 
 	/*
