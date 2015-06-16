@@ -178,7 +178,7 @@ Subscription.prototype = {
 				var item;
 				var url = baseUrl;
 
-				for (j = 0; j < arr.length; i++) {
+				for (j = 0; j < arr.length; j++) {
 					item = arr[j];
 
 					if (item.entity.id && item.entity.name) {
