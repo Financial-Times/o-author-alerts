@@ -152,67 +152,67 @@ Subscription.prototype = {
 			return;
 		}
 
-		var item;
 		var i;
-		var url = config.get().updateBulk + '?userId=' + this.userId + '&type=authors';
+		var baseUrl = config.get().updateBulk + '?userId=' + this.userId + '&type=authors';
+		var chunk = 10;
 
 		if (entities && entities instanceof Array) {
-			for (i = 0; i < entities.length; i++) {
-				item = entities[i];
+			var chunkArrays = [];
 
-				if (item.entity.id && item.entity.name) {
-					if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
-						item.frequency = 'daily';
-					}
-
-					url += '&' +
-							(item.frequency === 'off' ? 'unfollow' : 'follow') +
-							'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
-				}
+			for (i = 0; i < entities.length; i += chunk) {
+				chunkArrays.push(entities.slice(i, i + chunk));
 			}
-		}
 
 
-		var chunk = 10;
-		var chunkArrays = [];
+			var send = function (index) {
+				if (index < chunkArrays.length) {
+					var arr = chunkArrays[index];
+					var item;
 
-		for (i = 0; i < entities.length; i += chunk) {
-			chunkArrays.push(entities.slice(i, i + chunk));
-		}
-
-
-		var send = function (index) {
-			if (index < chunkArrays.length) {
-				var arr = chunkArrays[index];
-				var item;
-
-				if (self.online) {
-					jsonp({
-						url: url
-					}, function (err, data) {
-						if (err) {
-							self.set(null, arr);
-							send(index + 1);
-							return;
-						}
-
-						self.set(data, arr);
-						send(index + 1);
-					});
-				} else {
-					//don't execute jsonp call, but save it to do on another page visit
+					var url = baseUrl;
 
 					for (i = 0; i < arr.length; i++) {
 						item = arr[i];
 
-						self.addToPending(item.entity, item.frequency);
+						if (item.entity.id && item.entity.name) {
+							if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
+								item.frequency = 'daily';
+							}
+
+							url += '&' +
+									(item.frequency === 'off' ? 'unfollow' : 'follow') +
+									'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
+						}
 					}
 
-					send(index + 1);
+					if (self.online) {
+						jsonp({
+							url: url
+						}, function (err, data) {
+							if (err) {
+								self.set(null, arr);
+								send(index + 1);
+								return;
+							}
+
+							self.set(data, arr);
+							send(index + 1);
+						});
+					} else {
+						//don't execute jsonp call, but save it to do on another page visit
+
+						for (i = 0; i < arr.length; i++) {
+							item = arr[i];
+
+							self.addToPending(item.entity, item.frequency);
+						}
+
+						send(index + 1);
+					}
 				}
-			}
-		};
-		send(0);
+			};
+			send(0);
+		}
 	},
 
 	/*
