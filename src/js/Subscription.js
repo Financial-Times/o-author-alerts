@@ -181,7 +181,7 @@ Subscription.prototype = {
 		}
 
 
-		var execute = function (index) {
+		var send = function (index) {
 			if (index < chunkArrays.length) {
 				var arr = chunkArrays[index];
 				var item;
@@ -192,12 +192,12 @@ Subscription.prototype = {
 					}, function (err, data) {
 						if (err) {
 							self.set(null, arr);
-							execute(index + 1);
+							send(index + 1);
 							return;
 						}
 
 						self.set(data, arr);
-						execute(index + 1);
+						send(index + 1);
 					});
 				} else {
 					//don't execute jsonp call, but save it to do on another page visit
@@ -207,10 +207,12 @@ Subscription.prototype = {
 
 						self.addToPending(item.entity, item.frequency);
 					}
+
+					send(index + 1);
 				}
 			}
 		};
-		execute(0);
+		send(0);
 	},
 
 	/*
