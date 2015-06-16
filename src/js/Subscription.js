@@ -1,6 +1,7 @@
 'use strict';
 
 var jsonp = require('./lib/jsonp/jsonp');
+var requestQueue = require('./lib/requestQueue');
 var eventHelper = require('./lib/eventHelper');
 var BrowserStore = require('./lib/BrowserStore');
 var storage = new BrowserStore(localStorage);
@@ -123,7 +124,7 @@ Subscription.prototype = {
 		}
 
 		if (this.online) {
-			jsonp({
+			requestQueue.add({
 				url: url
 			}, function (err, data) {
 				if (err) {
@@ -186,7 +187,7 @@ Subscription.prototype = {
 					}
 
 					if (self.online) {
-						jsonp({
+						requestQueue.add({
 							url: url
 						}, function (err, data) {
 							if (err) {
