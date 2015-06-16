@@ -153,66 +153,56 @@ Subscription.prototype = {
 			return;
 		}
 
-		var i;
+
+		var addRequestToQueue = function (url, arr) {
+			requestQueue.add({
+				url: url
+			}, function (err, data) {
+				if (err) {
+					self.set(null, arr);
+					return;
+				}
+
+				self.set(data, arr);
+			});
+		};
+
+		var i, j;
 		var baseUrl = config.get().updateBulk + '?userId=' + this.userId + '&type=authors';
 		var chunk = 10;
 
 		if (entities && entities instanceof Array) {
-			var chunkArrays = [];
-
 			for (i = 0; i < entities.length; i += chunk) {
-				chunkArrays.push(entities.slice(i, i + chunk));
-			}
+				var arr = entities.slice(i, i + chunk);
 
+				var item;
+				var url = baseUrl;
 
-			var send = function (index) {
-				if (index < chunkArrays.length) {
-					var arr = chunkArrays[index];
-					var item;
+				for (j = 0; j < arr.length; i++) {
+					item = arr[j];
 
-					var url = baseUrl;
-
-					for (i = 0; i < arr.length; i++) {
-						item = arr[i];
-
-						if (item.entity.id && item.entity.name) {
-							if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
-								item.frequency = 'daily';
-							}
-
-							url += '&' +
-									(item.frequency === 'off' ? 'unfollow' : 'follow') +
-									'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
-						}
-					}
-
-					if (self.online) {
-						requestQueue.add({
-							url: url
-						}, function (err, data) {
-							if (err) {
-								self.set(null, arr);
-								send(index + 1);
-								return;
-							}
-
-							self.set(data, arr);
-							send(index + 1);
-						});
-					} else {
-						//don't execute jsonp call, but save it to do on another page visit
-
-						for (i = 0; i < arr.length; i++) {
-							item = arr[i];
-
-							self.addToPending(item.entity, item.frequency);
+					if (item.entity.id && item.entity.name) {
+						if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
+							item.frequency = 'daily';
 						}
 
-						send(index + 1);
+						url += '&' +
+								(item.frequency === 'off' ? 'unfollow' : 'follow') +
+								'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
 					}
 				}
-			};
-			send(0);
+
+				if (self.online) {
+					addRequestToQueue(url, arr);
+				} else {
+					//don't execute jsonp call, but save it to do on another page visit
+					for (j = 0; j < arr.length; i++) {
+						item = arr[j];
+
+						self.addToPending(item.entity, item.frequency);
+					}
+				}
+			}
 		}
 	},
 
