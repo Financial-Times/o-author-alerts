@@ -148,6 +148,9 @@ Subscription.prototype = {
 
 	updateBulk: function (entities) {
 		var self = this;
+		var i, j;
+		var baseUrl = config.get().updateBulk + '?userId=' + this.userId + '&type=authors';
+		var chunk = 10;
 
 		if (!this.userId) {
 			return;
@@ -155,9 +158,18 @@ Subscription.prototype = {
 
 
 		var addRequestToQueue = function (url, arr) {
+			var item;
+
 			requestQueue.add({
 				url: url
 			}, function (err, data) {
+				for (j = 0; j < arr.length; j++) {
+					item = arr[j];
+
+					self.removeFromPending(item.entity);
+				}
+
+
 				if (err) {
 					self.set(null, arr);
 					return;
@@ -166,10 +178,6 @@ Subscription.prototype = {
 				self.set(data, arr);
 			});
 		};
-
-		var i, j;
-		var baseUrl = config.get().updateBulk + '?userId=' + this.userId + '&type=authors';
-		var chunk = 10;
 
 		if (entities && entities instanceof Array) {
 			for (i = 0; i < entities.length; i += chunk) {
@@ -221,6 +229,15 @@ Subscription.prototype = {
 		//Go through pending requests from previous page visits
 		for (id in this.pending) {
 			if (this.pending.hasOwnProperty(id)) {
+				if (id === 'ALL') {
+					this.clearPending();
+					this.pending = [];
+
+					this.update({id: 'ALL', name: 'ALL'}, 'off');
+
+					return;
+				}
+
 				pending = this.pending[id];
 				pending.tried += 1;
 				//Give up on any that have maxed out attempts
@@ -228,11 +245,13 @@ Subscription.prototype = {
 					this.removeFromPending(pending.entity);
 					continue;
 				}
+
 				//send update request
 				updates.push({
 					entity: pending.entity,
 					frequency: pending.update
 				});
+
 				// pending.entity.frequency = pending.update;
 				if (pending.update !== 'off') {
 					newEntities.push(pending.entity);
