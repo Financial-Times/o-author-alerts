@@ -121,13 +121,12 @@ Subscription.prototype = {
 		if (this.online) {
 			requestQueue.add({
 				url: url
-			}, function (err, data, next) {
+			}, function (err, data) {
 				if (err) {
 					self.set(null, [{
 						entity: entity,
 						frequency: frequency
 					}]);
-					next();
 
 					return;
 				}
@@ -136,8 +135,6 @@ Subscription.prototype = {
 					entity: entity,
 					frequency: frequency
 				}]);
-
-				next();
 			});
 		} else {
 			//don't execute jsonp call, but save it to do on another page visit
@@ -160,17 +157,14 @@ Subscription.prototype = {
 		var addRequestToQueue = function (url, arr) {
 			requestQueue.add({
 				url: url
-			}, function (err, data, next) {
+			}, function (err, data) {
 				if (err) {
 					self.set(null, arr);
 
-					next();
 					return;
 				}
 
 				self.set(data, arr);
-
-				next();
 			});
 		};
 
