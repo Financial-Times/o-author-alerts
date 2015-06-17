@@ -151,6 +151,7 @@ Subscription.prototype = {
 		var i, j;
 		var baseUrl = config.get().updateBulk + '?userId=' + this.userId + '&type=authors';
 		var chunk = 10;
+		var item;
 
 		if (!this.userId) {
 			return;
@@ -158,15 +159,13 @@ Subscription.prototype = {
 
 
 		var addRequestToQueue = function (url, arr) {
-			var item;
-
 			requestQueue.add({
 				url: url
 			}, function (err, data) {
-				for (j = 0; j < arr.length; j++) {
-					item = arr[j];
+				var k;
 
-					self.removeFromPending(item.entity);
+				for (k = 0; k < arr.length; k++) {
+					self.removeFromPending(arr[k].entity);
 				}
 
 
@@ -183,24 +182,23 @@ Subscription.prototype = {
 			for (i = 0; i < entities.length; i += chunk) {
 				var arr = entities.slice(i, i + chunk);
 
-				var item;
-				var url = baseUrl;
-
-				for (j = 0; j < arr.length; j++) {
-					item = arr[j];
-
-					if (item.entity.id && item.entity.name) {
-						if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
-							item.frequency = 'daily';
-						}
-
-						url += '&' +
-								(item.frequency === 'off' ? 'unfollow' : 'follow') +
-								'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
-					}
-				}
-
 				if (self.online) {
+					var url = baseUrl;
+
+					for (j = 0; j < arr.length; j++) {
+						item = arr[j];
+
+						if (item.entity.id && item.entity.name) {
+							if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
+								item.frequency = 'daily';
+							}
+
+							url += '&' +
+									(item.frequency === 'off' ? 'unfollow' : 'follow') +
+									'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
+						}
+					}
+
 					addRequestToQueue(url, arr);
 				} else {
 					//don't execute jsonp call, but save it to do on another page visit
