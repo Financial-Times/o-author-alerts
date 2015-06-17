@@ -19,11 +19,11 @@ exports.reset = function() {
 function call (options, callback) {
 	jsonp(options, function (err, data) {
 		setTimeout(function () {
-			callback(err, data);
+			callback(err, data, function () {
+				queue.shift();
+				nextInQueue();
+			});
 		}, 0);
-
-		queue.shift();
-		nextInQueue();
 	});
 }
 
