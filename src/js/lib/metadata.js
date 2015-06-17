@@ -1,12 +1,12 @@
 'use strict';
 
-var jsonp = require('./jsonp/jsonp'),
-		config = require('../config.js');
+var config = require('../config.js');
+var requestQueue = require('./lib/requestQueue');
 
 
 exports.get = function(articleId, callback) {
 	var url = config.get().metadataUrl + articleId;
-	jsonp({
+	requestQueue.add({
 		url: url
 	}, callback);
 };

@@ -1,6 +1,5 @@
 'use strict';
 
-var jsonp = require('./lib/jsonp/jsonp');
 var requestQueue = require('./lib/requestQueue');
 var eventHelper = require('./lib/eventHelper');
 var BrowserStore = require('./lib/BrowserStore');
@@ -31,7 +30,7 @@ Subscription.prototype = {
 	get: function() {
 		var self = this;
 
-		jsonp({
+		requestQueue.add({
 				url: config.get().getFollowingUrl,
 				data: {
 					userId: self.userId
