@@ -157,13 +157,6 @@ Subscription.prototype = {
 			requestQueue.add({
 				url: url
 			}, function (err, data) {
-				var k;
-
-				for (k = 0; k < arr.length; k++) {
-					self.removeFromPending(arr[k].entity);
-				}
-
-
 				if (err) {
 					self.set(null, arr);
 					return;
@@ -176,6 +169,7 @@ Subscription.prototype = {
 		if (entities && entities instanceof Array) {
 			for (i = 0; i < entities.length; i += chunk) {
 				var arr = entities.slice(i, i + chunk);
+				var hasItems = false;
 
 				if (self.online) {
 					var url = baseUrl;
@@ -191,6 +185,7 @@ Subscription.prototype = {
 								// drop updates before
 								continue;
 							} else {
+								hasItems = true;
 								if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
 									item.frequency = 'daily';
 								}
@@ -202,7 +197,9 @@ Subscription.prototype = {
 						}
 					}
 
-					addRequestToQueue(url, arr);
+					if (hasItems) {
+						addRequestToQueue(url, arr);
+					}
 				} else {
 					//don't execute jsonp call, but save it to do on another page visit
 					for (j = 0; j < arr.length; j++) {
@@ -230,23 +227,22 @@ Subscription.prototype = {
 		//Go through pending requests from previous page visits
 		for (id in this.pending) {
 			if (this.pending.hasOwnProperty(id)) {
+				pending = this.pending[id];
+				pending.tried += 1;
+				//Give up on any that have maxed out attempts
+				if (pending.tried > MAX_ATTEMPTS) {
+					this.removeFromPending(pending.entity);
+					continue;
+				}
+
 				if (id === 'ALL') {
 					updates = [];
-					newEntities = [];
 
 					updates.push({
 						entity: {id: 'ALL', name: 'ALL'},
 						frequency: 'off'
 					});
 
-					continue;
-				}
-
-				pending = this.pending[id];
-				pending.tried += 1;
-				//Give up on any that have maxed out attempts
-				if (pending.tried > MAX_ATTEMPTS) {
-					this.removeFromPending(pending.entity);
 					continue;
 				}
 
