@@ -1,7 +1,7 @@
 'use strict';
 
 var config = require('../config.js');
-var requestQueue = require('./lib/requestQueue');
+var requestQueue = require('./requestQueue');
 
 
 exports.get = function(articleId, callback) {
