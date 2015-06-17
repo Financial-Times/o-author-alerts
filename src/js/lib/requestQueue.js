@@ -17,7 +17,11 @@ exports.reset = function() {
 };
 
 function call (options, callback) {
-	jsonp(options, function () {
+	jsonp(options, function (err, data) {
+		setTimeout(function () {
+			callback(err, data);
+		}, 0);
+
 		queue.shift();
 		nextInQueue();
 	});
