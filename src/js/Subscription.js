@@ -118,11 +118,6 @@ Subscription.prototype = {
 
 		url = resolveUrl(entity, frequency, this.userId);
 
-		//If user is unsubscribing all, then all pending requests become irrelevant
-		if (entity.id === 'ALL') {
-			this.clearPending();
-		}
-
 		if (this.online) {
 			requestQueue.add({
 				url: url
@@ -189,13 +184,21 @@ Subscription.prototype = {
 						item = arr[j];
 
 						if (item.entity.id && item.entity.name) {
-							if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
-								item.frequency = 'daily';
-							}
+							if (item.entity.id === 'ALL') {
+								// stop following all
+								self.update({id: 'ALL', name: 'ALL'}, 'off');
 
-							url += '&' +
-									(item.frequency === 'off' ? 'unfollow' : 'follow') +
-									'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
+								// drop updates before
+								continue;
+							} else {
+								if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
+									item.frequency = 'daily';
+								}
+
+								url += '&' +
+										(item.frequency === 'off' ? 'unfollow' : 'follow') +
+										'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
+							}
 						}
 					}
 
@@ -228,12 +231,15 @@ Subscription.prototype = {
 		for (id in this.pending) {
 			if (this.pending.hasOwnProperty(id)) {
 				if (id === 'ALL') {
-					this.clearPending();
-					this.pending = [];
+					updates = [];
+					newEntities = [];
 
-					this.update({id: 'ALL', name: 'ALL'}, 'off');
+					updates.push({
+						entity: {id: 'ALL', name: 'ALL'},
+						frequency: 'off'
+					});
 
-					return;
+					continue;
 				}
 
 				pending = this.pending[id];
