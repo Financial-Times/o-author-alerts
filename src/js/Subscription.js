@@ -202,7 +202,7 @@ Subscription.prototype = {
 					addRequestToQueue(url, arr);
 				} else {
 					//don't execute jsonp call, but save it to do on another page visit
-					for (j = 0; j < arr.length; i++) {
+					for (j = 0; j < arr.length; j++) {
 						item = arr[j];
 
 						self.addToPending(item.entity, item.frequency);
