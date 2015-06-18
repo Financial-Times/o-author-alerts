@@ -65,7 +65,7 @@ Subscription.prototype = {
 
 					if (item.entity) { // Update call
 						this.removeFromPending(item.entity);
-					} else { // Initial call to get user preferences
+					} else if (!item.pending) { // Initial call to get user preferences
 						sync = true;
 					}
 				}
@@ -238,7 +238,8 @@ Subscription.prototype = {
 
 				updates.push({
 					entity: pending.entity,
-					update: pending.update
+					update: pending.update,
+					pending: true
 				});
 
 				// pending.entity.frequency = pending.update;
