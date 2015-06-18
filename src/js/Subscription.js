@@ -223,6 +223,7 @@ Subscription.prototype = {
 		var newEntities = [];
 		var id;
 		var pending;
+		var updates = [];
 
 		//Go through pending requests from previous page visits
 		for (id in this.pending) {
@@ -234,14 +235,23 @@ Subscription.prototype = {
 					this.removeFromPending(pending.entity);
 					continue;
 				}
-				//send update request
-				this.update(pending.entity, pending.update);
+
+				updates.push({
+					entity: pending.entity,
+					update: pending.update
+				});
+
 				// pending.entity.frequency = pending.update;
 				if (pending.update !== 'off') {
 					newEntities.push(pending.entity);
 				}
 			}
 		}
+
+		if (updates.length) {
+			this.updateBulk(updates);
+		}
+
 		//ensure that the list we work with (of entities taht are being followed)
 		// a) Includes he properly synced entities from the server
 		// b) Includes the entities they want to follow, but havent been synced yet
