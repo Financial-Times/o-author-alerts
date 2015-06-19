@@ -280,12 +280,12 @@ Subscription.prototype = {
 
 				updates.push({
 					entity: pending.entity,
-					update: pending.update,
+					frequency: pending.frequency,
 					pending: true
 				});
 
 				// pending.entity.frequency = pending.update;
-				if (pending.update !== 'off') {
+				if (pending.frequency !== 'off') {
 					newEntities.push(pending.entity);
 				}
 			}
@@ -305,13 +305,13 @@ Subscription.prototype = {
 	// If we think we are cannot connect to server, add update calls to localStorage
 	addToPending: function(entity, updateFrequency) {
 		if (this.pending[entity.id] ) {
-			if (this.pending[entity.id].update !== updateFrequency) {
+			if (this.pending[entity.id].frequency !== updateFrequency) {
 				this.removeFromPending(entity);
 			}
 		} else {
 			this.pending[entity.id] = {
 				tried: 1,
-				update: updateFrequency,
+				frequency: updateFrequency,
 				entity: entity
 			};
 		}
@@ -362,7 +362,7 @@ function anythingThatIsntDueToStop(entities, pending) {
 	for (i=0,l=entities.length; i < l; i++) {
 		subscribedEntity = entities[i];
 		if (pending[subscribedEntity.id]) {
-			if (pending[subscribedEntity.id].update !== 'off') {
+			if (pending[subscribedEntity.id].frequency !== 'off') {
 				newEntities.push(subscribedEntity);
 			}
 		} else {
