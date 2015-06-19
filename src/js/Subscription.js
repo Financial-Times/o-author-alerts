@@ -1,6 +1,7 @@
 'use strict';
 
-var requestQueue = require('./lib/requestQueue');
+var executionQueue = require('./lib/executionQueue');
+var jsonp = require('./lib/jsonp/jsonp');
 var eventHelper = require('./lib/eventHelper');
 var BrowserStore = require('./lib/BrowserStore');
 var storage = new BrowserStore(localStorage);
@@ -30,21 +31,24 @@ Subscription.prototype = {
 	get: function() {
 		var self = this;
 
-		requestQueue.add({
+		executionQueue.add(function (done, userId) {
+			jsonp({
 				url: config.get().getFollowingUrl,
 				data: {
-					userId: self.userId
+					userId: userId
 				}
 			},
 			function (err, data) {
 				if (err) {
 					self.set();
+					done();
 					return;
 				}
 
 				self.set(data);
-			}
-		);
+				done();
+			});
+		}, self.userId);
 	},
 
 	/* Handle response from the personalisation server, for updates and fetches*/
@@ -118,23 +122,27 @@ Subscription.prototype = {
 		url = resolveUrl(entity, frequency, this.userId);
 
 		if (this.online) {
-			requestQueue.add({
-				url: url
-			}, function (err, data) {
-				if (err) {
-					self.set(null, [{
+			executionQueue.add(function (done, url, entity, frequency) {
+				jsonp({
+					url: url
+				}, function (err, data) {
+					if (err) {
+						self.set(null, [{
+							entity: entity,
+							frequency: frequency
+						}]);
+						done();
+
+						return;
+					}
+
+					self.set(data, [{
 						entity: entity,
 						frequency: frequency
 					}]);
-
-					return;
-				}
-
-				self.set(data, [{
-					entity: entity,
-					frequency: frequency
-				}]);
-			});
+					done();
+				});
+			}, entity, frequency);
 		} else {
 			//don't execute jsonp call, but save it to do on another page visit
 			this.addToPending(entity, frequency);
@@ -154,17 +162,21 @@ Subscription.prototype = {
 
 
 		var addRequestToQueue = function (url, arr) {
-			requestQueue.add({
-				url: url
-			}, function (err, data) {
-				if (err) {
-					self.set(null, arr);
+			executionQueue.add(function (done, url, arr) {
+				jsonp({
+					url: url
+				}, function (err, data) {
+					if (err) {
+						self.set(null, arr);
+						done();
 
-					return;
-				}
+						return;
+					}
 
-				self.set(data, arr);
-			});
+					self.set(data, arr);
+					done();
+				});
+			}, url, arr);
 		};
 
 
