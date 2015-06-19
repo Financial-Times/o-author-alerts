@@ -1,11 +1,13 @@
 'use strict';
 
-var jsonp = require('./jsonp/jsonp.js');
-
 var queue = [];
 
-exports.add = function(options, callback) {
-	queue.push(arguments);
+exports.add = function(func, args) {
+	queue.push({
+		func: func,
+		args: args,
+		_this: this
+	});
 	if (queue.length === 1) {
 		nextInQueue();
 	}
@@ -16,17 +18,17 @@ exports.reset = function() {
 	queue = [];
 };
 
-function call (options, callback) {
-	jsonp(options, function (err, data) {
-		callback(err, data);
-
+function execute (options) {
+	options.args.unshift(function () {
 		queue.shift();
 		nextInQueue();
 	});
+
+	options.func.call(options._this, options.args);
 }
 
 function nextInQueue() {
 	if (queue.length >= 1) {
-		call.apply(null, queue[0]);
+		execute.apply(null, queue[0]);
 	}
 }
