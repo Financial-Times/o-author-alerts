@@ -5,7 +5,7 @@ var queue = [];
 exports.add = function(func, args) {
 	queue.push({
 		func: func,
-		args: args,
+		args: args || [],
 		_this: this
 	});
 	if (queue.length === 1) {
@@ -24,7 +24,7 @@ function execute (options) {
 		nextInQueue();
 	});
 
-	options.func.call(options._this, options.args);
+	options.func.apply(options._this, options.args);
 }
 
 function nextInQueue() {
