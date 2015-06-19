@@ -121,28 +121,38 @@ Subscription.prototype = {
 
 		url = resolveUrl(entity, frequency, this.userId);
 
-		if (this.online) {
+		var addRequestToQueue = function (url, entity, frequency) {
 			executionQueue.add(function (done, url, entity, frequency) {
-				jsonp({
-					url: url
-				}, function (err, data) {
-					if (err) {
-						self.set(null, [{
+				if (self.online) {
+					jsonp({
+						url: url
+					}, function (err, data) {
+						if (err) {
+							self.set(null, [{
+								entity: entity,
+								frequency: frequency
+							}]);
+							done();
+
+							return;
+						}
+
+						self.set(data, [{
 							entity: entity,
 							frequency: frequency
 						}]);
 						done();
+					});
+				} else {
+					self.addToPending(entity, frequency);
 
-						return;
-					}
-
-					self.set(data, [{
-						entity: entity,
-						frequency: frequency
-					}]);
 					done();
-				});
-			}, entity, frequency);
+				}
+			}, [url, entity, frequency]);
+		};
+
+		if (this.online) {
+			addRequestToQueue(url, entity, frequency);
 		} else {
 			//don't execute jsonp call, but save it to do on another page visit
 			this.addToPending(entity, frequency);
@@ -163,53 +173,60 @@ Subscription.prototype = {
 
 		var addRequestToQueue = function (url, arr) {
 			executionQueue.add(function (done, url, arr) {
-				jsonp({
-					url: url
-				}, function (err, data) {
-					if (err) {
-						self.set(null, arr);
-						done();
+				if (self.online) {
+					jsonp({
+						url: url
+					}, function (err, data) {
+						if (err) {
+							self.set(null, arr);
+							done();
 
-						return;
+							return;
+						}
+
+						self.set(data, arr);
+						done();
+					});
+				} else {
+					for (j = 0; j < arr.length; j++) {
+						item = arr[j];
+
+						self.addToPending(item.entity, item.frequency);
 					}
 
-					self.set(data, arr);
 					done();
-				});
-			}, url, arr);
+				}
+			}, [url, arr]);
 		};
 
 
 		if (entities && entities instanceof Array) {
 			var arr = [];
 			var hasItems = false;
+			var url = baseUrl;
 
-			for (i = 0; i < entities.length; i++) {
-				if (self.online) {
-					var url = baseUrl;
+			if (self.online) {
+				for (i = 0; i < entities.length; i++) {
+					item = entities[i];
 
-					for (j = 0; j < arr.length; j++) {
-						item = arr[j];
+					if (item.entity.id && item.entity.name) {
+						if (item.entity.id === 'ALL') {
+							// stop following all
+							self.update({id: 'ALL', name: 'ALL'}, 'off');
 
-						if (item.entity.id && item.entity.name) {
-							if (item.entity.id === 'ALL') {
-								// stop following all
-								self.update({id: 'ALL', name: 'ALL'}, 'off');
+							// drop updates before
+							continue;
+						} else {
+							hasItems = true;
+							arr.push(item);
 
-								// drop updates before
-								continue;
-							} else {
-								hasItems = true;
-								arr.push(item);
-
-								if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
-									item.frequency = 'daily';
-								}
-
-								url += '&' +
-										(item.frequency === 'off' ? 'unfollow' : 'follow') +
-										'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
+							if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
+								item.frequency = 'daily';
 							}
+
+							url += '&' +
+									(item.frequency === 'off' ? 'unfollow' : 'follow') +
+									'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
 						}
 					}
 
@@ -220,14 +237,19 @@ Subscription.prototype = {
 
 						arr = [];
 						hasItems = false;
+						url = baseUrl;
 					}
-				} else {
-					//don't execute jsonp call, but save it to do on another page visit
-					for (j = 0; j < arr.length; j++) {
-						item = arr[j];
+				}
 
-						self.addToPending(item.entity, item.frequency);
-					}
+				if (arr.length) {
+					addRequestToQueue(url, arr);
+				}
+			} else {
+				//don't execute jsonp call, but save it to do on another page visit
+				for (j = 0; j < entities.length; j++) {
+					item = entities[j];
+
+					self.addToPending(item.entity, item.frequency);
 				}
 			}
 		}

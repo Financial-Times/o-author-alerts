@@ -11,8 +11,8 @@ exports.get = function(articleId, callback) {
 		jsonp({
 			url: url
 		}, function () {
-			callback.call(this, arguments);
+			callback.apply(this, arguments);
 			done();
 		});
-	}, url, callback);
+	}, [url, callback]);
 };
