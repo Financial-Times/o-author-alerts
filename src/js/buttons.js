@@ -160,15 +160,23 @@ function saveFrequencyUpdates(rootEl, saveBtn) {
 	var i;
 	var l;
 	var eventName;
+	var updates = [];
 
 	for (i=0, l=frequenciesToUpdate.length; i<l; i++) {
 		controls = rootEl.querySelector('[data-o-author-alerts-id="' + frequenciesToUpdate[i].entity.id + '"]');
-		user.subscription.update(frequenciesToUpdate[i].entity, frequenciesToUpdate[i].newFrequency);
+
+		updates.push({
+			entity: frequenciesToUpdate[i].entity,
+			frequency: frequenciesToUpdate[i].newFrequency
+		});
 		controls.setAttribute('data-o-author-alerts-state', frequenciesToUpdate[i].newFrequency);
+
 		//Send tracking event on Save
 		eventName = (frequenciesToUpdate[i].newFrequency === 'off') ? 'unfollow' : 'follow';
 		eventHelper.dispatch('oTracking.Event', { model: 'followme', type: eventName, value: frequenciesToUpdate[i].entity.name}, window);
 	}
+
+	user.subscription.updateBulk(updates);
 	saveBtn.disabled = true;
 
 }

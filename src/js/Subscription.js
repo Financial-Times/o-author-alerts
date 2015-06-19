@@ -1,5 +1,6 @@
 'use strict';
 
+var executionQueue = require('./lib/executionQueue');
 var jsonp = require('./lib/jsonp/jsonp');
 var eventHelper = require('./lib/eventHelper');
 var BrowserStore = require('./lib/BrowserStore');
@@ -30,52 +31,75 @@ Subscription.prototype = {
 	get: function() {
 		var self = this;
 
-		jsonp({
+		executionQueue.add(function (done, userId) {
+			jsonp({
 				url: config.get().getFollowingUrl,
 				data: {
-					userId: self.userId
+					userId: userId
 				}
 			},
 			function (err, data) {
 				if (err) {
 					self.set();
+					done();
 					return;
 				}
 
 				self.set(data);
-			}
-		);
+				done();
+			});
+		}, self.userId);
 	},
 
 	/* Handle response from the personalisation server, for updates and fetches*/
-	set: function(data, entity, frequency) {
+	set: function(data, entities) {
 		var eventToTrigger = '';
+		var item;
+		var i;
 
 		if (data && data.status === 'success' && data.taxonomies) {
 			eventToTrigger = 'updateSave';
 			this.online = true;
 			this.entities = data.taxonomies;
 
-			if (entity) { // Update call
-				this.removeFromPending(entity);
-			} else { // Initial call to get user preferences
+			var sync = false;
+			if (entities) {
+				for (i = 0; i < entities.length; i++) {
+					item = entities[i];
+
+					if (item.entity) { // Update call
+						this.removeFromPending(item.entity);
+					} else if (!item.pending) { // Initial call to get user preferences
+						sync = true;
+					}
+				}
+			} else {
+				sync = true;
+			}
+
+			if (sync) {
 				this.sync();
 				eventHelper.dispatch('oAuthorAlerts.userPreferencesLoad', this.entities);
 			}
 		} else {
 			eventToTrigger = 'serverError';
-			if (entity && isRetryable(data)) {
-				//Likely to be an invalid session, so save off further requests to try later
-				this.online = false;
-				this.addToPending(entity, frequency);
+			if (entities) {
+				for (i = 0; i < entities.length; i++) {
+					item = entities[i];
+
+					if (item.entity && isRetryable(data)) {
+						//Likely to be an invalid session, so save off further requests to try later
+						this.online = false;
+						this.addToPending(item.entity, item.frequency);
+					}
+				}
 			}
 		}
 
 		//TODO: use this tho display error messages within the module
 		eventHelper.dispatch('oAuthorAlerts.' + eventToTrigger, {
 			data: data,
-			entity: entity,
-			update: frequency,
+			entities: entities,
 			userId: this.userId
 		});
 
@@ -97,25 +121,137 @@ Subscription.prototype = {
 
 		url = resolveUrl(entity, frequency, this.userId);
 
-		//If user is unsubscribing all, then all pending requests become irrelevant
-		if (entity.id === 'ALL') {
-			this.clearPending();
-		}
+		var addRequestToQueue = function (url, entity, frequency) {
+			executionQueue.add(function (done, url, entity, frequency) {
+				if (self.online) {
+					jsonp({
+						url: url
+					}, function (err, data) {
+						if (err) {
+							self.set(null, [{
+								entity: entity,
+								frequency: frequency
+							}]);
+							done();
+
+							return;
+						}
+
+						self.set(data, [{
+							entity: entity,
+							frequency: frequency
+						}]);
+						done();
+					});
+				} else {
+					self.addToPending(entity, frequency);
+
+					done();
+				}
+			}, [url, entity, frequency]);
+		};
 
 		if (this.online) {
-			jsonp({
-				url: url
-			}, function (err, data) {
-				if (err) {
-					self.set();
-					return;
-				}
-
-				self.set( data, entity, frequency);
-			});
+			addRequestToQueue(url, entity, frequency);
 		} else {
 			//don't execute jsonp call, but save it to do on another page visit
 			this.addToPending(entity, frequency);
+		}
+	},
+
+	updateBulk: function (entities) {
+		var self = this;
+		var i, j;
+		var baseUrl = config.get().updateBulk + '?userId=' + this.userId + '&type=authors';
+		var chunk = 10;
+		var item;
+
+		if (!this.userId) {
+			return;
+		}
+
+
+		var addRequestToQueue = function (url, arr) {
+			executionQueue.add(function (done, url, arr) {
+				if (self.online) {
+					jsonp({
+						url: url
+					}, function (err, data) {
+						if (err) {
+							self.set(null, arr);
+							done();
+
+							return;
+						}
+
+						self.set(data, arr);
+						done();
+					});
+				} else {
+					for (j = 0; j < arr.length; j++) {
+						item = arr[j];
+
+						self.addToPending(item.entity, item.frequency);
+					}
+
+					done();
+				}
+			}, [url, arr]);
+		};
+
+
+		if (entities && entities instanceof Array) {
+			var arr = [];
+			var hasItems = false;
+			var url = baseUrl;
+
+			if (self.online) {
+				for (i = 0; i < entities.length; i++) {
+					item = entities[i];
+
+					if (item.entity.id && item.entity.name) {
+						if (item.entity.id === 'ALL') {
+							// stop following all
+							self.update({id: 'ALL', name: 'ALL'}, 'off');
+
+							// drop updates before
+							continue;
+						} else {
+							hasItems = true;
+							arr.push(item);
+
+							if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
+								item.frequency = 'daily';
+							}
+
+							url += '&' +
+									(item.frequency === 'off' ? 'unfollow' : 'follow') +
+									'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
+						}
+					}
+
+					if (i > 0 && i % chunk === 0) {
+						if (hasItems) {
+							addRequestToQueue(url, arr);
+						}
+
+						arr = [];
+						hasItems = false;
+						url = baseUrl;
+					}
+				}
+
+				if (arr.length) {
+					addRequestToQueue(url, arr);
+				}
+			} else {
+				//don't execute jsonp call, but save it to do on another page visit
+				for (j = 0; j < entities.length; j++) {
+					item = entities[j];
+
+					self.addToPending(item.entity, item.frequency);
+				}
+			}
 		}
 	},
 
@@ -129,6 +265,7 @@ Subscription.prototype = {
 		var newEntities = [];
 		var id;
 		var pending;
+		var updates = [];
 
 		//Go through pending requests from previous page visits
 		for (id in this.pending) {
@@ -140,14 +277,24 @@ Subscription.prototype = {
 					this.removeFromPending(pending.entity);
 					continue;
 				}
-				//send update request
-				this.update(pending.entity, pending.update);
+
+				updates.push({
+					entity: pending.entity,
+					frequency: pending.frequency,
+					pending: true
+				});
+
 				// pending.entity.frequency = pending.update;
-				if (pending.update !== 'off') {
+				if (pending.frequency !== 'off') {
 					newEntities.push(pending.entity);
 				}
 			}
 		}
+
+		if (updates.length) {
+			this.updateBulk(updates);
+		}
+
 		//ensure that the list we work with (of entities taht are being followed)
 		// a) Includes he properly synced entities from the server
 		// b) Includes the entities they want to follow, but havent been synced yet
@@ -158,13 +305,13 @@ Subscription.prototype = {
 	// If we think we are cannot connect to server, add update calls to localStorage
 	addToPending: function(entity, updateFrequency) {
 		if (this.pending[entity.id] ) {
-			if (this.pending[entity.id].update !== updateFrequency) {
+			if (this.pending[entity.id].frequency !== updateFrequency) {
 				this.removeFromPending(entity);
 			}
 		} else {
 			this.pending[entity.id] = {
 				tried: 1,
-				update: updateFrequency,
+				frequency: updateFrequency,
 				entity: entity
 			};
 		}
@@ -198,7 +345,7 @@ Subscription.prototype = {
 function isRetryable(data) {
 	//these alerts occur if the user trys to stop alerts for something it has already stopped
 	//i.e. in a different tab. In this case, no need to retry
-	if (data.message && (data.message === 'user is not following this id' ||
+	if (data && data.message && (data.message === 'user is not following this id' ||
 		data.message === 'user has no following list')) {
 		return false;
 	}
@@ -215,7 +362,7 @@ function anythingThatIsntDueToStop(entities, pending) {
 	for (i=0,l=entities.length; i < l; i++) {
 		subscribedEntity = entities[i];
 		if (pending[subscribedEntity.id]) {
-			if (pending[subscribedEntity.id].update !== 'off') {
+			if (pending[subscribedEntity.id].frequency !== 'off') {
 				newEntities.push(subscribedEntity);
 			}
 		} else {

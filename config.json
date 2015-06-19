@@ -3,6 +3,7 @@
 	"startAlertsUrl": "http://personalisation.ft.com/follow/update",
 	"stopAlertsUrl": "http://personalisation.ft.com/follow/stopFollowing",
 	"stopAllUrl": "http://personalisation.ft.com/follow/stopFollowingAll",
+	"updateBulk": "http://personalisation.ft.com/follow/updateBulk",
 	"metadataUrl": "http://metadata-cache.webservices.ft.com/v1/getAuthors/",
 	"lazyLoad": true,
 	"entityType": "Author",
