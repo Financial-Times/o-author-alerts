@@ -167,11 +167,12 @@ Subscription.prototype = {
 			});
 		};
 
-		if (entities && entities instanceof Array) {
-			for (i = 0; i < entities.length; i += chunk) {
-				var arr = entities.slice(i, i + chunk);
-				var hasItems = false;
 
+		if (entities && entities instanceof Array) {
+			var arr = [];
+			var hasItems = false;
+
+			for (i = 0; i < entities.length; i++) {
 				if (self.online) {
 					var url = baseUrl;
 
@@ -187,6 +188,8 @@ Subscription.prototype = {
 								continue;
 							} else {
 								hasItems = true;
+								arr.push(item);
+
 								if (!item.frequency || VALID_FREQUENCIES.indexOf(item.frequency) < 0) {
 									item.frequency = 'daily';
 								}
@@ -198,8 +201,13 @@ Subscription.prototype = {
 						}
 					}
 
-					if (hasItems) {
-						addRequestToQueue(url, arr);
+					if (i > 0 && i % chunk === 0) {
+						if (hasItems) {
+							addRequestToQueue(url, arr);
+						}
+
+						arr = [];
+						hasItems = false;
 					}
 				} else {
 					//don't execute jsonp call, but save it to do on another page visit
