@@ -7,8 +7,11 @@ var eventHelper = require('./lib/eventHelper');
 var config = require('./config.js');
 var message = require('./lib/message');
 var DomDelegate = require('ftdomdelegate');
+var attributeValueSanitizer = require('./lib/attributeValueSanitizer');
+
 var rootDelegate;
 var DEFAULT_FREQUENCY = 'daily';
+
 
 /* Initialise all buttons in the rootEl */
 function init(rootEl) {
@@ -163,7 +166,7 @@ function saveFrequencyUpdates(rootEl, saveBtn) {
 	var updates = [];
 
 	for (i=0, l=frequenciesToUpdate.length; i<l; i++) {
-		controls = rootEl.querySelector('[data-o-author-alerts-id="' + frequenciesToUpdate[i].entity.id + '"]');
+		controls = rootEl.querySelector('[data-o-author-alerts-id="' + attributeValueSanitizer.encode(frequenciesToUpdate[i].entity.id) + '"]');
 
 		updates.push({
 			entity: frequenciesToUpdate[i].entity,
@@ -203,7 +206,7 @@ function getFrequencyUpdates(rootEl) {
 
 		if (newFrequency !== savedFrequency) {
 			entity = {
-				'id': controls.getAttribute('data-o-author-alerts-id'),
+				'id': attributeValueSanitizer.decode(controls.getAttribute('data-o-author-alerts-id')),
 				'name': controls.getAttribute('data-o-author-alerts-name'),
 			};
 			frequenciesToUpdate.push({entity: entity, newFrequency: newFrequency});
@@ -224,7 +227,7 @@ function dismissUnsavedChanges(rootEl) {
 	var savedState;
 
 	for (i=0, l=unsavedFrequencies.length; i<l; i++) {
-		controls = rootEl.querySelector('[data-o-author-alerts-id="' + unsavedFrequencies[i].entity.id + '"]');
+		controls = rootEl.querySelector('[data-o-author-alerts-id="' + attributeValueSanitizer.encode(unsavedFrequencies[i].entity.id) + '"]');
 		savedState = controls.getAttribute('data-o-author-alerts-state');
 		isPressed = (controls.querySelector('.o-author-alerts__button').getAttribute('aria-pressed') === 'true');
 

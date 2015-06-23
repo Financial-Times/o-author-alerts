@@ -42,7 +42,7 @@ AlertsWidget.prototype = {
 
 		// Hide when clicked on the save button
 		this.delegate.on('oAuthorAlerts.saveChanges', '', function(e) {
-				self.hide(null, false); //dont fire close event!
+			self.hide(null, false); //dont fire close event!
 		});
 
 		//Hide the current popover if any other layer is opened

@@ -26,3 +26,4 @@ module.exports = AuthorAlerts;
 module.exports.setConfig = function () {
 	config.set.apply(this, arguments);
 };
+module.exports.attributeValueSanitizer = require('./src/js/lib/attributeValueSanitizer');

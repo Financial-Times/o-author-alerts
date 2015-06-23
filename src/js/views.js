@@ -1,6 +1,7 @@
 'use strict';
 
 var config = require('./config.js');
+var attributeValueSanitizer = require('./lib/attributeValueSanitizer');
 
 function setTextContent(element, text) {
 	if ('textContent' in element) {
@@ -20,7 +21,7 @@ function createControls(entity) {
 	var controls = document.createElement('span');
 	controls.className = 'o-author-alerts__controls';
 	if (entity) {
-		controls.setAttribute('data-o-author-alerts-id', entity.id);
+		controls.setAttribute('data-o-author-alerts-id', attributeValueSanitizer.encode(entity.id));
 		controls.setAttribute('data-o-author-alerts-name', entity.name);
 	}
 	return controls;

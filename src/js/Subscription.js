@@ -226,7 +226,7 @@ Subscription.prototype = {
 
 							url += '&' +
 									(item.frequency === 'off' ? 'unfollow' : 'follow') +
-									'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
+									'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + encodeURIComponent(item.entity.name) + ',' + encodeURIComponent(item.entity.id);
 						}
 					}
 
@@ -382,8 +382,8 @@ function resolveUrl(entity, frequency, userId) {
 	} else {
 		url = (frequency === 'off' ? config.get().stopAlertsUrl : config.get().startAlertsUrl) +
 			'?userId=' + userId +
-			'&type=authors&name=' + entity.name +
-			'&id=' + entity.id;
+			'&type=authors&name=' + encodeURIComponent(entity.name) +
+			'&id=' + encodeURIComponent(entity.id);
 
 		if (frequency !== 'off') {
 			url = url + '&frequency=' + frequency;
