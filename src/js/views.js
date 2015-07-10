@@ -22,6 +22,9 @@ function createControls(entity) {
 	if (entity) {
 		controls.setAttribute('data-o-author-alerts-id', entity.id);
 		controls.setAttribute('data-o-author-alerts-name', entity.name);
+		if (entity.defaultFrequency) {
+			controls.setAttribute('data-o-author-alerts-default-frequency', entity.defaultFrequency);
+		}
 	}
 	return controls;
 }
