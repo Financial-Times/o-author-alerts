@@ -38,7 +38,7 @@ function createSelect(defaultFrequency) {
 		option.value = config.get().frequencies[i].key;
 
 		if (config.get().frequencies[i].key === defaultFrequency) {
-			option.selected = "selected";
+			option.selected = true;
 		}
 
 		setTextContent(option, config.get().frequencies[i].text);
