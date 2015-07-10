@@ -59,17 +59,19 @@ function setInitialStates(rootEl) {
 	var controls;
 	var id;
 	var currentState;
+	var preferredDefaultFrequency;
 
 	for (i=0,l=entityControls.length; i<l;i++) {
 		controls = entityControls[i];
 		id = controls.getAttribute('data-o-author-alerts-id');
+		preferredDefaultFrequency = controls.getAttribute('data-o-author-alerts-default-frequency');
 		currentState = getSubscriptionStatus(id, user.subscription.entities);
 		if (currentState === 'off') {
 			unsubscribe(controls);
 		} else {
 			subscribe(controls);
 		}
-		setFrequency(controls, currentState);
+		setFrequency(controls, currentState, preferredDefaultFrequency);
 		controls.setAttribute('data-o-author-alerts-state', currentState);
 
 	}
@@ -120,36 +122,38 @@ function toggleButtonState(controls) {
 /* Handle UI when subscribed to an author) */
 function subscribe(controls) {
 	var name = controls.getAttribute('data-o-author-alerts-name');
+	var preferredDefaultFrequency = controls.getAttribute('data-o-author-alerts-default-frequency');
 	var btn = controls.querySelector('.o-author-alerts__button');
 
 	//note: using innerHTML in second instance since element is hidden so innerText returns ''
 	btn.innerHTML = config.get().stopAlertsText.replace(/\%entityName\%/g, name);
 	btn.setAttribute('title', config.get().stopAlertsHoverText.replace(/\%entityType\%/g, config.get().entityType));
 	btn.setAttribute('aria-pressed', 'true');
-	setFrequency(controls, DEFAULT_FREQUENCY);
+	setFrequency(controls, preferredDefaultFrequency || DEFAULT_FREQUENCY);
 }
 
 /* Handle UI when not subscribed to an author) */
 function unsubscribe(controls) {
 	var name = controls.getAttribute('data-o-author-alerts-name');
+	var preferredDefaultFrequency = controls.getAttribute('data-o-author-alerts-default-frequency');
 	var btn = controls.querySelector('.o-author-alerts__button');
 
 	btn.innerHTML = config.get().startAlertsText.replace(/\%entityName\%/g, name); //Use innerHTML as config contains icon html
 	btn.setAttribute('title', config.get().startAlertsHoverText.replace(/\%entityType\%/g, config.get().entityType));
 	btn.setAttribute('aria-pressed', 'false');
-	setFrequency(controls, 'off'); // Reset the frequency toggle
+	setFrequency(controls, 'off', preferredDefaultFrequency || DEFAULT_FREQUENCY); // Reset the frequency toggle
 }
 
 
-/* Handle external changes to frequency (i.e. from primary button clicks or dismissing widget) */
-function setFrequency(controls, newFrequency) {
+/* Handle external changes to frequency (i.e. from primary button clicks or dismissing widget) or set default state */
+function setFrequency(controls, newFrequency, preferredDefaultFrequency) {
 	var select = controls.querySelector('.o-author-alerts__frequency');
 	if (newFrequency === 'off') {
 		select.disabled = true;
-		select.value = DEFAULT_FREQUENCY;
+		select.value = preferredDefaultFrequency || DEFAULT_FREQUENCY;
 	} else {
 		select.disabled = false;
-		select.value = newFrequency;
+		select.value = newFrequency || preferredDefaultFrequency || DEFAULT_FREQUENCY;
 	}
 }
 
@@ -222,10 +226,12 @@ function dismissUnsavedChanges(rootEl) {
 	var l;
 	var isPressed;
 	var savedState;
+	var preferredDefaultFrequency;
 
 	for (i=0, l=unsavedFrequencies.length; i<l; i++) {
 		controls = rootEl.querySelector('[data-o-author-alerts-id="' + unsavedFrequencies[i].entity.id + '"]');
 		savedState = controls.getAttribute('data-o-author-alerts-state');
+		preferredDefaultFrequency = controls.getAttribute('data-o-author-alerts-default-frequency');
 		isPressed = (controls.querySelector('.o-author-alerts__button').getAttribute('aria-pressed') === 'true');
 
 		if(isPressed && savedState === 'off') {
@@ -233,7 +239,7 @@ function dismissUnsavedChanges(rootEl) {
 		} else if (!isPressed && savedState !== 'off') {
 			subscribe(controls);
 		}
-		setFrequency(controls, savedState);
+		setFrequency(controls, savedState, preferredDefaultFrequency);
 	}
 
 	if (rootEl.querySelector('[data-o-author-alerts-action="save"]')) {

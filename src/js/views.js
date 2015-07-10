@@ -26,7 +26,7 @@ function createControls(entity) {
 	return controls;
 }
 
-function createSelect(defaultFrequency) {
+function createSelect() {
 	var select = document.createElement('select');
 	var i;
 	var l;
@@ -36,11 +36,6 @@ function createSelect(defaultFrequency) {
 	for (i=0,l=config.get().frequencies.length;i<l;i++) {
 		option = document.createElement('option');
 		option.value = config.get().frequencies[i].key;
-
-		if (config.get().frequencies[i].key === defaultFrequency) {
-			option.setAttribute('selected', 'selected');
-		}
-
 		setTextContent(option, config.get().frequencies[i].text);
 		select.appendChild(option);
 	}
@@ -88,7 +83,7 @@ exports.button = function(list, entity) {
 		wrapper.appendChild(createNameSpan(config.get().displayName.replace(/\%entityName\%/g, entity.name)));
 	}
 	controls.appendChild(createButton());
-	controls.appendChild(createSelect(entity.frequency));
+	controls.appendChild(createSelect());
 	wrapper.appendChild(controls);
 	list.appendChild(wrapper);
 	return wrapper;
