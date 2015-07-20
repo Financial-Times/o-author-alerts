@@ -41,6 +41,8 @@ function init(rootEl) {
 	// Unsubscribe button
 	rootDelegate.on('click', '[data-o-author-alerts-action="unsubscribe"]', function(ev, el) {
 		stopAll(el, rootEl);
+
+		ev.target.innerHTML = config.get().config.get().unsubscribeButtonTextSuccess;
 	});
 }
 

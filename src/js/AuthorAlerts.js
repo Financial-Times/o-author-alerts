@@ -122,7 +122,7 @@ AuthorAlerts.prototype = {
 
 		//Add an unfollow all button if they are already following something
 		if(entities.length > 0) {
-			views.standaloneButton(this.list, 'unsubscribe', 'Submit');
+			views.standaloneButton(this.list, 'unsubscribe', config.get().unsubscribeButtonTextActive);
 		}
 		this.handleEntityLoad();
 	},
@@ -177,7 +177,7 @@ function renderButtonsForEntities(entities, list, unsub) {
 	}
 	if (entities.length > 0) {
 		if (unsub && unsub === 'unsubscribe') {
-			views.standaloneButton(list, 'save', 'Submit', false); //Enable save button by default for unsubscribe
+			views.standaloneButton(list, 'save', config.get().unsubscribeButtonTextActive, false); //Enable save button by default for unsubscribe
 		} else {
 			views.standaloneButton(list, 'save', 'Save', true); //Disabled save button by default
 		}

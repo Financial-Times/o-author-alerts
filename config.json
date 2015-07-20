@@ -16,6 +16,8 @@
 	"stopAlertsHoverText": "Click to stop alerts for this %entityType%",
 	"startAlertsHoverText": "Click to start alerts for this %entityType%",
 	"unsubscribeAllText": "You have been unsubscribed from all authors.",
+	"unsubscribeButtonTextActive": "Unsubscribe",
+	"unsubscribeButtonTextSuccess": "Unsubscribed",
 	"displayName": "%entityName%",
 	"frequencies": [
 		{
