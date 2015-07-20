@@ -5,7 +5,7 @@
 var user = require('./user');
 var eventHelper = require('./lib/eventHelper');
 var config = require('./config.js');
-var message = require('./lib/message');
+var messageBottom = require('./lib/messageBottom');
 var DomDelegate = require('ftdomdelegate');
 var rootDelegate;
 var DEFAULT_FREQUENCY = 'daily';
@@ -249,7 +249,7 @@ function stopAll(el, rootEl) {
 	var i;
 	var l;
 
-	message.create(rootEl, config.get().unsubscribeAllText, '');
+	messageBottom.create(rootEl, config.get().unsubscribeAllText, '');
 
 	user.subscription.update({id: 'ALL', name: 'ALL'}, 'off');
 
