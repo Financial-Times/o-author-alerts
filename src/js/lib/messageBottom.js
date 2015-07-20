@@ -5,7 +5,7 @@ function create(rootEl, message, type) {
 	if(!hasMessage(rootEl)) {
 		list = rootEl.querySelector('.o-author-alerts__list');
 		msg = document.createElement('span');
-		msg.className = 'o-author-alerts__message';
+		msg.className = 'o-author-alerts__message-bottom';
 		if(list) {
 			list.parentElement.appendChild(msg);
 		}
