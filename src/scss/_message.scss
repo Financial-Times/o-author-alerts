@@ -17,3 +17,24 @@
 		color: oColorsGetColorFor(o-author-alerts-error, text);
 	}
 }
+
+
+.o-author-alerts {
+	.o-author-alerts__message-bottom {
+		display: none;
+		font-size: 14px;
+	}
+}
+
+.o-author-alerts[data-o-author-alerts-message-bottom] {
+	.o-author-alerts__message-bottom {
+		display: block;
+		padding: 10px 5px;
+	}
+}
+
+.o-author-alerts[data-o-author-alerts-message-bottom='error'] {
+	.o-author-alerts__message-bottom {
+		color: oColorsGetColorFor(o-author-alerts-error, text);
+	}
+}
