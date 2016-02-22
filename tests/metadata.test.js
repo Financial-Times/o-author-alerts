@@ -2,7 +2,7 @@
 'use strict';
 
 var metadata = require('../src/js/lib/metadata'),
-	jsonp =  require('../src/js/lib/jsonp');
+	jsonp =  require('../src/js/lib/jsonp/jsonp');
 
 describe('Metadata Cache Retriever', function() {
 

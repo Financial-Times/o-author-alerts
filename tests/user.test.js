@@ -2,7 +2,7 @@
 'use strict';
 
 var user = require('../src/js/user.js');
-var jsonp = require('../src/js/lib/jsonp.js');
+var jsonp = require('../src/js/lib/jsonp/jsonp.js');
 var oCookies = require('o-cookies');
 
 describe('The user object', function(){

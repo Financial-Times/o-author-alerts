@@ -3,7 +3,6 @@
 
 var AuthorAlerts = require('../src/js/AuthorAlerts.js');
 var buttons = require('../src/js/buttons.js');
-var jsonp = require('../src/js/lib/jsonp.js');
 var metadata = require('../src/js/lib/metadata.js');
 var user = require('../src/js/user.js');
 var eventHelper = require('../src/js/lib/eventHelper');
@@ -12,12 +11,16 @@ var authorAlerts;
 var rootEl;
 var widgetEl;
 
+var defaultConfig = require('../config.json');
+var config = require('../src/js/config.js');
+
+config.set(defaultConfig);
+
 describe ('CreateAllin', function() {
 	beforeEach(function() {
 		if(authorAlerts) {
 			authorAlerts.destroy();
 		}
-		spyOn(jsonp, 'get');
 		rootEl = document.createElement('ul');
 		rootEl.setAttribute('data-o-author-alerts-user', '');
 		rootEl.className = 'o-author-alerts';
@@ -33,7 +36,6 @@ describe('Initialising authorAlerts', function() {
 		if(authorAlerts) {
 			authorAlerts.destroy();
 		}
-		spyOn(jsonp, 'get');
 		rootEl = document.createElement('ul');
 		rootEl.setAttribute('data-o-author-alerts-user', '');
 		rootEl.className = 'o-author-alerts';
@@ -121,11 +123,12 @@ describe('Lazy loading the calls to metadata', function() {
 		authorAlerts = new AuthorAlerts(widgetEl);
 
 		var metadataSpy = spyOn(metadata, 'get');
+		var entity = {id:'author1', name: 'First Author'};
 		user.init();
 		user.id = 'test';
 		user.subscription.entities= [];
 
-		authorAlerts.init();
+		authorAlerts.init({lazyLoad: true});
 		//widget should be visible
 		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).toBeTruthy();
 		//but no call to metadata spy yet
@@ -218,7 +221,7 @@ describe('Lazy loading the calls to metadata', function() {
 		user.subscription.entities= [];
 
 
-		authorAlerts.init();
+		authorAlerts.init({lazyLoad: true});
 		//widget should be visible
 		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).toBeTruthy();
 		//but no call to metadata spy yet
