@@ -12,11 +12,13 @@ User.prototype.init = function() {
 	// If it hasn't already been initialized...
 	if (!(this.id && this.subscription)) {
 		this.id = oCookies.getParam('FTSession');
+		console.log('dd-ses', this.id);
 		this.subscription = new Subscription(this.id);
 
 		if (this.id) {
 			this.subscription.get();
 		}
+		console.log('dd-subs', this.subscription);
 	}
 };
 
