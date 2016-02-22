@@ -221,7 +221,7 @@ Subscription.prototype = {
 								item.frequency = 'daily';
 							}
 
-							url += '&' +
+							url += '?' +
 									(item.frequency === 'off' ? 'unfollow' : 'follow') +
 									'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
 						}
@@ -373,7 +373,7 @@ function anythingThatIsntDueToStop(entities, pending) {
 function resolveUrl(entity, frequency) {
 	var url = '';
 	if (entity.id === 'ALL') {
-		url = config.get().stopAllUrl
+		url = config.get().stopAllUrl;
 	} else {
 		url = (frequency === 'off' ? config.get().stopAlertsUrl : config.get().startAlertsUrl) +
 			'?name=' + entity.name +
