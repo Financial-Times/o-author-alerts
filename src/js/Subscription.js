@@ -159,7 +159,7 @@ Subscription.prototype = {
 	updateBulk: function (entities) {
 		var self = this;
 		var i, j;
-		var baseUrl = config.get().updateBulk;
+		var baseUrl = config.get().updateBulk + '?';
 		var chunk = 10;
 		var item;
 
@@ -221,7 +221,7 @@ Subscription.prototype = {
 								item.frequency = 'daily';
 							}
 
-							url += '?' +
+							url += ((url === baseUrl) ? '' : '&') +
 									(item.frequency === 'off' ? 'unfollow' : 'follow') +
 									'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
 						}
