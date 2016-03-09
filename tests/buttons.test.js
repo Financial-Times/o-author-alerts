@@ -3,7 +3,7 @@
 
 var buttons = require('../src/js/buttons.js');
 var views = require('../src/js/views.js');
-var jsonp = require('../src/js/lib/jsonp.js');
+var jsonp = require('../src/js/lib/jsonp/jsonp.js');
 var eventHelper = require('../src/js/lib/eventHelper.js');
 var user = require('../src/js/user.js');
 

@@ -3,7 +3,7 @@
 
 var Subscription = require('../src/js/Subscription'),
 		eventHelper =  require('../src/js/lib/eventHelper.js'),
-		jsonp =  require('../src/js/lib/jsonp.js');
+		jsonp =  require('../src/js/lib/jsonp/jsonp.js');
 
 var subscription;
 

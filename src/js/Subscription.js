@@ -17,10 +17,10 @@ var VALID_FREQUENCIES = ['off', 'daily', 'immediate', 'weekly'];
 
 	Also syncs to local storage when there is a failure in communication (e.g. Invalid session)
 */
-function Subscription(userId) {
-	this.userId = userId;
+function Subscription(sessionId) {
+	this.sessionId = sessionId;
 	this.entities = null;
-	this.pending = JSON.parse(storage.get('oAuthorAlertsUserCache-'+this.userId)) || {};
+	this.pending = JSON.parse(storage.get('oAuthorAlertsUserCache-'+this.sessionId)) || {};
 	this.online = true;
 }
 
@@ -31,12 +31,9 @@ Subscription.prototype = {
 	get: function() {
 		var self = this;
 
-		executionQueue.add(function (done, userId) {
+		executionQueue.add(function (done, sessionId) {
 			jsonp({
-				url: config.get().getFollowingUrl,
-				data: {
-					userId: userId
-				}
+				url: config.get().getFollowingUrl
 			},
 			function (err, data) {
 				if (err) {
@@ -48,7 +45,7 @@ Subscription.prototype = {
 				self.set(data);
 				done();
 			});
-		}, self.userId);
+		}, self.sessionId);
 	},
 
 	/* Handle response from the personalisation server, for updates and fetches*/
@@ -100,7 +97,7 @@ Subscription.prototype = {
 		eventHelper.dispatch('oAuthorAlerts.' + eventToTrigger, {
 			data: data,
 			entities: entities,
-			userId: this.userId
+			sessionId: this.sessionId
 		});
 
 	},
@@ -110,7 +107,7 @@ Subscription.prototype = {
 		var url;
 		var self = this;
 
-		if (!(this.userId && entity.id && entity.name)){
+		if (!(this.sessionId && entity.id && entity.name)){
 			return;
 		}
 
@@ -119,7 +116,7 @@ Subscription.prototype = {
 			frequency = 'daily';
 		}
 
-		url = resolveUrl(entity, frequency, this.userId);
+		url = resolveUrl(entity, frequency);
 
 		var addRequestToQueue = function (url, entity, frequency) {
 			executionQueue.add(function (done, url, entity, frequency) {
@@ -162,11 +159,11 @@ Subscription.prototype = {
 	updateBulk: function (entities) {
 		var self = this;
 		var i, j;
-		var baseUrl = config.get().updateBulk + '?userId=' + this.userId + '&type=authors';
+		var baseUrl = config.get().updateBulk + '?';
 		var chunk = 10;
 		var item;
 
-		if (!this.userId) {
+		if (!this.sessionId) {
 			return;
 		}
 
@@ -224,7 +221,7 @@ Subscription.prototype = {
 								item.frequency = 'daily';
 							}
 
-							url += '&' +
+							url += ((url === baseUrl) ? '' : '&') +
 									(item.frequency === 'off' ? 'unfollow' : 'follow') +
 									'=' + (item.frequency !== 'off' ? item.frequency + ',' : '') + item.entity.name + ',' + item.entity.id;
 						}
@@ -328,7 +325,7 @@ Subscription.prototype = {
 
 	savePending: function() {
 		if (this.pending && Object.keys(this.pending).length) {
-			storage.put('oAuthorAlertsUserCache-'+this.userId, JSON.stringify(this.pending));
+			storage.put('oAuthorAlertsUserCache-'+this.sessionId, JSON.stringify(this.pending));
 		} else {
 			//get rid of the key from localstorage
 			this.clearPending();
@@ -336,7 +333,7 @@ Subscription.prototype = {
 	},
 
 	clearPending: function() {
-		storage.remove('oAuthorAlertsUserCache-' + this.userId);
+		storage.remove('oAuthorAlertsUserCache-' + this.sessionId);
 	}
 };
 
@@ -373,16 +370,13 @@ function anythingThatIsntDueToStop(entities, pending) {
 }
 
 // Return the correct URL to use based on the action they are taking.
-function resolveUrl(entity, frequency, userId) {
+function resolveUrl(entity, frequency) {
 	var url = '';
 	if (entity.id === 'ALL') {
-		url = config.get().stopAllUrl +
-			'?userId=' + userId +
-			'&type=authors';
+		url = config.get().stopAllUrl;
 	} else {
 		url = (frequency === 'off' ? config.get().stopAlertsUrl : config.get().startAlertsUrl) +
-			'?userId=' + userId +
-			'&type=authors&name=' + entity.name +
+			'?name=' + entity.name +
 			'&id=' + entity.id;
 
 		if (frequency !== 'off') {

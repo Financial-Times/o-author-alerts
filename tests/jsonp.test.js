@@ -1,7 +1,7 @@
 /*global require,describe,it,expect, jasmine, beforeEach */
 'use strict';
 
-var jsonp = require('../src/js/lib/jsonp');
+var jsonp = require('../src/js/lib/jsonp/jsonp.js');
 
 describe('jsonp.get()', function() {
 	beforeEach(function() {
