@@ -1,16 +1,13 @@
 /*global require,describe,it,expect,spyOn*/
-'use strict';
-
-var metadata = require('../src/js/lib/metadata'),
-	jsonp =  require('../src/js/lib/jsonp/jsonp');
+const metadata = require('../src/js/lib/metadata');
+const jsonp = require('../src/js/lib/jsonp/jsonp');
 
 describe('Metadata Cache Retriever', function() {
-
 	it('gets the metadata cache for a url', function() {
-		var callback = function() {};
-		var getSpy = spyOn(jsonp, 'get');
+		const callback = function() {};
+		const getSpy = spyOn(jsonp, 'get');
 		metadata.get('testId', callback);
-		var expectedUrl = 'http://metadata-cache.webservices.ft.com/v1/getAuthors/testId';
+		const expectedUrl = 'http://metadata-cache.webservices.ft.com/v1/getAuthors/testId';
 		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oFollowMetadataCallback', callback);
 	});
 });

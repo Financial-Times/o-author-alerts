@@ -1,9 +1,7 @@
 /*global require,describe,it,expect,spyOn*/
-'use strict';
-
-var user = require('../src/js/user.js');
-var jsonp = require('../src/js/lib/jsonp/jsonp.js');
-var oCookies = require('o-cookies');
+const user = require('../src/js/user.js');
+const jsonp = require('../src/js/lib/jsonp/jsonp.js');
+const oCookies = require('o-cookies');
 
 describe('The user object', function(){
 

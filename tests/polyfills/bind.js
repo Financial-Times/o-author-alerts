@@ -1,4 +1,4 @@
-/* jshint ignore:start */
+/* eslint-disable */
 
 if (!Function.prototype.bind) {
 	Function.prototype.bind = function (oThis) {
@@ -24,4 +24,4 @@ if (!Function.prototype.bind) {
 		return fBound;
 	};
 }
-/* jshint ignore:end */
+/* eslint-enable */

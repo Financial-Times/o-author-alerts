@@ -27,4 +27,4 @@ module.exports = {
 			text: "Immediate email"
 		}
 	]
-}
+};

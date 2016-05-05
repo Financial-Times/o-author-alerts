@@ -1,18 +1,17 @@
 /*global require,describe,beforeEach,afterEach,it,expect,spyOn*/
-'use strict';
 
-var AuthorAlerts = require('../src/js/AuthorAlerts.js');
-var buttons = require('../src/js/buttons.js');
-var metadata = require('../src/js/lib/metadata.js');
-var user = require('../src/js/user.js');
-var eventHelper = require('../src/js/lib/eventHelper');
+const AuthorAlerts = require('../src/js/AuthorAlerts.js');
+const buttons = require('../src/js/buttons.js');
+const metadata = require('../src/js/lib/metadata.js');
+const user = require('../src/js/user.js');
+const eventHelper = require('../src/js/lib/eventHelper');
 
-var authorAlerts;
-var rootEl;
-var widgetEl;
+let authorAlerts;
+let rootEl;
+let widgetEl;
 
-var defaultConfig = require('../config.json');
-var config = require('../src/js/config.js');
+const defaultConfig = require('../config.json');
+const config = require('../src/js/config.js');
 
 config.set(defaultConfig);
 
@@ -48,7 +47,7 @@ describe('Initialising authorAlerts', function() {
 	});
 
 	it('sets up the user', function() {
-		var userSpy = spyOn(user, 'init');
+		const userSpy = spyOn(user, 'init');
 		spyOn(authorAlerts, 'createView');
 		spyOn(authorAlerts, 'setupAuthorButtons');
 		authorAlerts.init({lazyLoad: false});
@@ -57,8 +56,8 @@ describe('Initialising authorAlerts', function() {
 	});
 
 	it('initialises the buttons if the user preferences are available and there are authors', function() {
-		var entity = {id:'author1', name: 'First Author'};
-		var eventSpy = spyOn(eventHelper, 'dispatch');
+		const entity = {id:'author1', name: 'First Author'};
+		const eventSpy = spyOn(eventHelper, 'dispatch');
 		user.init();
 		user.id = 'test';
 		user.subscription.entities= [entity];
@@ -84,7 +83,7 @@ describe('Initialising authorAlerts', function() {
 	});
 
 	it('does not initialise if there are no authors', function() {
-		var eventSpy = spyOn(eventHelper, 'dispatch');
+		const eventSpy = spyOn(eventHelper, 'dispatch');
 
 		user.init();
 		user.subscription.entities= [];
@@ -96,8 +95,8 @@ describe('Initialising authorAlerts', function() {
 
 
 	it('waits for event if the user preferences are not available', function() {
-		var entity = {id:'author1', name: 'First Author'};
-		var btnInitSpy = spyOn(buttons, 'init');
+		const entity = {id:'author1', name: 'First Author'};
+		const btnInitSpy = spyOn(buttons, 'init');
 
 
 		authorAlerts.init({lazyLoad: false});
@@ -122,8 +121,7 @@ describe('Lazy loading the calls to metadata', function() {
 		document.body.appendChild(widgetEl);
 		authorAlerts = new AuthorAlerts(widgetEl);
 
-		var metadataSpy = spyOn(metadata, 'get');
-		var entity = {id:'author1', name: 'First Author'};
+		const metadataSpy = spyOn(metadata, 'get');
 		user.init();
 		user.id = 'test';
 		user.subscription.entities= [];
@@ -134,7 +132,7 @@ describe('Lazy loading the calls to metadata', function() {
 		//but no call to metadata spy yet
 		expect(metadataSpy).not.toHaveBeenCalled();
 		//...until we mouseover
-		var evObj = document.createEvent('MouseEvents');
+		const evObj = document.createEvent('MouseEvents');
 		evObj.initEvent( 'mouseover', true, false );
 		authorAlerts.rootEl.dispatchEvent(evObj);
 		//then it should make the call
@@ -148,7 +146,7 @@ describe('Lazy loading the calls to metadata', function() {
 		document.body.appendChild(widgetEl);
 		authorAlerts = new AuthorAlerts(widgetEl);
 
-		var metadataSpy = spyOn(metadata, 'get');
+		const metadataSpy = spyOn(metadata, 'get');
 		user.init();
 		user.id = 'test';
 		user.subscription.entities= [];
@@ -180,7 +178,7 @@ describe('Lazy loading the calls to metadata', function() {
 		expect(authorAlerts.rootEl.hasAttribute('data-o-author-alerts--js')).toBeTruthy();
 		//but no call to metadata spy yet
 
-		var evObj = document.createEvent('MouseEvents');
+		const evObj = document.createEvent('MouseEvents');
 		evObj.initEvent( 'mouseover', true, false );
 		authorAlerts.rootEl.dispatchEvent(evObj);
 		//then it should make the call
@@ -196,7 +194,7 @@ describe('Lazy loading the calls to metadata', function() {
 		document.body.appendChild(widgetEl);
 		authorAlerts = new AuthorAlerts(widgetEl);
 
-		var metadataSpy = spyOn(metadata, 'get');
+		const metadataSpy = spyOn(metadata, 'get');
 		user.init();
 		user.id = 'test';
 		user.subscription.entities= [];
@@ -215,7 +213,7 @@ describe('Lazy loading the calls to metadata', function() {
 		document.body.appendChild(widgetEl);
 		authorAlerts = new AuthorAlerts(widgetEl);
 
-		var metadataSpy = spyOn(metadata, 'get');
+		const metadataSpy = spyOn(metadata, 'get');
 		user.init();
 		user.id = 'test';
 		user.subscription.entities= [];

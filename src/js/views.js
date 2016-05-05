@@ -49,7 +49,7 @@ function createNameSpan(name){
 	return span;
 }
 
-function createButton(text, selected, title) {
+function createButton(text, selected) {
 	const btn = document.createElement('button');
 	btn.className = 'o-author-alerts__button';
 	btn.setAttribute('aria-selected', (typeof selected !== 'undefined') ? selected : false);

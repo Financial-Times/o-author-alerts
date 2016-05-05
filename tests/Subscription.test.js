@@ -1,11 +1,9 @@
 /*global require,describe,beforeEach,afterEach, jasmine,it,expect,spyOn*/
-'use strict';
+const Subscription = require('../src/js/Subscription');
+const eventHelper = require('../src/js/lib/eventHelper.js');
+const jsonp = require('../src/js/lib/jsonp/jsonp.js');
 
-var Subscription = require('../src/js/Subscription'),
-		eventHelper =  require('../src/js/lib/eventHelper.js'),
-		jsonp =  require('../src/js/lib/jsonp/jsonp.js');
-
-var subscription;
+let subscription;
 
 beforeEach(function() {
 	localStorage.removeItem('oAuthorAlertsUserCache-userId');
@@ -17,18 +15,16 @@ afterEach(function() {
 });
 
 describe('Getting the initial model', function() {
-
-
 	it('get() makes a call to fetch the latest subscription data for a user', function() {
-		var getSpy = spyOn(jsonp, 'get');
+		const getSpy = spyOn(jsonp, 'get');
 		subscription.get();
-		var url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=userId';
+		const url = 'http://personalisation.ft.com/follow/getFollowingIds?userId=userId';
 		expect(getSpy).toHaveBeenCalledWith(url, 'oAuthorAlertsGetCallback', jasmine.any(Function));
 	});
 
 	it('set() updates the model based on the data recieved', function() {
-		var data = {"status":"success", "taxonomies":[{"id":"Q0ItMDAwMDcxOA==-QXV0aG9ycw==","name":"Jack Farchy","type":"authors","frequency": "immediate"}]};
-		var eventSpy = spyOn(eventHelper, 'dispatch');
+		const data = {"status":"success", "taxonomies":[{"id":"Q0ItMDAwMDcxOA==-QXV0aG9ycw==","name":"Jack Farchy","type":"authors","frequency": "immediate"}]};
+		const eventSpy = spyOn(eventHelper, 'dispatch');
 		subscription.set(data);
 		expect(subscription.entities.length).toBe(1);
 		expect(subscription.entities[0].id).toBe(data.taxonomies[0].id);
@@ -37,7 +33,7 @@ describe('Getting the initial model', function() {
 	});
 
 	it('set() only works if the data is correct', function() {
-		var data = {"blah":[{"id":"Q0ItMDAwMDcxOA==-QXV0aG9ycw==","name":"Jack Farchy","type":"authors"}]};
+		const data = {"blah":[{"id":"Q0ItMDAwMDcxOA==-QXV0aG9ycw==","name":"Jack Farchy","type":"authors"}]};
 		subscription.set(data);
 		expect(subscription.entities).toBe(null);
 	});
@@ -47,14 +43,14 @@ describe('Getting the initial model', function() {
 describe('Updating the model while online', function() {
 
 	it('will send a request to unsubscribe to an author', function() {
-		var getSpy = spyOn(jsonp, 'get');
-		var entity = {
+		const getSpy = spyOn(jsonp, 'get');
+		const entity = {
 			name: 'Arjun',
 			id: 'arjunId'
 		};
 		subscription.online = true;
 		subscription.update(entity, 'off');
-		var expectedUrl = 'http://personalisation.ft.com/follow/stopFollowing?userId=' +
+		const expectedUrl = 'http://personalisation.ft.com/follow/stopFollowing?userId=' +
 			'userId&type=authors&name=Arjun&id=arjunId';
 
 		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsUpdateCallback', jasmine.any(Function));
@@ -63,14 +59,14 @@ describe('Updating the model while online', function() {
 
 
 	it('will send a request to change alert frequency of an author', function() {
-		var getSpy = spyOn(jsonp, 'get');
-		var entity = {
+		const getSpy = spyOn(jsonp, 'get');
+		const entity = {
 			name: 'Arjun',
 			id: 'arjunId'
 		};
 		subscription.online = true;
 		subscription.update(entity, 'immediate');
-		var expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' +
+		const expectedUrl = 'http://personalisation.ft.com/follow/update?userId=' +
 			'userId&type=authors&name=Arjun&id=arjunId&frequency=immediate';
 
 		expect(getSpy).toHaveBeenCalledWith(expectedUrl,'oAuthorAlertsUpdateCallback', jasmine.any(Function));
@@ -82,15 +78,15 @@ describe('Updating the model while online', function() {
 describe('Updating the model while offline', function() {
 
 	it('will save a request to update an author', function() {
-		var getSpy = spyOn(jsonp, 'get');
-		var entity = {
+		const getSpy = spyOn(jsonp, 'get');
+		const entity = {
 			name: 'Arjun',
 			id: 'arjunId'
 		};
 		subscription.online = false;
 		subscription.update(entity, 'off');
 		expect(getSpy).not.toHaveBeenCalled();
-		var pending = JSON.parse(localStorage.getItem('oAuthorAlertsUserCache-userId'));
+		const pending = JSON.parse(localStorage.getItem('oAuthorAlertsUserCache-userId'));
 		expect(pending.arjunId.tried).toBe(1);
 		expect(pending.arjunId.entity.name).toBe(entity.name);
 		expect(pending.arjunId.update).toBe('off');
@@ -98,14 +94,14 @@ describe('Updating the model while offline', function() {
 
 	it('cancels out requests that would be obsolete', function() {
 		spyOn(jsonp, 'get');
-		var entity = {
+		const entity = {
 			name: 'Arjun',
 			id: 'arjunId'
 		};
 
 		subscription.online = false;
 		subscription.update(entity, 'daily');
-		var pending = JSON.parse(localStorage.getItem('oAuthorAlertsUserCache-userId'));
+		let pending = JSON.parse(localStorage.getItem('oAuthorAlertsUserCache-userId'));
 		expect(pending.arjunId.update).toBe('daily');
 		subscription.update(entity, 'off');
 		pending = JSON.parse(localStorage.getItem('oAuthorAlertsUserCache-userId'));
@@ -116,10 +112,10 @@ describe('Updating the model while offline', function() {
 describe('Handles response from the server', function() {
 
 	it('successfully recieves data from the initial call', function() {
-		var mockData = {'status': 'success', taxonomies: ['a', 'b']};
+		const mockData = {'status': 'success', taxonomies: ['a', 'b']};
 		subscription.online = false;
-		var syncSpy = spyOn(subscription, 'sync');
-		var eventSpy = spyOn(eventHelper, 'dispatch');
+		const syncSpy = spyOn(subscription, 'sync');
+		const eventSpy = spyOn(eventHelper, 'dispatch');
 		subscription.set(mockData);
 		expect(subscription.entities.length).toBe(2);
 		expect(subscription.entities[0]).toBe('a');
@@ -129,10 +125,10 @@ describe('Handles response from the server', function() {
 	});
 
 	it('handles errors from the initial call', function() {
-		var mockData = {'status': 'error'};
+		const mockData = {'status': 'error'};
 		subscription.online = true;
-		var syncSpy = spyOn(subscription, 'sync');
-		var eventSpy = spyOn(eventHelper, 'dispatch');
+		const syncSpy = spyOn(subscription, 'sync');
+		const eventSpy = spyOn(eventHelper, 'dispatch');
 		subscription.set(mockData);
 
 		expect(subscription.entities).toBe(null);
@@ -150,12 +146,12 @@ describe('Handles response from the server', function() {
 	});
 
 it('successfully recieves data from update requests', function() {
-		var mockData = {'status': 'success', taxonomies: ['a', 'b']};
-		var mockEntity = { id: 'mockEntity' };
+		const mockData = {'status': 'success', taxonomies: ['a', 'b']};
+		const mockEntity = { id: 'mockEntity' };
 		subscription.online = false;
-		var syncSpy = spyOn(subscription, 'sync');
-		var removeSpy = spyOn(subscription, 'removeFromPending');
-		var eventSpy = spyOn(eventHelper, 'dispatch');
+		const syncSpy = spyOn(subscription, 'sync');
+		const removeSpy = spyOn(subscription, 'removeFromPending');
+		const eventSpy = spyOn(eventHelper, 'dispatch');
 
 		subscription.set(mockData, mockEntity, 'daily');
 
@@ -176,12 +172,12 @@ it('successfully recieves data from update requests', function() {
 	});
 
 	it('retryable errors from update request will add to the list', function() {
-		var mockData = {'status': 'error', 'message': 'retry me please'};
-		var mockEntity = {id: 'mockEntity'} ;
+		const mockData = {'status': 'error', 'message': 'retry me please'};
+		const mockEntity = {id: 'mockEntity'} ;
 		subscription.online = true;
-		var syncSpy = spyOn(subscription, 'sync');
-		var eventSpy = spyOn(eventHelper, 'dispatch');
-		var addSpy = spyOn(subscription, 'addToPending');
+		const syncSpy = spyOn(subscription, 'sync');
+		const eventSpy = spyOn(eventHelper, 'dispatch');
+		const addSpy = spyOn(subscription, 'addToPending');
 
 		subscription.set(mockData, mockEntity, 'immediate');
 
@@ -202,10 +198,10 @@ it('successfully recieves data from update requests', function() {
 
 
 	it('dont retry if user is not subscribed to that person in the first place', function() {
-		var mockData = {'status': 'error', 'message': 'user is not following this id'};
-		var mockEntity = 'mockEntity';
+		const mockData = {'status': 'error', 'message': 'user is not following this id'};
+		const mockEntity = 'mockEntity';
 		subscription.online = true;
-		var addSpy = spyOn(subscription, 'addToPending');
+		const addSpy = spyOn(subscription, 'addToPending');
 
 		subscription.set(mockData, mockEntity, 'daily');
 
@@ -215,10 +211,10 @@ it('successfully recieves data from update requests', function() {
 	});
 
 	it('dont retry if user has no subscription list', function() {
-		var mockData = {'status': 'error', 'message': 'user has no following list'};
-		var mockEntity = 'mockEntity';
+		const mockData = {'status': 'error', 'message': 'user has no following list'};
+		const mockEntity = 'mockEntity';
 		subscription.online = true;
-		var addSpy = spyOn(subscription, 'addToPending');
+		const addSpy = spyOn(subscription, 'addToPending');
 
 		subscription.set(mockData, mockEntity, 'off');
 
@@ -231,7 +227,7 @@ it('successfully recieves data from update requests', function() {
 
 describe('Keeping the client and server in sync', function() {
 	it('Makes any pending requests', function() {
-		var pending = {
+		const pending = {
 			"startId": {
 				"tried": 1,
 				"entity": {
@@ -253,7 +249,7 @@ describe('Keeping the client and server in sync', function() {
 		localStorage.setItem('oAuthorAlertsUserCache-userId', JSON.stringify(pending));
 		subscription = new Subscription('userId');
 		subscription.entities = [];
-		var updateSpy = spyOn(subscription, 'update');
+		const updateSpy = spyOn(subscription, 'update');
 
 		subscription.sync();
 
@@ -268,7 +264,7 @@ describe('Keeping the client and server in sync', function() {
 
 
 	it('Updates the list that came from the server with any pending requests', function() {
-		var pending = {
+		const pending = {
 			"startId": {
 				"tried": 1,
 				"entity": {
@@ -306,7 +302,7 @@ describe('Keeping the client and server in sync', function() {
 	});
 
 	it('Gives up on requests after 3 attempts', function() {
-		var pending = {
+		const pending = {
 			"start1": {
 				"tried": 5,
 				"entity": {
@@ -328,7 +324,7 @@ describe('Keeping the client and server in sync', function() {
 		localStorage.setItem('oAuthorAlertsUserCache-userId', JSON.stringify(pending));
 		subscription = new Subscription('userId');
 		subscription.entities = [];
-		var updateSpy = spyOn(subscription, 'update');
+		const updateSpy = spyOn(subscription, 'update');
 
 		subscription.sync();
 

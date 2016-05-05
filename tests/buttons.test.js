@@ -1,13 +1,11 @@
 /*global require,describe,beforeEach,afterEach,it,expect,spyOn*/
-'use strict';
+const buttons = require('../src/js/buttons.js');
+const views = require('../src/js/views.js');
+const jsonp = require('../src/js/lib/jsonp/jsonp.js');
+const eventHelper = require('../src/js/lib/eventHelper.js');
+const user = require('../src/js/user.js');
 
-var buttons = require('../src/js/buttons.js');
-var views = require('../src/js/views.js');
-var jsonp = require('../src/js/lib/jsonp/jsonp.js');
-var eventHelper = require('../src/js/lib/eventHelper.js');
-var user = require('../src/js/user.js');
-
-var testEl;
+let testEl;
 
 
 describe('Initialising a button', function() {
@@ -27,14 +25,14 @@ describe('Initialising a button', function() {
 	});
 
 	it('sets the initial state assuming that the user is initialised', function() {
-		var entity = {id: 'author1', name: 'First Author'};
+		const entity = {id: 'author1', name: 'First Author'};
 		views.button(testEl, entity);
-		user.subscription.entities  = [entity];
+		user.subscription.entities = [entity];
 		buttons.init(testEl);
-		var updateSpy = spyOn(user.subscription, 'update');
-		var controls = testEl.querySelector('[data-o-author-alerts-id]');
-		var button = controls.querySelector('button');
-		var select = controls.querySelector('select');
+		const updateSpy = spyOn(user.subscription, 'update');
+		const controls = testEl.querySelector('[data-o-author-alerts-id]');
+		const button = controls.querySelector('button');
+		const select = controls.querySelector('select');
 		expect(button.innerText).toBe('Alerting');
 
 		expect(updateSpy).not.toHaveBeenCalled();
@@ -65,19 +63,19 @@ describe('Clicking the button', function() {
 	});
 
 	it('toggles between states', function() {
-		var entity = {id: 'author1', name: 'First Author'};
+		const entity = {id: 'author1', name: 'First Author'};
 		views.button(testEl, entity);
 		views.standaloneButton(testEl, 'save', 'Save', true); //Disabled save button by default
 
-		user.subscription.entities  = [];
-		var updateSpy = spyOn(user.subscription, 'update');
-		var eventSpy = spyOn(eventHelper, 'dispatch');
+		user.subscription.entities = [];
+		const updateSpy = spyOn(user.subscription, 'update');
+		const eventSpy = spyOn(eventHelper, 'dispatch');
 
 		buttons.init(testEl);
 
-		var button = testEl.querySelector('.o-author-alerts__controls button');
-		var select = testEl.querySelector('[data-o-author-alerts-id] select');
-		var save = testEl.querySelector('[data-o-author-alerts-action="save"]');
+		const button = testEl.querySelector('.o-author-alerts__controls button');
+		const select = testEl.querySelector('[data-o-author-alerts-id] select');
+		const save = testEl.querySelector('[data-o-author-alerts-action="save"]');
 
 
 		//Frequency dropdown will be disabled
@@ -115,9 +113,5 @@ describe('Clicking the button', function() {
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
 			model: 'followme', type: 'unfollow', value: 'First Author'
 		}, window);
-
-
-
 	});
-
 });
