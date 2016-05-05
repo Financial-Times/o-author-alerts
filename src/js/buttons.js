@@ -1,14 +1,13 @@
 /*global require, module*/
 
-'use strict';
+const user = require('./user');
+const eventHelper = require('./lib/eventHelper');
+const config = require('./config.js');
+const message = require('./lib/message');
+const DomDelegate = require('ftdomdelegate');
+const DEFAULT_FREQUENCY = 'daily';
 
-var user = require('./user');
-var eventHelper = require('./lib/eventHelper');
-var config = require('./config.js');
-var message = require('./lib/message');
-var DomDelegate = require('ftdomdelegate');
-var rootDelegate;
-var DEFAULT_FREQUENCY = 'daily';
+let rootDelegate;
 
 /* Initialise all buttons in the rootEl */
 function init(rootEl) {
@@ -23,7 +22,7 @@ function init(rootEl) {
 	});
 
 	// Changes in frequency should enable/disable save button as appropriate
-	rootDelegate.on('change', '[data-o-author-alerts-id] > .o-author-alerts__frequency', function(ev, el) {
+	rootDelegate.on('change', '[data-o-author-alerts-id] > .o-author-alerts__frequency', function() {
 		setSaveButtonState(rootEl);
 	});
 
@@ -53,13 +52,13 @@ function destroy() {
 /* Set the initial UI of the view based on model data */
 
 function setInitialStates(rootEl) {
-	var entityControls = rootEl.querySelectorAll('[data-o-author-alerts-id]');
-	var i;
-	var l;
-	var controls;
-	var id;
-	var currentState;
-	var preferredDefaultFrequency;
+	const entityControls = rootEl.querySelectorAll('[data-o-author-alerts-id]');
+	let i;
+	let l;
+	let controls;
+	let id;
+	let currentState;
+	let preferredDefaultFrequency;
 
 	for (i=0,l=entityControls.length; i<l;i++) {
 		controls = entityControls[i];
@@ -80,9 +79,9 @@ function setInitialStates(rootEl) {
 /* Checks the entity's alerting state against data stored against the user */
 
 function getSubscriptionStatus(id, subscriptionList) {
-	var freq = 'off';
-	var i;
-	var l;
+	let freq = 'off';
+	let i;
+	let l;
 
 	subscriptionList = subscriptionList || [];
 
@@ -99,7 +98,7 @@ function getSubscriptionStatus(id, subscriptionList) {
 /* Handle whether the save button is enabled or not */
 
 function setSaveButtonState(rootEl) {
-	var saveBtn = rootEl.querySelector('[data-o-author-alerts-action="save"]');
+	const saveBtn = rootEl.querySelector('[data-o-author-alerts-action="save"]');
 	if (saveBtn) {
 		if (getFrequencyUpdates(rootEl).length > 0) {
 			saveBtn.removeAttribute('disabled');
@@ -111,7 +110,7 @@ function setSaveButtonState(rootEl) {
 
 /* Handle Primary button clicks - toggling between alerting state) */
 function toggleButtonState(controls) {
-	var isPressed = (controls.querySelector('.o-author-alerts__button').getAttribute('aria-pressed') === 'true');
+	const isPressed = (controls.querySelector('.o-author-alerts__button').getAttribute('aria-pressed') === 'true');
 	if (isPressed) {
 		unsubscribe(controls);
 	} else {
@@ -121,9 +120,9 @@ function toggleButtonState(controls) {
 
 /* Handle UI when subscribed to an author) */
 function subscribe(controls) {
-	var name = controls.getAttribute('data-o-author-alerts-name');
-	var preferredDefaultFrequency = controls.getAttribute('data-o-author-alerts-default-frequency');
-	var btn = controls.querySelector('.o-author-alerts__button');
+	const name = controls.getAttribute('data-o-author-alerts-name');
+	const preferredDefaultFrequency = controls.getAttribute('data-o-author-alerts-default-frequency');
+	const btn = controls.querySelector('.o-author-alerts__button');
 
 	//note: using innerHTML in second instance since element is hidden so innerText returns ''
 	btn.innerHTML = config.get().stopAlertsText.replace(/\%entityName\%/g, name);
@@ -134,9 +133,9 @@ function subscribe(controls) {
 
 /* Handle UI when not subscribed to an author) */
 function unsubscribe(controls) {
-	var name = controls.getAttribute('data-o-author-alerts-name');
-	var preferredDefaultFrequency = controls.getAttribute('data-o-author-alerts-default-frequency');
-	var btn = controls.querySelector('.o-author-alerts__button');
+	const name = controls.getAttribute('data-o-author-alerts-name');
+	const preferredDefaultFrequency = controls.getAttribute('data-o-author-alerts-default-frequency');
+	const btn = controls.querySelector('.o-author-alerts__button');
 
 	btn.innerHTML = config.get().startAlertsText.replace(/\%entityName\%/g, name); //Use innerHTML as config contains icon html
 	btn.setAttribute('title', config.get().startAlertsHoverText.replace(/\%entityType\%/g, config.get().entityType));
@@ -147,7 +146,7 @@ function unsubscribe(controls) {
 
 /* Handle external changes to frequency (i.e. from primary button clicks or dismissing widget) or set default state */
 function setFrequency(controls, newFrequency, preferredDefaultFrequency) {
-	var select = controls.querySelector('.o-author-alerts__frequency');
+	const select = controls.querySelector('.o-author-alerts__frequency');
 	if (newFrequency === 'off') {
 		select.disabled = true;
 		select.value = preferredDefaultFrequency || DEFAULT_FREQUENCY;
@@ -159,12 +158,12 @@ function setFrequency(controls, newFrequency, preferredDefaultFrequency) {
 
 /* Submit changes to frequencies to the server */
 function saveFrequencyUpdates(rootEl, saveBtn) {
-	var frequenciesToUpdate = getFrequencyUpdates(rootEl);
-	var controls;
-	var i;
-	var l;
-	var eventName;
-	var updates = [];
+	const frequenciesToUpdate = getFrequencyUpdates(rootEl);
+	let controls;
+	let i;
+	let l;
+	let eventName;
+	const updates = [];
 
 	for (i=0, l=frequenciesToUpdate.length; i<l; i++) {
 		controls = rootEl.querySelector('[data-o-author-alerts-id="' + frequenciesToUpdate[i].entity.id + '"]');
@@ -187,14 +186,14 @@ function saveFrequencyUpdates(rootEl, saveBtn) {
 
 /* Return a list of all entities that have frequency updates pending, and the new frequency to update to*/
 function getFrequencyUpdates(rootEl) {
-	var allControls = rootEl.querySelectorAll('.o-author-alerts__controls');
-	var i;
-	var l;
-	var controls;
-	var savedFrequency;
-	var newFrequency;
-	var entity;
-	var frequenciesToUpdate = [];
+	const allControls = rootEl.querySelectorAll('.o-author-alerts__controls');
+	let i;
+	let l;
+	let controls;
+	let savedFrequency;
+	let newFrequency;
+	let entity;
+	const frequenciesToUpdate = [];
 
 	for (i=0, l=allControls.length; i<l; i++) {
 		controls = allControls[i];
@@ -220,13 +219,13 @@ function getFrequencyUpdates(rootEl) {
 
 /* Sets all controls back to original saved state */
 function dismissUnsavedChanges(rootEl) {
-	var unsavedFrequencies = getFrequencyUpdates(rootEl);
-	var controls;
-	var i;
-	var l;
-	var isPressed;
-	var savedState;
-	var preferredDefaultFrequency;
+	const unsavedFrequencies = getFrequencyUpdates(rootEl);
+	let controls;
+	let i;
+	let l;
+	let isPressed;
+	let savedState;
+	let preferredDefaultFrequency;
 
 	for (i=0, l=unsavedFrequencies.length; i<l; i++) {
 		controls = rootEl.querySelector('[data-o-author-alerts-id="' + unsavedFrequencies[i].entity.id + '"]');
@@ -249,9 +248,9 @@ function dismissUnsavedChanges(rootEl) {
 
 /* Unsubscribe All button*/
 function stopAll(el, rootEl) {
-	var all = rootEl.querySelectorAll('[data-o-author-alerts-state]');
-	var i;
-	var l;
+	const all = rootEl.querySelectorAll('[data-o-author-alerts-state]');
+	let i;
+	let l;
 
 	message.create(rootEl, config.get().unsubscribeAllText, '');
 

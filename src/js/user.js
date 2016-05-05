@@ -1,7 +1,5 @@
-'use strict';
-
-var oCookies = require('o-cookies');
-var Subscription = require('./Subscription');
+const oCookies = require('o-cookies');
+const Subscription = require('./Subscription');
 
 /* Singleton User object */
 function User() {

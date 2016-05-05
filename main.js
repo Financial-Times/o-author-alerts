@@ -1,17 +1,15 @@
-'use strict';
-
-var defaultConfig = require('./config.json');
-var config = require('./src/js/config.js');
+const defaultConfig = require('./config.json');
+const config = require('./src/js/config.js');
 
 config.set(defaultConfig);
 
-var AuthorAlerts = require('./src/js/AuthorAlerts');
+const AuthorAlerts = require('./src/js/AuthorAlerts');
 
 document.addEventListener("o.DOMContentLoaded", function() {
 	try {
-		var configInDomEl = document.querySelector('script[type="application/json"][data-o-author-alerts-config]');
+		const configInDomEl = document.querySelector('script[type="application/json"][data-o-author-alerts-config]');
 		if (configInDomEl) {
-			var configInDom = JSON.parse(configInDomEl.innerHTML);
+			const configInDom = JSON.parse(configInDomEl.innerHTML);
 
 			config.set(configInDom);
 		}

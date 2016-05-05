@@ -1,5 +1,3 @@
-'use strict';
-
 function BrowserStore(storage) {
 	this.storage = storage || localStorage;
 }

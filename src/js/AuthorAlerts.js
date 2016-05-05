@@ -1,13 +1,11 @@
-'use strict';
-
-var user = require('./user');
-var views = require('./views');
-var eventHelper = require('./lib/eventHelper');
-var buttons = require('./buttons');
-var message = require('./lib/message');
-var AlertsWidget = require('./AlertsWidget');
-var metadata = require('./lib/metadata');
-var config = require('./config.js');
+const user = require('./user');
+const views = require('./views');
+const eventHelper = require('./lib/eventHelper');
+const buttons = require('./buttons');
+const message = require('./lib/message');
+const AlertsWidget = require('./AlertsWidget');
+const metadata = require('./lib/metadata');
+const config = require('./config.js');
 
 
 function AuthorAlerts(rootEl) {
@@ -73,10 +71,10 @@ AuthorAlerts.prototype = {
 		Optionally lazy loads the creation of these controls - to avoid multiple initial calls to fetch metadata
 	*/
 	setupAuthorButtons: function() {
-		var self = this;
-		var eventToLoadOn = ('onmouseover' in window) ? 'mouseover' : 'click';
+		const self = this;
+		const eventToLoadOn = ('onmouseover' in window) ? 'mouseover' : 'click';
 
-		var initialiseButtons = function() {
+		const initialiseButtons = function() {
 
 			self.createButtons();
 
@@ -104,7 +102,7 @@ AuthorAlerts.prototype = {
 
 
 	createButtons: function() {
-		if (this.rootEl.hasAttribute('data-o-author-alerts-article-id'))  {
+		if (this.rootEl.hasAttribute('data-o-author-alerts-article-id')) {
 			this.createForArticle();
 		} else if (this.rootEl.hasAttribute('data-o-author-alerts-user')) {
 			this.createForUser();
@@ -116,7 +114,7 @@ AuthorAlerts.prototype = {
 	},
 
 	createForUser: function() {
-		var entities = user && user.subscription ? user.subscription.entities : [];
+		const entities = user && user.subscription ? user.subscription.entities : [];
 
 		renderButtonsForEntities(entities, this.list, 'unsubscribe');
 
@@ -128,8 +126,8 @@ AuthorAlerts.prototype = {
 	},
 
 	createForArticle: function() {
-		var self = this;
-		var articleId = this.rootEl.getAttribute('data-o-author-alerts-article-id');
+		const self = this;
+		const articleId = this.rootEl.getAttribute('data-o-author-alerts-article-id');
 
 		metadata.get(articleId, function(err, entities) {
 			renderButtonsForEntities(entities.authors, self.list);
@@ -140,17 +138,16 @@ AuthorAlerts.prototype = {
 	},
 
 	createForEntities: function() {
-			var entities = JSON.parse(this.rootEl.getAttribute('data-o-author-alerts-entities'));
+		const entities = JSON.parse(this.rootEl.getAttribute('data-o-author-alerts-entities'));
 
-			renderButtonsForEntities(entities, this.list);
-			this.handleEntityLoad();
+		renderButtonsForEntities(entities, this.list);
+		this.handleEntityLoad();
 	},
 
 	/* This is called when we know we have created the controls for all the authors
 
 	*/
 	handleEntityLoad: function() {
-
 		message.remove(this.rootEl);
 
 		eventHelper.dispatch('oAuthorAlerts.entitiesLoaded', null, this.rootEl);
@@ -171,7 +168,9 @@ function isWidget(rootEl) {
 }
 
 function renderButtonsForEntities(entities, list, unsub) {
-	var i, l;
+	let i;
+	let l;
+
 	for (i=0,l=entities.length; i< l; i++) {
 		views.button(list, entities[i]);
 	}
@@ -200,11 +199,11 @@ function showComponent(rootEl) {
 	Optionally pass in configuration overrides
  */
 AuthorAlerts.init = function(rootEl, opts) {
-	var components = [];
-	var fEls;
-	var c;
-	var l;
-	var component;
+	let fEls;
+	let c;
+	let l;
+	let component;
+	const components = [];
 
 	rootEl = rootEl || document.body;
 	//set config with overrides passed through

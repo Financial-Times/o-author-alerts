@@ -1,6 +1,4 @@
-'use strict';
-
-var queue = [];
+let queue = [];
 
 exports.add = function(func, args) {
 	queue.push({

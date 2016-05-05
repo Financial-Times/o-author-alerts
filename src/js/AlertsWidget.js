@@ -1,8 +1,6 @@
-'use strict';
-
-var views = require('./views');
-var eventHelper = require('./lib/eventHelper');
-var DomDelegate = require('ftdomdelegate');
+const views = require('./views');
+const eventHelper = require('./lib/eventHelper');
+const DomDelegate = require('ftdomdelegate');
 
 function AlertsWidget() {
 	this.delegate = new DomDelegate();
@@ -28,7 +26,7 @@ AlertsWidget.prototype = {
 	},
 
 	bindEvents: function() {
-		var self = this;
+		const self = this;
 
 		this.delegate.on('click', '.o-author-alerts__widget', this.toggle.bind(this));
 
@@ -41,7 +39,7 @@ AlertsWidget.prototype = {
 		});
 
 		// Hide when clicked on the save button
-		this.delegate.on('oAuthorAlerts.saveChanges', '', function(e) {
+		this.delegate.on('oAuthorAlerts.saveChanges', '', function() {
 				self.hide(null, false); //dont fire close event!
 		});
 
@@ -68,8 +66,8 @@ AlertsWidget.prototype = {
 	},
 
 	hide: function(ev, fireCloseEvent) {
-		var target = ev ? ev.target : null,
-			isInWidget = target && (target.className === 'o-author-alerts__icon--tick' ||
+		const target = ev ? ev.target : null;
+		const isInWidget = target && (target.className === 'o-author-alerts__icon--tick' ||
 				this.rootEl.contains(target));
 
 		if(typeof fireCloseEvent === 'undefined') {

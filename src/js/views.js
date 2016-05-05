@@ -1,6 +1,4 @@
-'use strict';
-
-var config = require('./config.js');
+const config = require('./config.js');
 
 function setTextContent(element, text) {
 	if ('textContent' in element) {
@@ -11,13 +9,13 @@ function setTextContent(element, text) {
 }
 
 function createWrapper(tagName) {
-	var wrapper = document.createElement(tagName);
+	const wrapper = document.createElement(tagName);
 	wrapper.className = 'o-author-alerts__entity';
 	return wrapper;
 }
 
 function createControls(entity) {
-	var controls = document.createElement('span');
+	const controls = document.createElement('span');
 	controls.className = 'o-author-alerts__controls';
 	if (entity) {
 		controls.setAttribute('data-o-author-alerts-id', entity.id);
@@ -30,10 +28,10 @@ function createControls(entity) {
 }
 
 function createSelect() {
-	var select = document.createElement('select');
-	var i;
-	var l;
-	var option;
+	const select = document.createElement('select');
+	let i;
+	let l;
+	let option;
 	select.disabled = true;
 	select.className = 'o-author-alerts__frequency';
 	for (i=0,l=config.get().frequencies.length;i<l;i++) {
@@ -45,14 +43,14 @@ function createSelect() {
 	return select;
 }
 function createNameSpan(name){
-	var span = document.createElement('span');
+	const span = document.createElement('span');
 	setTextContent(span, name);
 	span.className = 'o-author-alerts__name';
 	return span;
 }
 
 function createButton(text, selected, title) {
-	var btn = document.createElement('button');
+	const btn = document.createElement('button');
 	btn.className = 'o-author-alerts__button';
 	btn.setAttribute('aria-selected', (typeof selected !== 'undefined') ? selected : false);
 	btn.setAttribute('title', config.get().startAlertsHoverText.replace(/\%entityType\%/g, config.get().entityType));
@@ -62,9 +60,10 @@ function createButton(text, selected, title) {
 
 // Used for unsubscribe all button and Save button
 exports.standaloneButton = function(list, action, text, isDisabled) {
-	var tagName = list.tagName === ('UL') ? 'li' : 'div';
-	var wrapper = createWrapper(tagName);
-	var btn = document.createElement('button');
+	const tagName = list.tagName === ('UL') ? 'li' : 'div';
+	const wrapper = createWrapper(tagName);
+	const btn = document.createElement('button');
+
 	btn.className = 'o-author-alerts__button o-author-alerts__button--standout';
 	btn.setAttribute('data-o-author-alerts-action', action);
 	if (isDisabled && isDisabled === true) {
@@ -78,9 +77,9 @@ exports.standaloneButton = function(list, action, text, isDisabled) {
 
 // Used for the author toggle button
 exports.button = function(list, entity) {
-	var tagName = list.tagName === ('UL') ? 'li' : 'div';
-	var wrapper = createWrapper(tagName);
-	var controls = createControls(entity);
+	const tagName = list.tagName === ('UL') ? 'li' : 'div';
+	const wrapper = createWrapper(tagName);
+	const controls = createControls(entity);
 
 	if (config.get().displayName) {
 		wrapper.appendChild(createNameSpan(config.get().displayName.replace(/\%entityName\%/g, entity.name)));
@@ -93,7 +92,7 @@ exports.button = function(list, entity) {
 };
 
 exports.list = function(rootEl) {
-	var list = rootEl.querySelector('.o-author-alerts__list');
+	let list = rootEl.querySelector('.o-author-alerts__list');
 
 	if (!list) {
 		list = document.createElement('ul');
@@ -104,8 +103,8 @@ exports.list = function(rootEl) {
 };
 
 exports.popover = function(rootEl) {
-	var list = rootEl.querySelector('.o-author-alerts__list');
-	var popover = rootEl.querySelector('.o-author-alerts__popover');
+	const list = rootEl.querySelector('.o-author-alerts__list');
+	let popover = rootEl.querySelector('.o-author-alerts__popover');
 
 	if (!popover) {
 		popover = document.createElement('div');
@@ -118,9 +117,9 @@ exports.popover = function(rootEl) {
 };
 
 exports.widget = function(rootEl) {
-	var popover = rootEl.querySelector('.o-author-alerts__popover');
-	var widget = rootEl.querySelector('.o-author-alerts__widget');
-	var icon = widget ? widget.querySelector('i') : null;
+	const popover = rootEl.querySelector('.o-author-alerts__popover');
+	let widget = rootEl.querySelector('.o-author-alerts__widget');
+	let icon = widget ? widget.querySelector('i') : null;
 
 	if (!widget) {
 		widget = document.createElement('button');

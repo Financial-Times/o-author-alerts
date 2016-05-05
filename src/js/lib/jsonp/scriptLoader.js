@@ -1,21 +1,22 @@
-"use strict";
-
 /**
  * Reference to the &lt;head&gt; DOM object
  * @type {Object}
  */
-var head = document.head || document.getElementsByTagName('head')[0];
+const head = document.head || document.getElementsByTagName('head')[0];
 
 /**
  * The actual function which does the script loading.
  * @param  {object}   options  Several configuration options (e.g. url)
  * @param  {Function} callback function (err)
+ * @return {undefined}
  */
 function scriptLoader (options, callback) {
-	var script, callbackIssued,
-		error, success,
-		url,
-		charset;
+	let script;
+	let callbackIssued;
+	let error;
+	let success;
+	let url;
+	let charset;
 
 	/**
 	 * Parameter validation.
@@ -71,7 +72,7 @@ function scriptLoader (options, callback) {
 
 	script.src = url;
 
-	var destroy = function () {
+	const destroy = function () {
 		if (script) {
 			// Handle memory leak in IE
 			script.onload = script.onreadystatechange = null;

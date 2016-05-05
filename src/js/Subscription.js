@@ -1,13 +1,11 @@
-'use strict';
-
-var executionQueue = require('./lib/executionQueue');
-var jsonp = require('./lib/jsonp/jsonp');
-var eventHelper = require('./lib/eventHelper');
-var BrowserStore = require('./lib/BrowserStore');
-var storage = new BrowserStore(localStorage);
-var config = require('./config.js');
-var MAX_ATTEMPTS = 5;
-var VALID_FREQUENCIES = ['off', 'daily', 'immediate', 'weekly'];
+const executionQueue = require('./lib/executionQueue');
+const jsonp = require('./lib/jsonp/jsonp');
+const eventHelper = require('./lib/eventHelper');
+const BrowserStore = require('./lib/BrowserStore');
+const storage = new BrowserStore(localStorage);
+const config = require('./config.js');
+const MAX_ATTEMPTS = 5;
+const VALID_FREQUENCIES = ['off', 'daily', 'immediate', 'weekly'];
 
 
 /*
@@ -29,9 +27,9 @@ Subscription.prototype = {
 
 	/* Fetch the initial list of authors that a user is following */
 	get: function() {
-		var self = this;
+		const self = this;
 
-		executionQueue.add(function (done, sessionId) {
+		executionQueue.add(function (done) {
 			jsonp({
 				url: config.get().getFollowingUrl
 			},
@@ -50,16 +48,16 @@ Subscription.prototype = {
 
 	/* Handle response from the personalisation server, for updates and fetches*/
 	set: function(data, entities) {
-		var eventToTrigger = '';
-		var item;
-		var i;
+		let eventToTrigger = '';
+		let item;
+		let i;
 
 		if (data && data.status === 'success' && data.taxonomies) {
 			eventToTrigger = 'updateSave';
 			this.online = true;
 			this.entities = data.taxonomies;
 
-			var sync = false;
+			let sync = false;
 			if (entities) {
 				for (i = 0; i < entities.length; i++) {
 					item = entities[i];
@@ -104,8 +102,8 @@ Subscription.prototype = {
 
 	/* Update the user preferences for a given entity, and frequency to update to*/
 	update: function(entity, frequency) {
-		var url;
-		var self = this;
+		let url;
+		const self = this;
 
 		if (!(this.sessionId && entity.id && entity.name)){
 			return;
@@ -118,7 +116,7 @@ Subscription.prototype = {
 
 		url = resolveUrl(entity, frequency);
 
-		var addRequestToQueue = function (url, entity, frequency) {
+		const addRequestToQueue = function (url, entity, frequency) {
 			executionQueue.add(function (done, url, entity, frequency) {
 				if (self.online) {
 					jsonp({
@@ -157,18 +155,19 @@ Subscription.prototype = {
 	},
 
 	updateBulk: function (entities) {
-		var self = this;
-		var i, j;
-		var baseUrl = config.get().updateBulk + '?';
-		var chunk = 10;
-		var item;
+		const self = this;
+		let i;
+		let j;
+		const baseUrl = config.get().updateBulk + '?';
+		const chunk = 10;
+		let item;
 
 		if (!this.sessionId) {
 			return;
 		}
 
 
-		var addRequestToQueue = function (url, arr) {
+		const addRequestToQueue = function (url, arr) {
 			executionQueue.add(function (done, url, arr) {
 				if (self.online) {
 					jsonp({
@@ -198,9 +197,9 @@ Subscription.prototype = {
 
 
 		if (entities && entities instanceof Array) {
-			var arr = [];
-			var hasItems = false;
-			var url = baseUrl;
+			let arr = [];
+			let hasItems = false;
+			let url = baseUrl;
 
 			if (self.online) {
 				for (i = 0; i < entities.length; i++) {
@@ -259,10 +258,10 @@ Subscription.prototype = {
 	whilst we proceed to retry their request in the background.
 	*/
 	sync: function() {
-		var newEntities = [];
-		var id;
-		var pending;
-		var updates = [];
+		const newEntities = [];
+		let id;
+		let pending;
+		const updates = [];
 
 		//Go through pending requests from previous page visits
 		for (id in this.pending) {
@@ -351,10 +350,10 @@ function isRetryable(data) {
 
 //
 function anythingThatIsntDueToStop(entities, pending) {
-	var newEntities = [];
-	var subscribedEntity;
-	var i;
-	var l;
+	const newEntities = [];
+	let subscribedEntity;
+	let i;
+	let l;
 
 	for (i=0,l=entities.length; i < l; i++) {
 		subscribedEntity = entities[i];
@@ -371,7 +370,7 @@ function anythingThatIsntDueToStop(entities, pending) {
 
 // Return the correct URL to use based on the action they are taking.
 function resolveUrl(entity, frequency) {
-	var url = '';
+	let url = '';
 	if (entity.id === 'ALL') {
 		url = config.get().stopAllUrl;
 	} else {

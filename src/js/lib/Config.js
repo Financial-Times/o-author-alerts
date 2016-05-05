@@ -1,17 +1,17 @@
-"use strict";
-
-var merge = require('./merge.js');
+const merge = require('./merge.js');
 
 /**
  * Config class which can be instantiated. It will create an isolated set of configuration options.
  * It can be extended and read.
+ *
+ * @return {undefined}
  */
 function Config () {
 	/**
 	 * Local object of the configuration.
 	 * @type {Object}
 	 */
-	var config = {};
+	let config = {};
 
 	/**
 	 * Read the current configuration or a configuration entry
@@ -37,11 +37,12 @@ function Config () {
 	 *                                       then the object will be merged into the current config object.
 	 * @param {[type]}         value         If a key is specified, the value should also be specified and will be merged
 	 *                                       into the corresponding value of the current object's key's value.
+	 * @return {undefined}
 	 */
 	this.set = function (keyOrObject, value) {
 		if (typeof keyOrObject === 'string') {
 			if (typeof value !== 'undefined') {
-				var obj = {};
+				const obj = {};
 				obj[keyOrObject] = value;
 
 				config = merge(config, obj);

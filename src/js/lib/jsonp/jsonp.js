@@ -1,19 +1,21 @@
-"use strict";
+const param = require('./param.js');
+const scriptLoader = require('./scriptLoader.js');
 
-var param = require('./param.js'),
-	scriptLoader = require('./scriptLoader.js');
-
-var callbackIndex = 0,
-	callbackBase = 'jsonp_' + Math.random().toString(36).substring(7);
+let callbackIndex = 0;
+const callbackBase = 'jsonp_' + Math.random().toString(36).substring(7);
 
 /**
  * The actual function which does the jsonp.
  * @param  {object}   options  Several configuration options (e.g. url, data)
  * @param  {Function} callback function (err, data)
+ * @return {undefined}
  */
 function jsonp (options, callback) {
-	var callbackName, callbackIssued, callbackCalled,
-		success, error;
+	let callbackName;
+	let callbackIssued;
+	let callbackCalled;
+	let success;
+	let error;
 
 	/**
 	 * Parameter validation.
@@ -66,7 +68,7 @@ function jsonp (options, callback) {
 
 	callbackName = callbackBase + callbackIndex++;
 
-	var urlDataSeparator = '?';
+	let urlDataSeparator = '?';
 	if (options.url.indexOf('?') !== -1) {
 		urlDataSeparator = '&';
 	}
