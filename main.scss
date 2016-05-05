@@ -3,8 +3,13 @@
 @import "o-forms/main";
 @import "o-typography/main";
 
-$o-ft-icons-is-silent: false;
-@import "o-ft-icons/main";
+@import 'o-fonts/main';
+// @font-face declarations for all Benton Sans weights
+@include oFontsInclude(BentonSans, light);
+@include oFontsInclude(BentonSans, regular);
+@include oFontsInclude(BentonSans, bold);
+
+@import "o-icons/main";
 
 @import "src/scss/color-use-cases";
 @import "src/scss/variables";

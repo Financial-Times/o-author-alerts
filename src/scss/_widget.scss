@@ -12,7 +12,7 @@
 		border-radius: 10px;
 		padding: 5px 10px;
 		margin: 0;
-		background-color: #ffffff;
+		background-color: oColorsGetPaletteColor('white');
 		color: oColorsGetColorFor(link, text);
 		font-family: $o-author-alerts-button-font;
 		text-decoration: none;
@@ -20,8 +20,7 @@
 		line-height: 13px;
 
 		i {
-			@extend %o-ft-icons-icon--arrow-down;
-			@include oFtIconsBaseIconStyles();
+			@include oIconsGetIcon('arrow-down', oColorsGetPaletteColor('blue'), 32);
 			margin-left: 8px;
 			line-height: 13px;
 			font-size: 13px;

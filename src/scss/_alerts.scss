@@ -25,7 +25,7 @@
 
 	//Added specificity to override ft typography margins.
 	.o-author-alerts__header.o-author-alerts__header {
-		@include oFtTypographyHeading2Text;
+		@include oTypographyHeading2;
 		margin: 10px 0;
 	}
 
@@ -61,8 +61,7 @@
 
 	.o-author-alerts__button[aria-pressed="true"] {
 		i {
-			@extend %o-ft-icons-icon--tick;
-			@include oFtIconsBaseIconStyles();
+			@include oIconsGetIcon('tick', oColorsGetPaletteColor('white'), 32);
 			margin-left: 8px;
 			line-height: 1; // prevent button height from changing between states
 		}
