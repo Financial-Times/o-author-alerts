@@ -1,4 +1,4 @@
-const defaultConfig = require('./config.json');
+const defaultConfig = require('./config.js');
 const config = require('./src/js/config.js');
 
 config.set(defaultConfig);
