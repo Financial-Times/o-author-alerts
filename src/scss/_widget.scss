@@ -20,11 +20,8 @@
 		line-height: 13px;
 
 		i {
-			@include oIconsGetIcon('arrow-down', oColorsGetPaletteColor('blue'), 32);
+			@include oIconsGetIcon('arrow-down', oColorsGetPaletteColor('blue'), 13);
 			margin-left: 8px;
-			line-height: 13px;
-			font-size: 13px;
-			vertical-align: inherit;
 		}
 		&:hover {
 			cursor: pointer;

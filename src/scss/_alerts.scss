@@ -61,7 +61,7 @@
 
 	.o-author-alerts__button[aria-pressed="true"] {
 		i {
-			@include oIconsGetIcon('tick', oColorsGetPaletteColor('white'), 32);
+			@include oIconsGetIcon('tick', oColorsGetPaletteColor('white'), 16);
 			margin-left: 8px;
 			line-height: 1; // prevent button height from changing between states
 		}
