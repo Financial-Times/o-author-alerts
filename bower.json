@@ -4,7 +4,7 @@
     "o-cookies": "^1.1.0",
     "o-colors": ">=2.5 <4",
     "o-fonts": "^2.1.2",
-    "o-buttons": "^3.0.0",
+    "o-buttons": "^2.0.0",
     "o-icons": "^4.0.0",
     "o-layers": ">=0.1.0 <2",
     "ftdomdelegate": "^2.0.0",
