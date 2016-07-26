@@ -1,6 +1,7 @@
 {
     "description": "Alerts widget used for Author Alerts",
     "origamiType": "module",
+    "origamiGroup": "component",
     "origamiVersion": 1,
     "support": "origami.support@ft.com",
     "supportStatus": "experimental",
