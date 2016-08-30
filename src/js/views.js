@@ -102,17 +102,47 @@ exports.list = function(rootEl) {
 	return list;
 };
 
+exports.notice = function(rootEl, text, title) {
+	let noticeWrapper = rootEl.querySelector('.o-author-alerts__notice');
+	let noticeContent = rootEl.querySelector('.o-author-alerts__notice__content');
+	let noticeTitle = rootEl.querySelector('.o-author-alerts__notice__title');
+
+	if (!noticeWrapper) {
+		noticeWrapper = document.createElement('div');
+		noticeWrapper.className = 'o-author-alerts__notice';
+		rootEl.appendChild(noticeWrapper);
+	}
+
+	if (!noticeTitle) {
+		noticeTitle = document.createElement('div');
+		noticeTitle.className = 'o-author-alerts__notice__title';
+		setTextContent(noticeTitle, title);
+		noticeWrapper.appendChild(noticeTitle);
+	}
+
+	if (!noticeContent) {
+		noticeContent = document.createElement('div');
+		noticeContent.className = 'o-author-alerts__notice__text';
+		noticeContent.innerHTML = text;
+		noticeWrapper.appendChild(noticeContent);
+	}
+
+	return noticeWrapper;
+};
+
 exports.popover = function(rootEl) {
 	const list = rootEl.querySelector('.o-author-alerts__list');
+	const notice = rootEl.querySelector('.o-author-alerts__notice');
 	let popover = rootEl.querySelector('.o-author-alerts__popover');
 
 	if (!popover) {
 		popover = document.createElement('div');
 		popover.className = 'o-author-alerts__popover';
 		rootEl.insertBefore(popover, list);
+		rootEl.insertBefore(notice, list);
+		popover.appendChild(notice);
 		popover.appendChild(list);
 	}
-
 	return popover;
 };
 

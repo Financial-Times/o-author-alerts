@@ -9,6 +9,8 @@ module.exports = {
 	entityType: "Author",
 	handleLoadErrorText: "No alerts available.",
 	startAlertsText: "Start alerts",
+	noticeText: "This service is about to be deprecated, you can still follow your favourite authors on the new <a href=\"https://next.ft.com/__opt-in?optedvia=falconauthalerts=https://next.ft.com\">FT.com</a> website. If you have any questions please contact FT.com <a href=\" http://aboutus.ft.com/contact-us/generalenquiries/#axzz3oeRwX4NU\">Help team</a>",
+	noticeTitle: "Notice: Author Alerts",
 	stopAlertsText: "Alerting<i class=\"o-author-alerts__icon--tick\"></i>",
 	widgetText: "Author alerts",
 	popoverHeadingText: null,

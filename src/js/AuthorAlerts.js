@@ -47,6 +47,7 @@ AuthorAlerts.prototype = {
 
 
 	createView: function() {
+		this.notice = views.notice(this.rootEl, config.get().noticeText, config.get().noticeTitle);
 		//Creates a basic list to display the authors
 		this.list = views.list(this.rootEl);
 
