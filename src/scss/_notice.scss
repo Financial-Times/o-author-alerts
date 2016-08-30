@@ -1,6 +1,14 @@
 .o-author-alerts__notice {
-  margin: 5px;
+  border-top: 2px solid #6883A1;
+  width: 100%;
+  background-color: #EEECE1;
 }
 .o-author-alerts__notice__title {
+  margin: 5px 20px;
   color: #CF191D;
+  text-decoration: underline;
+}
+.o-author-alerts__notice__text {
+  margin-left: 20px;
+  padding-bottom: 10px;
 }

@@ -61,13 +61,9 @@
 		position: absolute;
 		top: auto;
 		left: auto;
-		padding: 10px 20px;
+      	padding: 0;
 		margin-top: 8px;
 		z-index: 10; //match o-overlay default z-index
-
-		@media (max-width: 400px) {
-			padding: 5px 10px;
-		}
 
 	}
 

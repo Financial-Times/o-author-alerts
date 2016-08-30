@@ -8,8 +8,12 @@
 
 	//Added specificity to override ft typography margins.
 	.o-author-alerts__list {
-		margin: 0;
-		padding: 0;
+		margin: 10px 20px;
+      	padding: 0;
+
+		@media (max-width: 400px) {
+			margin: 5px 10px;
+		}
 	}
 
 	.o-author-alerts__entity {

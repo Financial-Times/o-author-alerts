@@ -139,9 +139,9 @@ exports.popover = function(rootEl) {
 		popover = document.createElement('div');
 		popover.className = 'o-author-alerts__popover';
 		rootEl.insertBefore(popover, list);
-		rootEl.insertBefore(notice, list);
-		popover.appendChild(notice);
+		rootEl.insertBefore(list, notice);
 		popover.appendChild(list);
+		popover.appendChild(notice);
 	}
 	return popover;
 };
