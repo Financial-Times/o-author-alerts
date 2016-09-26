@@ -1,6 +1,21 @@
 .o-author-alerts__notice {
-  margin: 5px;
+  background-color: #EEECE1;
 }
 .o-author-alerts__notice__title {
+  margin: 0 20px;
+  padding-top: 5px;
   color: #CF191D;
+  text-decoration: underline;
+}
+.o-author-alerts__notice__text {
+  margin-left: 20px;
+  padding-bottom: 10px;
+}
+
+.o-author-alerts--theme {
+  .o-author-alerts__popover {
+    &:after {
+      border-bottom-color: #eeece1;
+    }
+  }
 }
