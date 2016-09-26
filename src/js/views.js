@@ -131,16 +131,13 @@ exports.notice = function(rootEl, text, title) {
 };
 
 exports.popover = function(rootEl) {
-	const list = rootEl.querySelector('.o-author-alerts__list');
 	const notice = rootEl.querySelector('.o-author-alerts__notice');
 	let popover = rootEl.querySelector('.o-author-alerts__popover');
 
 	if (!popover) {
 		popover = document.createElement('div');
 		popover.className = 'o-author-alerts__popover';
-		rootEl.insertBefore(popover, list);
-		rootEl.insertBefore(list, notice);
-		popover.appendChild(list);
+		rootEl.insertBefore(popover, notice);
 		popover.appendChild(notice);
 	}
 	return popover;
