@@ -3,7 +3,8 @@ const Subscription = require('./Subscription');
 
 /* Singleton User object */
 function User() {
-
+	this.subscription = null;
+	this.id = null;
 }
 
 User.prototype.init = function() {

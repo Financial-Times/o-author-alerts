@@ -7,10 +7,9 @@ const user = require('../src/js/user.js');
 
 let testEl;
 
+describe('Initialising a button', function () {
 
-describe('Initialising a button', function() {
-
-	beforeEach(function() {
+	beforeEach(function () {
 		spyOn(jsonp, 'get');
 		user.init();
 		user.id = 'userId';
@@ -20,12 +19,15 @@ describe('Initialising a button', function() {
 
 	});
 
-	afterEach(function() {
+	afterEach(function () {
 		document.body.removeChild(testEl);
 	});
 
-	it('sets the initial state assuming that the user is initialised', function() {
-		const entity = {id: 'author1', name: 'First Author'};
+	it('sets the initial state assuming that the user is initialised', function () {
+		const entity = {
+			id: 'author1',
+			name: 'First Author'
+		};
 		views.button(testEl, entity);
 		user.subscription.entities = [entity];
 		buttons.init(testEl);
@@ -45,9 +47,9 @@ describe('Initialising a button', function() {
 
 });
 
-describe('Clicking the button', function() {
+describe('Clicking the button', function () {
 
-	beforeEach(function() {
+	beforeEach(function () {
 		spyOn(jsonp, 'get');
 		user.destroy();
 		user.init();
@@ -58,12 +60,15 @@ describe('Clicking the button', function() {
 
 	});
 
-	afterEach(function() {
+	afterEach(function () {
 		document.body.removeChild(testEl);
 	});
 
-	it('toggles between states', function() {
-		const entity = {id: 'author1', name: 'First Author'};
+	it('toggles between states', function () {
+		const entity = {
+			id: 'author1',
+			name: 'First Author'
+		};
 		views.button(testEl, entity);
 		views.standaloneButton(testEl, 'save', 'Save', true); //Disabled save button by default
 
@@ -97,11 +102,13 @@ describe('Clicking the button', function() {
 		expect(updateSpy).toHaveBeenCalledWith(entity, 'daily'); //update goes through
 
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
-			model: 'followme', type: 'follow', value: 'First Author'
+			model: 'followme',
+			type: 'follow',
+			value: 'First Author'
 		}, window);
 
 		button.click();
-				expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('daily');
+		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('daily');
 
 		save.click();
 		expect(button.parentElement.getAttribute('data-o-author-alerts-state')).toBe('off'); //saved state updates
@@ -111,7 +118,9 @@ describe('Clicking the button', function() {
 		expect(select.hasAttribute('disabled')).toBeTruthy();
 
 		expect(eventSpy).toHaveBeenCalledWith('oTracking.Event', {
-			model: 'followme', type: 'unfollow', value: 'First Author'
+			model: 'followme',
+			type: 'unfollow',
+			value: 'First Author'
 		}, window);
 	});
 });

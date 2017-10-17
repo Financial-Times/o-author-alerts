@@ -19,7 +19,7 @@ function merge (destination) {
 		object = arguments[i];
 
 		for (key in object) {
-			if (object.hasOwnProperty(key)) {
+			if (Object.prototype.hasOwnProperty.call(object,key)) {
 				value = object[key];
 
 				if (value !== null && typeof value !== 'undefined') {

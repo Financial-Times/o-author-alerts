@@ -16,18 +16,18 @@
     },
     "demos": [
         {
-            "path": "/demos/ArticleWidget.html",
-            "expanded": true,
+            "name": "Article Widget",
+            "template": "/demos/ArticleWidget.html",
             "description": ""
         },
         {
-            "path": "/demos/user.html",
-            "expanded": true,
+            "name": "User",
+            "template": "/demos/user.html",
             "description": ""
         },
         {
-            "path": "/demos/author.html",
-            "expanded": true,
+            "name": "Author",
+            "template": "/demos/author.html",
             "description": ""
         }
     ]

@@ -27,6 +27,6 @@ function execute (options) {
 
 function nextInQueue() {
 	if (queue.length >= 1) {
-		execute.call(null, queue[0]);
+		execute(queue[0]);
 	}
 }
