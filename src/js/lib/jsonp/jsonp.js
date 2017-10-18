@@ -10,7 +10,7 @@ const callbackBase = 'jsonp_' + Math.random().toString(36).substring(7);
  * @param  {Function} callback function (err, data)
  * @return {undefined}
  */
-function jsonp (options, callback) {
+function jsonp(options, callback) {
 	let callbackName;
 	let callbackIssued;
 	let callbackCalled;
@@ -21,7 +21,7 @@ function jsonp (options, callback) {
 	 * Parameter validation.
 	 */
 	if (typeof callback !== 'function') {
-		throw "Callback not specified";
+		throw new Error("Callback not specified");
 	}
 
 	if (typeof options !== 'object') {

@@ -8,7 +8,7 @@ function AlertsWidget() {
 
 AlertsWidget.prototype = {
 
-	init: function(rootEl) {
+	init: function (rootEl) {
 		this.delegate.root(rootEl);
 		this.rootEl = rootEl;
 		this.popover = views.popover(rootEl);
@@ -18,65 +18,73 @@ AlertsWidget.prototype = {
 	},
 
 
-	destroy: function() {
+	destroy: function () {
 		this.popover.parentElement.removeChild(this.popover);
 		this.widget.parentElement.removeChild(this.widget);
 
 		this.delegate.off();
 	},
 
-	bindEvents: function() {
+	bindEvents: function () {
 		const self = this;
 
 		this.delegate.on('click', '.o-author-alerts__widget', this.toggle.bind(this));
 
 		document.addEventListener('click', this.hide.bind(this), false);
 
-		this.delegate.on('keydown', '[aria-expanded]', function(e) {
-			if(e.which === 27) { //esc key
+		this.delegate.on('keydown', '[aria-expanded]', function (e) {
+			if (e.which === 27) { //esc key
 				self.hide();
 			}
 		});
 
 		// Hide when clicked on the save button
-		this.delegate.on('oAuthorAlerts.saveChanges', '', function() {
-				self.hide(null, false); //dont fire close event!
+		this.delegate.on('oAuthorAlerts.saveChanges', '', function () {
+			self.hide(null, false); //dont fire close event!
 		});
 
 		//Hide the current popover if any other layer is opened
-		document.body.addEventListener('oLayers.new', function(ev) {
-			if(ev.detail.el !== self.popover) {
+		document.body.addEventListener('oLayers.new', function (ev) {
+			if (ev.detail.el !== self.popover) {
 				self.hide();
 			}
 		});
 	},
 
-	toggle: function() {
-		if(this.rootEl.hasAttribute('aria-expanded')) {
+	toggle: function () {
+		if (this.rootEl.hasAttribute('aria-expanded')) {
 			this.hide();
 		} else {
 			this.show();
 		}
 	},
 
-	show: function() {
+	show: function () {
 		this.rootEl.setAttribute('aria-expanded', '');
-		eventHelper.dispatch('oTracking.Event', { model: 'eventonpage', type: 'hover', data: 'followAuthor'}, window);
-		eventHelper.dispatch('oLayers.new', { el: this.popover }, document.body);
+		eventHelper.dispatch('oTracking.Event', {
+			model: 'eventonpage',
+			type: 'hover',
+			data: 'followAuthor'
+		}, window);
+		eventHelper.dispatch('oLayers.new', {
+			el: this.popover
+		}, document.body);
 	},
 
-	hide: function(ev, fireCloseEvent) {
+	hide: function (ev, fireCloseEvent) {
 		const target = ev ? ev.target : null;
 		const isInWidget = target && (target.className === 'o-author-alerts__icon--tick' ||
-				this.rootEl.contains(target));
+			this.rootEl.contains(target));
 
-		if(typeof fireCloseEvent === 'undefined') {
+		if (typeof fireCloseEvent === 'undefined') {
 			fireCloseEvent = true; //fire the close event by default
 		}
-		if(!isInWidget || (!target && this.rootEl.hasAttribute('aria-expanded'))) {
+		if (!isInWidget || (!target && this.rootEl.hasAttribute('aria-expanded'))) {
 			this.rootEl.removeAttribute('aria-expanded');
-			if(fireCloseEvent) {
-				eventHelper.dispatch('oLayers.close', { el: this.popover }, document.body);
+			if (fireCloseEvent) {
+				eventHelper.dispatch('oLayers.close', {
+					el: this.popover
+				}, document.body);
 				eventHelper.dispatch('oAuthorAlerts.widgetClose', null, this.rootEl);
 			}
 		}

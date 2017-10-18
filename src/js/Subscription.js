@@ -265,7 +265,7 @@ Subscription.prototype = {
 
 		//Go through pending requests from previous page visits
 		for (id in this.pending) {
-			if (this.pending.hasOwnProperty(id)) {
+			if (Object.prototype.hasOwnProperty.call(this.pending, id)) {
 				pending = this.pending[id];
 				pending.tried += 1;
 				//Give up on any that have maxed out attempts

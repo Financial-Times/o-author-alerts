@@ -43,9 +43,6 @@ describe('Initialising authorAlerts', function() {
 		authorAlerts = new AuthorAlerts(rootEl);
 	});
 
-	afterEach(function(){
-	});
-
 	it('sets up the user', function() {
 		const userSpy = spyOn(user, 'init');
 		spyOn(authorAlerts, 'createView');
